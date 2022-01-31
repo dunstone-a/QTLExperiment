@@ -1,0 +1,187 @@
+---
+title: "1. An introduction to the multiStateQTLExperiment class"
+author:
+  - "Christina B Azodi"
+  - "Davis McCarthy"
+package: splatter
+date: "Last updated: 19 October 2020"
+output:
+    BiocStyle::html_document:
+        toc: true
+        toc_float: true
+vignette: >
+  %\VignetteIndexEntry{An introduction to the multiStateQTL package}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r knitr-options, echo = FALSE}
+suppressPackageStartupMessages({
+  library(ggpubr)
+  library(tidyverse)
+  library(InteractiveComplexHeatmap)
+  library(SingleCellExperiment)
+  devtools::load_all(".")
+})
+
+knitr::opts_chunk$set(warning=FALSE, error=FALSE, message=FALSE, 
+                      fig.height = 6, fig.width = 8)
+```
+
+# 1. Motivation
+
+The `multiStateQTLExperiment` class is a Bioconductor container for storing and manipulating QTL summary statistics (effect size/beta, standard error, significance metric) from multiple states (e.g., tissues, celltypes, environmental conditions). It extends the RangedSummarizedExperiment class, where rows represent features (e.g., genes, transcripts, genomic regions), columns represent states, and assays are the various summary statistics. This package provides methods for merging and subseting, applying basic statistical tests (e.g., feature-wise FDR correction, calculating pairwise sharing), and generating useful plots from `MSQE` objects. It also provides wrapper implementations of a number of multi-test correction methods (e.g., [mashr](https://github.com/stephenslab/mashr), [meta-soft](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3146723/), etc), which result in a set of multi-test corrected summary statistics. 
+
+
+# 2. Creating multiStateQTLExperiment instances
+
+## Manual generation
+
+`multiStateQTLExperiment` objects can be created by passing a list of named matrices of summary statistics to the `multiStateQTLExperiment` function:
+
+```{r create-mock-MSQE-manual}
+set.seed(42)
+nStates <- 10
+nQTL <- 100
+
+mockBeta <- mockBeta(nStates=nStates, nQTL=nQTL, seed=seed)
+mockSE <- mockSE(nStates=nStates, nQTL=nQTL, seed=seed)
+mockPval <- mockPval(nStates=nStates, nQTL=nQTL, seed=seed)
+
+msqe <- multiStateQTLExperiment(assays = list(beta=mockBeta, se=mockSE, pval=mockPval))
+msqe
+```
+
+It is similarly easy to set the column and row metadata by passing values to the appropriate arguments, these functions work as described in detail in the SummarizedExperiment documentation. 
+
+```{r add-rowData-colData-to-mock-MSQE}
+mock.states <- paste0("state_", LETTERS[seq(from = 1, to = nStates)])
+mock.feature_ids <- sample(paste0("gene", LETTERS[seq(from = 1, to = 10)]), 
+                              nQTL, replace=TRUE)
+mock.snp_ids <- paste0("snp", sample(seq(1e3:1e5), nQTL))
+
+msqe <- multiStateQTLExperiment(assays = list(beta=mockBeta, se=mockSE, pval=mockPval),
+                                colData=DataFrame(state=mock.states),
+                                rowData=DataFrame(feature_id=mock.feature_ids,
+                                                  snp_id=mock.snp_ids),
+                                metadata=list(study="mock-example"))
+msqe
+```
+
+Note that a mock `multiStateQTLExperiment` object can also be generated automatically using the `mockMSQE` function:
+
+```{r create-mock-MSQE-wrapper}
+msqe <- mockMSQE(nStates=nStates, nQTL=nQTL)
+```
+
+## Automate MSQE generation from QTL mapping results
+
+`multiStateQTLExperiment` objects can be generated using one of a number of import functions that automatically convert QTL summary statistics from common QTL mapping software into `multiStateQTLExperiment` objects.
+
+These include:
+  
+  - limix
+  - GTEx
+
+
+## Automate MSQE generation from multi-state QTL correction results
+
+Finally, `multiStateQTLExperiment` objects can be generated using one of a number of import functions that automatically convert multi-state corrected QTL summary statistics from common software into `multiStateQTLExperiment` objects.
+
+These include:
+
+  - mashr
+
+# 3. Basic object manipulation
+
+Any operation that can be applied to a RangedSummarizedExperiment is also applicable to any instance of a `multiStateQTLExperiment`. This includes access to assay data via assay(), column metadata with colData(), etc. 
+
+```{r show-dim}
+dim(msqe)
+```
+
+```{r show-state-names}
+colnames(msqe)
+```
+
+```{r show-feature-snp-ids}
+head(rowData(msqe))
+```
+
+```{r show-bind-functions}
+dim(rbind(msqe, msqe))
+dim(cbind(msqe, msqe))
+```
+
+```{r show-subset-functions}
+msqe.subset <- msqe[rowData(msqe)$featureID == "geneA", ]
+dim(msqe.subset)
+
+msqe.subset <- msqe[, c("state1", "state2")]
+dim(msqe.subset)
+
+msqe.subset <- subset(msqe, , sample_size > 100)
+dim(msqe.subset)
+```
+
+# 4. Named assay conventions
+
+In the `multiStateQTLExperiment`, users can assign arbitrary names to entries of assays. However, a number of `MSQE` functions look for common assay names (although the user can always specify their own names). To assist interoperability between packages, we provide some suggestions for what the names should be for particular types of data:
+
+- betas: Raw estimated betas (effect sizes) for each association test for each state. 
+- error: Raw estimated error of the betas (e.g. standard error, standard deviation).
+- pval: Raw estimated significance scores. 
+- adj.betas: Multi-test adjusted betas (e.g. posterior means from mashr)
+- adj.se: Multi-test adjusted betas (e.g. posterior standard deviation from mashr)
+- adj.lfsr: Local false sign rate (e.g. lfsr from mashr that is analogous to a false discovery rate, but more stringent because it requires true discoveries to be non-zero and correctly signed)
+
+
+Each of these suggested names has an appropriate getter/setter method for convenient manipulation of the `multiStateQTLExperiment`. For example, we can take gtex_slope and assign it to beta instead:
+
+```{r set-as-common-assay}
+beta(msqe) <- assay(msqe, "gtex_slope")
+msqe
+```
+
+
+# 4. Adding low-dimensional representations to MSQE
+
+We obtain the PCA and t-SNE representations of the data and add them to the object with the reducedDims()<- method. Alternatively, we can add representations one at a time with the reducedDim()<- method (note the missing s).
+
+```{r set-reducedDim-PCA}
+pca_data <- prcomp(t(betas(msqe)), rank=50)
+
+reducedDims(msqe) <- list(PCA=pca_data$x)
+reducedDims(msqe)
+```
+
+The coordinates for all representations can be retrieved from a multiStateQTLExperiment with reducedDims() or one at a time by name/index with reducedDim(). Each row of the coordinate matrix is assumed to correspond to a state while each column represents a dimension.
+
+```{r show-PCA}
+reducedDims(msqe)
+head(reducedDim(msqe, "PCA")[,1:2])
+```
+
+Any subsetting by column of sce_sub will also lead to subsetting of the dimensionality reduction results by cell. This is convenient as it ensures our low-dimensional results are always synchronized with the gene expression data.
+
+```{r show-subset-of-PCA}
+dim(reducedDim(sce, "PCA"))
+## [1] 379  50
+dim(reducedDim(sce[,1:10], "PCA"))
+## [1] 10 50
+```
+
+# Storing row or column pairings
+
+A common procedure in single-cell analyses is to identify relationships between pairs of cells, e.g., to construct a nearest-neighbor graph or to mark putative physical interactions between cells. We can capture this information in the SingleCellExperiment class with the colPairs() functionality. To demonstrate, say we have 100 relationships between the cells in sce, characterized by some distance measure:
+
+
+# Additional metadata fields
+
+The SingleCellExperiment class provides the sizeFactors() getter and setter methods, to set and retrieve size factors from the colData of the object. Each size factor represents the scaling factor applied to a cell to normalize expression values prior to downstream comparisons, e.g., to remove the effects of differences in library size and other cell-specific biases. These methods are primarily intended for programmatic use in functions implementing normalization methods, but users can also directly call this to inspect or define the size factors for their analysis.
+
+# Session Info
+
+```{r session-info}
+sessionInfo()
+```
