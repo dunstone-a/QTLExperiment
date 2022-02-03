@@ -8,10 +8,6 @@
 #' \code{\link{getPairwiseSharing}}.
 #'
 #' @param ... Arguments passed to the \code{\link{SummarizedExperiment}} constructor to fill the slots of the base class.
-#' @param rowPairs A list of any number of \linkS4class{SelfHits} objects describing relationships between pairs of rows.
-#' Each entry should have number of nodes equal to the number of rows of the output SingleCellExperiment object.
-#' Alternatively, entries may be square sparse matrices of order equal to the number of rows of the output object.
-#' @param colPairs A list of any number of \linkS4class{SelfHits} objects describing relationships between pairs of columns. Each entry should have number of nodes equal to the number of columns of the output SingleCellExperiment object. Alternatively, entries may be square sparse matrices of order equal to the number of columns of the output object.
 #'
 #' @details
 #' In this class, rows should represent associations (feature:variant pairs)
@@ -63,18 +59,14 @@
 #' @importClassesFrom SummarizedExperiment RangedSummarizedExperiment
 #'
 multiStateQTLExperiment <- function(...,
-                                    reducedDims=list(),
-                                    rowPairs=list(),
-                                    colPairs=list()) {
+                                    reducedDims=list()) {
 
   se <- SummarizedExperiment(...)
   if(!is(se, "RangedSummarizedExperiment")) {
     se <- as(se, "RangedSummarizedExperiment")
   }
   .rse_to_msqe(se,
-               reducedDims=reducedDims,
-               rowPairs=rowPairs,
-               colPairs=colPairs)
+               reducedDims=reducedDims)
 }
 
 #' @importFrom S4Vectors DataFrame SimpleList
@@ -82,9 +74,7 @@ multiStateQTLExperiment <- function(...,
 #' @importFrom methods new
 #' @importFrom BiocGenerics nrow ncol
 .rse_to_msqe <- function(rse,
-                         reducedDims=list(),
-                         rowPairs=list(),
-                         colPairs=list()) {
+                         reducedDims=list()) {
 
   old <- S4Vectors:::disableValidity()
   if (!isTRUE(old)) {
@@ -98,8 +88,6 @@ multiStateQTLExperiment <- function(...,
              int_colData=new("DFrame", nrows=ncol(rse)))
 
   reducedDims(out) <- reducedDims
-  rowPairs(out) <- rowPairs
-  colPairs(out) <- colPairs
 
   out
 }
@@ -111,7 +99,7 @@ setAs("RangedSummarizedExperiment", "multiStateQTLExperiment", function(from) {
 })
 
 #' @exportMethod coerce
-#' @importClassesFrom SummarizedExperiment RangedSummarizedExperiment 
+#' @importClassesFrom SummarizedExperiment RangedSummarizedExperiment
 setAs("SummarizedExperiment", "multiStateQTLExperiment", function(from) {
   .rse_to_msqe(as(from, "RangedSummarizedExperiment"))
 })

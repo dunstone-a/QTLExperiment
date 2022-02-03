@@ -1,24 +1,20 @@
-Package: multiStateQTL
+Package: multiStateQTLExperiment
 Type: Package
-Date: 2021-10-18
-Title: Toolkit for the analysis of multi-state QTL data
+Date: 2022-01-31
+Title: S4 classes for multi-state QTL data
 Version: 0.1.0
 Authors@R: c(person("Christina", "Azodi", role=c("aut", "cre"),
         email="cazodi@svi.edu.au"))
 Maintainer: Davis McCarthy <dmccarthy@svi.edu.au>
-Description: A collection of tools for doing various analyses of
-        multi-state QTL data, with a focus on visualization and interpretation.
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
 Depends: 
     SummarizedExperiment,
-    ComplexHeatmap,
     data.table
 Imports: 
     methods,
     dplyr,
-    tidyr,
     utils,
     stats,
     S4Vectors,
@@ -26,18 +22,13 @@ Imports:
     GenomicRanges,
     DelayedArray,
     beachmat,
-    viridis,
-    RColorBrewer,
-    ggplot2,
-    circlize,
-    BiocParallel,
-    ashr,
-    mashr
+    BiocParallel
 Suggests: 
     testthat, 
     BiocStyle, 
     knitr, 
-    rmarkdown,
-    Rtsne
+    rmarkdown
+Description: Defines a S4 class for storing data from multiple QTL mapping 
+    experiments.
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2

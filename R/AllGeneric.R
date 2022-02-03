@@ -67,44 +67,6 @@ setGeneric("mainExpName", function(x) standardGeneric("mainExpName"))
 #' @export
 setGeneric("mainExpName<-", function(x, value) standardGeneric("mainExpName<-"))
 
-########################################
-# Pairing getter/setters.
-
-#' @export
-setGeneric("colPair", function(x, type, ...) standardGeneric("colPair"))
-
-#' @export
-setGeneric("colPairs", function(x, ...) standardGeneric("colPairs"))
-
-#' @export
-setGeneric("colPairNames", function(x, ...) standardGeneric("colPairNames"))
-
-#' @export
-setGeneric("colPair<-", function(x, type, ..., value) standardGeneric("colPair<-"))
-
-#' @export
-setGeneric("colPairs<-", function(x, ..., value) standardGeneric("colPairs<-"))
-
-#' @export
-setGeneric("colPairNames<-", function(x, ..., value) standardGeneric("colPairNames<-"))
-
-#' @export
-setGeneric("rowPair", function(x, type, ...) standardGeneric("rowPair"))
-
-#' @export
-setGeneric("rowPairs", function(x, ...) standardGeneric("rowPairs"))
-
-#' @export
-setGeneric("rowPairNames", function(x, ...) standardGeneric("rowPairNames"))
-
-#' @export
-setGeneric("rowPair<-", function(x, type, ..., value) standardGeneric("rowPair<-"))
-
-#' @export
-setGeneric("rowPairs<-", function(x, ..., value) standardGeneric("rowPairs<-"))
-
-#' @export
-setGeneric("rowPairNames<-", function(x, ..., value) standardGeneric("rowPairNames<-"))
 
 ########################################
 # Convenience assay getter/setters.

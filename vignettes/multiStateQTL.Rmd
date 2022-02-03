@@ -1,26 +1,22 @@
 ---
-title: "1. An introduction to the multiStateQTLExperiment class"
+title: "An introduction to the multiStateQTLExperiment class"
 author:
   - "Christina B Azodi"
   - "Davis McCarthy"
 package: splatter
-date: "Last updated: 19 October 2020"
+date: "Last updated: 31 January 2022"
 output:
     BiocStyle::html_document:
         toc: true
         toc_float: true
 vignette: >
-  %\VignetteIndexEntry{An introduction to the multiStateQTL package}
+  %\VignetteIndexEntry{An introduction to the multiStateQTLExperiment class}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
 
 ```{r knitr-options, echo = FALSE}
 suppressPackageStartupMessages({
-  library(ggpubr)
-  library(tidyverse)
-  library(InteractiveComplexHeatmap)
-  library(SingleCellExperiment)
   devtools::load_all(".")
 })
 
@@ -30,7 +26,7 @@ knitr::opts_chunk$set(warning=FALSE, error=FALSE, message=FALSE,
 
 # 1. Motivation
 
-The `multiStateQTLExperiment` class is a Bioconductor container for storing and manipulating QTL summary statistics (effect size/beta, standard error, significance metric) from multiple states (e.g., tissues, celltypes, environmental conditions). It extends the RangedSummarizedExperiment class, where rows represent features (e.g., genes, transcripts, genomic regions), columns represent states, and assays are the various summary statistics. This package provides methods for merging and subseting, applying basic statistical tests (e.g., feature-wise FDR correction, calculating pairwise sharing), and generating useful plots from `MSQE` objects. It also provides wrapper implementations of a number of multi-test correction methods (e.g., [mashr](https://github.com/stephenslab/mashr), [meta-soft](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3146723/), etc), which result in a set of multi-test corrected summary statistics. 
+The `multiStateQTLExperiment` class is a Bioconductor container for storing and manipulating QTL summary statistics (effect sizes, standard errors, significance metrics) from multiple states (e.g., tissues, celltypes, environmental conditions). It extends the RangedSummarizedExperiment class, where rows represent QTL associations, columns represent states, and assays are the various summary statistics. Each row is named as "featureID|snpID", for example ENSG00000103888|rs112057726 or ENSG00000103888|15:81925049. This package provides methods for reading, merging, and subseting multi-state QTL data. Further, as features generally are tested against multiple variants,multiStateQTLExperiment also provides methods for summarizing QTL statistics based by feature. 
 
 
 # 2. Creating multiStateQTLExperiment instances
@@ -44,9 +40,9 @@ set.seed(42)
 nStates <- 10
 nQTL <- 100
 
-mockBeta <- mockBeta(nStates=nStates, nQTL=nQTL, seed=seed)
-mockSE <- mockSE(nStates=nStates, nQTL=nQTL, seed=seed)
-mockPval <- mockPval(nStates=nStates, nQTL=nQTL, seed=seed)
+mockBeta <- mockBeta(nStates=nStates, nQTL=nQTL)
+mockSE <- mockSE(nStates=nStates, nQTL=nQTL)
+mockPval <- mockPval(nStates=nStates, nQTL=nQTL)
 
 msqe <- multiStateQTLExperiment(assays = list(beta=mockBeta, se=mockSE, pval=mockPval))
 msqe
