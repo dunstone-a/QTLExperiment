@@ -1,4 +1,3 @@
-
 ########################################
 # Getter/setters for reducedDim.
 

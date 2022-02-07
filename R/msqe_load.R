@@ -16,7 +16,7 @@
 #' }
 #'
 #'
-#' @param input Named array or data.frame with state name and the path to the
+#' @param input Named array or data.frame with state name and the file to the
 #'              QTL summary statistics for that state. If data.frame is
 #'              provided, additional columns will be stored in the colData
 #'              annotation.
@@ -52,18 +52,15 @@ loadSummaryStatistics <- function(input,
                                   verbose = TRUE){
 
   if(class(input)=="list"){
-    input <- data.frame(list(state=names(input), path=unlist(unname(input))))
+    input <- data.frame(list(state=names(input), file=unlist(unname(input))))
   }
 
-  if(!"state" %in% colnames(input) | !"path" %in% colnames(input)){
-    error("input a named array or a df with columns `state` and `path`")
+  if(!"state" %in% colnames(input) | !"file" %in% colnames(input)){
+    error("input a named array or a df with columns `state` and `file`")
   }
-  if(!all(file.exists(input$path))){
-    missing <- input$path[!file.exists(input$path)]
-    warning("The following files are missing and were skipped: ")
-    print(missing)
-    input <- input[!input$path %in% missing, ]
-  }
+
+  input <- .absent_file_action(input, onAbsence="warn")
+
 
   if(tolower(mode) == "random"){
     keep <- getRandomQTL(input, nRandom=nRandom, feature=feature, snp=snp,
@@ -87,7 +84,7 @@ loadSummaryStatistics <- function(input,
   for(row in seq(1, nrow(input))){
     if(verbose) { message(input$state[row]) }
 
-    tmp <- data.table::fread(input$path[row], showProgress = verbose) %>%
+    tmp <- data.table::fread(input$file[row], showProgress = verbose) %>%
       dplyr::mutate(id = paste(get(feature), get(snp), sep="|"))
 
     if(!is.null(keep)) { tmp <- tmp %>% dplyr::filter(id %in% keep)}
@@ -126,13 +123,12 @@ loadSummaryStatistics <- function(input,
 #'
 mash_set_data2MSQE <- function(m) {
 
-  if("Bhat" %in% names(m)){ beta <- m$Bhat } else {beta <- NULL}
-  if("Shat" %in% names(m)){ se <- m$Shat } else {se <- NULL}
-  if("pval" %in% names(m)){ pval <- m$pval } else {pval <- NULL}
+  msqe <- multiStateQTLExperiment(list(beta = m$Bhat,
+                                         se = m$Shat))
 
-  msqe <- multiStateQTLExperiment(list(beta = beta,
-                                         se = se,
-                                         pval= pval))
+  if("pval" %in% names(m)){
+    assay(m)$pval <- m$pval
+  }
 
   return(msqe)
 }
@@ -165,7 +161,7 @@ getRandomQTL <- function(input,
 
   if(verbose) {message("Selecting ", nRandom, " random tests from: ",
                        input$state[1])}
-  tmp <- data.table::fread(input$path[1], showProgress = verbose)
+  tmp <- data.table::fread(input$file[1], showProgress = verbose)
   tmp$QTL <- paste(tmp[, feature], tmp[, snp], sep="|")
 
   return(sample(tmp$QTL, nRandom))
@@ -189,7 +185,7 @@ getTopQTL <- function(input,
   for(row in seq(1, nrow(input))){
     if(verbose) { message(input$state[row]) }
 
-    tmp <- data.table::fread(input$path[row], showProgress = verbose) %>%
+    tmp <- data.table::fread(input$file[row], showProgress = verbose) %>%
       dplyr::group_by(get(feature)) %>%
       dplyr::slice(which.min(get(sig))) %>%
       dplyr::mutate(id = paste(get(feature), get(snp), sep="|"))
@@ -220,7 +216,7 @@ getSignificantQTL <- function(input,
   for(row in seq(1, nrow(input))){
     if(verbose) { message(input$state[row]) }
 
-    tmp <- data.table::fread(input$path[row], showProgress = verbose) %>%
+    tmp <- data.table::fread(input$file[row], showProgress = verbose) %>%
       dplyr::filter(get(sig) <= thresh) %>%
       dplyr::mutate(id = paste(get(feature), get(snp), sep="|"))
 

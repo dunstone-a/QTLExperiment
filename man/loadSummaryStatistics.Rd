@@ -19,7 +19,7 @@ loadSummaryStatistics(
 )
 }
 \arguments{
-\item{input}{Named array or data.frame with state name and the path to the
+\item{input}{Named array or data.frame with state name and the file to the
 QTL summary statistics for that state. If data.frame is
 provided, additional columns will be stored in the colData
 annotation.}

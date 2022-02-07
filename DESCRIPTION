@@ -8,23 +8,23 @@ Authors@R: c(person("Christina", "Azodi", role=c("aut", "cre"),
 Maintainer: Davis McCarthy <dmccarthy@svi.edu.au>
 License: GPL (>= 2)
 Encoding: UTF-8
-LazyData: true
 Depends: 
     SummarizedExperiment,
     data.table
 Imports: 
     methods,
     dplyr,
+    tidyr,
     utils,
     stats,
     S4Vectors,
     BiocGenerics,
     GenomicRanges,
     DelayedArray,
-    beachmat,
     BiocParallel
 Suggests: 
-    testthat, 
+    testthat,
+    ashr,
     BiocStyle, 
     knitr, 
     rmarkdown

@@ -3,7 +3,7 @@
 #' The multiStateQTLExperiment class is designed to represent multi-state QTL
 #' data. It inherits from the \linkS4class{RangedSummarizedExperiment} class.
 #' In addition, the class supports storage of multi-state adjusted
-#' beta and betaSE results (e.g., mash) via \code{\link{applyMashr}} and
+#' beta and betaSE results (e.g., mash) and
 #' storage of summary results (e.g., pairwise sharing) via
 #' \code{\link{getPairwiseSharing}}.
 #'

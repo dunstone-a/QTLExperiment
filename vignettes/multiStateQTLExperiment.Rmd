@@ -122,9 +122,9 @@ dim(msqe.subset)
 
 # 4. Named assay conventions
 
-In the `multiStateQTLExperiment`, users can assign arbitrary names to entries of assays. However, a number of `MSQE` functions look for common assay names (although the user can always specify their own names). To assist interoperability between packages, we provide some suggestions for what the names should be for particular types of data:
+In the `multiStateQTLExperiment`, users can assign arbitrary names to assay entries= (however using common assay names will allow `MSQE` functions to function with specifying different assay names). To assist interoperability between packages, we provide some suggestions for what the names should be for particular types of data:
 
-- betas: Raw estimated betas (effect sizes) for each association test for each state. 
+- betas: Raw estimated betas (effect sizes) for each association test for each state.
 - error: Raw estimated error of the betas (e.g. standard error, standard deviation).
 - pval: Raw estimated significance scores. 
 - adj.betas: Multi-test adjusted betas (e.g. posterior means from mashr)
@@ -135,8 +135,10 @@ In the `multiStateQTLExperiment`, users can assign arbitrary names to entries of
 Each of these suggested names has an appropriate getter/setter method for convenient manipulation of the `multiStateQTLExperiment`. For example, we can take gtex_slope and assign it to beta instead:
 
 ```{r set-as-common-assay}
-beta(msqe) <- assay(msqe, "gtex_slope")
-msqe
+msqe <- multiStateQTLExperiment(assays = list(gtex_slope=mockBeta, se=mockSE, pval=mockPval))
+names(assays(msqe))
+betas(msqe) <- assay(msqe, "gtex_slope")
+names(assays(msqe))
 ```
 
 
@@ -154,27 +156,16 @@ reducedDims(msqe)
 The coordinates for all representations can be retrieved from a multiStateQTLExperiment with reducedDims() or one at a time by name/index with reducedDim(). Each row of the coordinate matrix is assumed to correspond to a state while each column represents a dimension.
 
 ```{r show-PCA}
-reducedDims(msqe)
 head(reducedDim(msqe, "PCA")[,1:2])
 ```
 
 Any subsetting by column of sce_sub will also lead to subsetting of the dimensionality reduction results by cell. This is convenient as it ensures our low-dimensional results are always synchronized with the gene expression data.
 
 ```{r show-subset-of-PCA}
-dim(reducedDim(sce, "PCA"))
-## [1] 379  50
-dim(reducedDim(sce[,1:10], "PCA"))
-## [1] 10 50
+dim(reducedDim(msqe, "PCA"))
+dim(reducedDim(msqe[, 1:4], "PCA"))
 ```
 
-# Storing row or column pairings
-
-A common procedure in single-cell analyses is to identify relationships between pairs of cells, e.g., to construct a nearest-neighbor graph or to mark putative physical interactions between cells. We can capture this information in the SingleCellExperiment class with the colPairs() functionality. To demonstrate, say we have 100 relationships between the cells in sce, characterized by some distance measure:
-
-
-# Additional metadata fields
-
-The SingleCellExperiment class provides the sizeFactors() getter and setter methods, to set and retrieve size factors from the colData of the object. Each size factor represents the scaling factor applied to a cell to normalize expression values prior to downstream comparisons, e.g., to remove the effects of differences in library size and other cell-specific biases. These methods are primarily intended for programmatic use in functions implementing normalization methods, but users can also directly call this to inspect or define the size factors for their analysis.
 
 # Session Info
 
