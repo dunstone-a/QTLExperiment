@@ -57,11 +57,11 @@ msqe2 <- msqe
 msqe2[1:10,] <- msqe[11:20,]
 
 # Can also use subset()
-sce$WHEE <- sample(LETTERS, ncol(sce), replace=TRUE)
-subset(sce, , WHEE=="A")
+msqe$WHEE <- sample(c("A", "B", "C"), ncol(msqe), replace=TRUE)
+subset(msqe, , WHEE=="A")
 
 # Can also use split()
-split(sce, sample(LETTERS, nrow(sce), replace=TRUE))
+split(msqe, sample(c("A", "B", "C"), nrow(msqe), replace=TRUE))
 
 }
 \author{

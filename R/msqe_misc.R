@@ -17,8 +17,8 @@
 #' \code{\link{updateObject}}, where \code{objectVersion} is used.
 #'
 #' @examples
-#' example(multiStateQTLExperiment, echo=FALSE) # Using the class example
-#' objectVersion(sce)
+#' msqe <- mockMSQE()
+#' objectVersion(msqe)
 #'
 #' @name SCE-miscellaneous
 #' @rdname miscellaneous

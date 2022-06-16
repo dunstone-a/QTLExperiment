@@ -4,13 +4,17 @@
 \alias{getRandomQTL}
 \title{Return an array of N random QTL}
 \usage{
-getRandomQTL(
-  input,
-  nRandom = nRandom,
-  feature = feature,
-  snp = snp,
-  verbose = verbose
-)
+getRandomQTL(input, nRandom = nRandom, verbose = verbose)
+}
+\arguments{
+\item{input}{Named array or data.frame with state name and the file to the
+QTL summary statistics for that state. If data.frame is
+provided, additional columns will be stored in the colData
+annotation.}
+
+\item{nRandom}{Number of QTL to sample if `mode=random`.}
+
+\item{verbose}{logical. Whether to print progress messages.}
 }
 \description{
 Return an array of N random QTL

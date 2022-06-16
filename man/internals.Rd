@@ -22,7 +22,7 @@
 \description{
 Methods to get or set internal fields from the multiStateQTLExperiment class.
 These functions are intended for package developers who want to add protected
-fields to a multiStateQTLExperiment. They should \emph{not} be used by 
+fields to a multiStateQTLExperiment. They should \emph{not} be used by
 ordinary users of the \pkg{multiStateQTLExperiment} package.
 }
 \section{Getters}{
@@ -39,19 +39,19 @@ the user-visible \code{\link{colData}}).}
  to the user-visible \code{\link{metadata}}).}
 }
 
-The following methods can return visible and internal data in a single 
+The following methods can return visible and internal data in a single
 DataFrame.
 \describe{
 \item{\code{rowData(x, ..., internal=TRUE)}:}{Returns a
 \linkS4class{DataFrame} of the user-visible row metadata with the internal
-row metadata added column-wise. A warning is emitted if the user-visible 
-metadata column names overlap with the internal fields. Any arguments in 
+row metadata added column-wise. A warning is emitted if the user-visible
+metadata column names overlap with the internal fields. Any arguments in
 \code{...} are passed to \code{\link{rowData,SummarizedExperiment-method}}.}
 
 \item{\code{colData(x, ..., internal=TRUE)}:}{Returns a
 \linkS4class{DataFrame} of the user-visible column metadata with the internal
-column metadata added column-wise. A warning is emitted if the user-visible 
-metadata column names overlap with the internal fields. Any arguments in 
+column metadata added column-wise. A warning is emitted if the user-visible
+metadata column names overlap with the internal fields. Any arguments in
 \code{...} are passed to \code{\link{colData,SummarizedExperiment-method}}.}
 }
 }
@@ -88,8 +88,8 @@ the internal representation without breaking user code.
 }
 
 \examples{
-example(multiStateQTLExperiment, echo=FALSE) # Using the class example
-int_metadata(sce)$whee <- 1
+msqe <- mockMSQE()
+int_metadata(msqe)$whee <- 1
 }
 \seealso{
 \code{\link{colData}}, \code{\link{rowData}} and \code{\link{metadata}} for

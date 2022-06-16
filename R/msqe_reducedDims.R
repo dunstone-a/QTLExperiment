@@ -97,35 +97,22 @@
 #' @section Storing dimensionality reduction metadata:
 #' Dimension reduction methods frequently generate metadata that we want to
 #' store, for example the percentage of variance explained and the rotation
-#' matrix from PCA. To store this information alongside the coordinates, we 
+#' matrix from PCA. To store this information alongside the coordinates, we
 #' recommended that this metadata is stored as attributes of the coordinate
-#' matrix. This is simple to do, easy to extract, and avoids problems with 
+#' matrix. This is simple to do, easy to extract, and avoids problems with
 #' synchronization (when the coordinates are separated from the metadata).
-#' The biggest problem with this approach is that attributes are not retained 
+#' The biggest problem with this approach is that attributes are not retained
 #' when the matrix is subsetted or combined. To persist these attributes, we
-#' suggest wrapping the coordinates and metadata in a \link{reduced.dim.matrix}.
-#' More complex matrix-like objects like the \code{\link{LinearEmbeddingMatrix}}
-#' can also be used but may not be immediately compatible with downstream 
-#' functions that expect an ordinary matrix.
-#'
-#' The path less taken is to store the metadata in the \code{\link{mcols}} of 
-#' the \code{\link{reducedDims}} List. This approach avoids the subsetting 
-#' problem with the attributes but is less ideal as it separates the metadata 
-#' from the coordinates, which makes the metadata harder to find and removes 
-#' automated syncing with the coordinates when the latter changes.
-#' The structure of \code{\link{mcols}} is best suited to situations where there
-#' are some commonalities in the metadata across entries, but this rarely occurs
-#' for different dimensionality reduction strategies.
+#' suggest wrapping the coordinates and metadata in a
+#' \link[SingleCellExperiment]{reduced.dim.matrix}.
 #'
 #' @author Christina B Azodi
 #'
 #' @examples
-#' example(multiStateQTLExperiment, echo=FALSE)
-#' reducedDim(msqe, "PCA")
+#' msqe <- mockMSQE()
+#' reducedDim(msqe, "PCA") <- prcomp(t(betas(msqe)), rank=50)$x
 #' reducedDims(msqe)
-#'
-#' reducedDim(msqe, "PCA") <- NULL
-#'
+#' reducedDims(msqe)$PCA
 #' reducedDims(msqe) <- SimpleList()
 #' reducedDims(msqe)
 #'
@@ -304,3 +291,5 @@ setReplaceMethod("reducedDim", c("multiStateQTLExperiment", "character"),
                           vdimstr="rows",
                           substr="type")
 })
+
+

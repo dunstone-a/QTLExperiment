@@ -20,8 +20,8 @@ In the following code snippets, \code{x} and \code{object} are \linkS4class{mult
 }
 
 \examples{
-example(multiStateQTLExperiment, echo=FALSE) # Using the class example
-objectVersion(sce)
+msqe <- mockMSQE()
+objectVersion(msqe)
 
 }
 \seealso{

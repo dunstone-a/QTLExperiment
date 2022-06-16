@@ -24,8 +24,6 @@
 #' @param na.rm logical. If QTL should be dropped if missing for any state.
 #' @param thresh Significance threshold if `mode=significant`.
 #' @param nRandom Number of QTL to sample if `mode=random`.
-#' @param feature The name/index of the column with the feature ID.
-#' @param snp The name/index of the column with the SNP ID.
 #' @param beta The name/index of the column with the effect size/beta value.
 #' @param se The name/index of the column with the effect size/beta standard
 #'           error value.
@@ -36,20 +34,22 @@
 #' Christina B Azodi
 #'
 #' @export
+#' @importFrom rlang .data
 #' @importFrom data.table fread
-#' @importFrom dplyr filter mutate
+#' @importFrom dplyr filter mutate %>%
+#' @importFrom SummarizedExperiment rowData rowData<- colData assay
 #'
 loadSummaryStatistics <- function(input,
                                   mode = "significant",
                                   na.rm = FALSE,
                                   thresh = 0.05,
                                   nRandom = 1000,
-                                  feature = "feature_id",
-                                  snp = "snp_id",
                                   beta = "beta",
                                   se = "beta_se",
                                   sig = "empirical_feature_p_value",
                                   verbose = TRUE){
+
+  id <- NULL
 
   if(class(input)=="list"){
     input <- data.frame(list(state=names(input), file=unlist(unname(input))))
@@ -63,41 +63,38 @@ loadSummaryStatistics <- function(input,
 
 
   if(tolower(mode) == "random"){
-    keep <- getRandomQTL(input, nRandom=nRandom, feature=feature, snp=snp,
-                            verbose=verbose)
+    keep <- getRandomQTL(input, nRandom=nRandom, verbose=verbose)
   } else if (tolower(mode) == "top"){
-    keep <- getTopQTL(input, feature=feature, snp=snp, sig=sig,
-                         verbose=verbose)
+    keep <- getTopQTL(input, sig=sig, verbose=verbose)
   } else if (tolower(mode) %in% c("sig", "significant")){
-    keep <- getSignificantQTL(input, feature=feature, snp=snp, sig=sig,
-                                 thresh=thresh, verbose=verbose)
+    keep <- getSignificantQTL(input, sig=sig, thresh=thresh, verbose=verbose)
   } else if (tolower(mode) == "all"){
     keep <- NULL
   } else { warning("Did not recognize mode...")}
 
 
   if(verbose) {message("Loading summary statistics for: ")}
-  listBeta <- list()
-  listSE <- list()
-  listSig <- list()
+  listBetas <- list()
+  listError <- list()
+  listPval <- list()
 
   for(row in seq(1, nrow(input))){
     if(verbose) { message(input$state[row]) }
 
     tmp <- data.table::fread(input$file[row], showProgress = verbose) %>%
-      dplyr::mutate(id = paste(get(feature), get(snp), sep="|"))
+      dplyr::mutate(id = paste(.data$feature_id, .data$variant_id, sep="|"))
 
-    if(!is.null(keep)) { tmp <- tmp %>% dplyr::filter(id %in% keep)}
+    if(!is.null(keep)) { tmp <- tmp %>% dplyr::filter(.data$id %in% keep)}
 
-    listBeta[[row]] <- setNames(as.list(tmp[, beta]), tmp$id)
-    listSE[[row]] <- setNames(as.list(tmp[, se]), tmp$id)
-    listSig[[row]] <- setNames(as.list(tmp[, sig]), tmp$id)
+    listBetas[[row]] <- setNames(as.list(tmp[, beta]), tmp[, id])
+    listError[[row]] <- setNames(as.list(tmp[, se]), tmp[, id])
+    listPval[[row]] <- setNames(as.list(tmp[, sig]), tmp[, id])
 
   }
 
-  dfBeta <- t(data.table::setDF(data.table::rbindlist(listBeta, fill=TRUE)))
-  dfSE <- t(data.table::setDF(data.table::rbindlist(listSE, fill=TRUE)))
-  dfSig <- t(data.table::setDF(data.table::rbindlist(listSig, fill=TRUE)))
+  dfBeta <- t(data.table::setDF(data.table::rbindlist(listBetas, fill=TRUE)))
+  dfSE <- t(data.table::setDF(data.table::rbindlist(listError, fill=TRUE)))
+  dfSig <- t(data.table::setDF(data.table::rbindlist(listPval, fill=TRUE)))
 
   msqe <- multiStateQTLExperiment(list(beta = dfBeta, se = dfSE, sig = dfSig))
 
@@ -105,7 +102,7 @@ loadSummaryStatistics <- function(input,
   colnames(msqe) <- input$state
   row.names(msqe) <- row.names(dfBeta)
   rowData(msqe)$feature_id <- gsub("\\|.*", "", row.names(msqe))
-  rowData(msqe)$snp_id <- gsub(".*\\|", "", row.names(msqe))
+  rowData(msqe)$variant_id <- gsub(".*\\|", "", row.names(msqe))
 
   if(any(any(is.na(assays(msqe))))){
     if(na.rm) {msqe <- removeNAs(msqe, verbose)}
@@ -120,6 +117,7 @@ loadSummaryStatistics <- function(input,
 #' Convert a mash_set_data object to a MSQE
 #'
 #' @param m mash_set_data input
+#' @importFrom SummarizedExperiment assay assay<-
 #'
 mash_set_data2MSQE <- function(m) {
 
@@ -134,6 +132,8 @@ mash_set_data2MSQE <- function(m) {
 }
 
 #' @importFrom ashr get_pm get_psd get_lfsr
+#' @importFrom SummarizedExperiment rowData rowData<-
+#'
 mash_out2MSQE <- function(m){
 
   beta <- DataFrame(get_pm(m))
@@ -143,26 +143,30 @@ mash_out2MSQE <- function(m){
   msqe <- multiStateQTLExperiment(list(beta = beta, se = sd, lfsr = lfsr))
 
   rowData(msqe)$feature_id <- gsub("\\|.*", "", row.names(msqe))
-  rowData(msqe)$snp_id <- gsub(".*\\|", "", row.names(msqe))
+  rowData(msqe)$variant_id <- gsub(".*\\|", "", row.names(msqe))
   msqe$state <- colnames(msqe)
 
   return(msqe)
 }
 
 #' Return an array of N random QTL
+#' @param input Named array or data.frame with state name and the file to the
+#'              QTL summary statistics for that state. If data.frame is
+#'              provided, additional columns will be stored in the colData
+#'              annotation.
+#' @param nRandom Number of QTL to sample if `mode=random`.
+#' @param verbose logical. Whether to print progress messages.
 #'
 #' @importFrom data.table fread
 #'
 getRandomQTL <- function(input,
                          nRandom = nRandom,
-                         feature = feature,
-                         snp = snp,
                          verbose = verbose){
 
   if(verbose) {message("Selecting ", nRandom, " random tests from: ",
                        input$state[1])}
   tmp <- data.table::fread(input$file[1], showProgress = verbose)
-  tmp$QTL <- paste(tmp[, feature], tmp[, snp], sep="|")
+  tmp$QTL <- paste(tmp[, "feature_id"], tmp[, "variant_id"], sep="|")
 
   return(sample(tmp$QTL, nRandom))
 
@@ -170,12 +174,17 @@ getRandomQTL <- function(input,
 
 #' Return an array of the top QTL for each feature across all states
 #'
+#' @param input Named array or data.frame with state name and the file to the
+#'              QTL summary statistics for that state. If data.frame is
+#'              provided, additional columns will be stored in the colData
+#'              annotation.
+#' @param sig The name/index of the column with the significance score.
+#' @param verbose logical. Whether to print progress messages.
+#'
 #' @importFrom dplyr group_by slice
 #' @importFrom data.table fread
 #'
 getTopQTL <- function(input,
-                      feature = feature,
-                      snp = snp,
                       sig = sig,
                       verbose = verbose){
 
@@ -186,9 +195,9 @@ getTopQTL <- function(input,
     if(verbose) { message(input$state[row]) }
 
     tmp <- data.table::fread(input$file[row], showProgress = verbose) %>%
-      dplyr::group_by(get(feature)) %>%
+      dplyr::group_by(get(.data$feature_id)) %>%
       dplyr::slice(which.min(get(sig))) %>%
-      dplyr::mutate(id = paste(get(feature), get(snp), sep="|"))
+      dplyr::mutate(id = paste(get(.data$feature_id), .data$variant_id, sep="|"))
 
     keep <- union(keep, tmp$id)
   }
@@ -200,12 +209,18 @@ getTopQTL <- function(input,
 
 #' Return an array of the QTL significant in at least one state
 #'
+#' @param input Named array or data.frame with state name and the file to the
+#'              QTL summary statistics for that state. If data.frame is
+#'              provided, additional columns will be stored in the colData
+#'              annotation.
+#' @param sig The name/index of the column with the significance score.
+#' @param thresh Significance threshold if `mode=significant`.
+#' @param verbose logical. Whether to print progress messages.
+#'
 #' @importFrom dplyr group_by slice
 #' @importFrom data.table fread
 #'
 getSignificantQTL <- function(input,
-                      feature = feature,
-                      snp = snp,
                       sig = sig,
                       thresh = thresh,
                       verbose = verbose){
@@ -218,7 +233,7 @@ getSignificantQTL <- function(input,
 
     tmp <- data.table::fread(input$file[row], showProgress = verbose) %>%
       dplyr::filter(get(sig) <= thresh) %>%
-      dplyr::mutate(id = paste(get(feature), get(snp), sep="|"))
+      dplyr::mutate(id = paste(.data$feature_id, .data$variant_id, sep="|"))
 
     keep <- union(keep, tmp$id)
   }
@@ -231,7 +246,14 @@ getSignificantQTL <- function(input,
 
 #' Return MSQE object with NAs filled in
 #'
+#' @param object Named array or data.frame with state name and the file to the
+#'              QTL summary statistics for that state. If data.frame is
+#'              provided, additional columns will be stored in the colData
+#'              annotation.
+#' @param verbose logical. Whether to print progress messages.
+#'
 #' @importFrom dplyr group_by slice
+#' @importFrom SummarizedExperiment assays assays<-
 #' @importFrom data.table fread
 #'
 fillNAs <- function(object, verbose){
@@ -258,9 +280,16 @@ fillNAs <- function(object, verbose){
 
 #' Return MSQE object with rows with NAs in any assay removed
 #'
+#' @param object Named array or data.frame with state name and the file to the
+#'              QTL summary statistics for that state. If data.frame is
+#'              provided, additional columns will be stored in the colData
+#'              annotation.
+#' @param verbose logical. Whether to print progress messages.
+#'
 #' @importFrom dplyr group_by slice
 #' @importFrom data.table fread
 #' @importFrom SummarizedExperiment assay
+#'
 removeNAs <- function(object, verbose){
 
   keep <- rep(TRUE, nrow(object))

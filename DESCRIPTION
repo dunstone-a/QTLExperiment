@@ -13,10 +13,13 @@ Depends:
     data.table
 Imports: 
     methods,
+    rlang,
+    checkmate,
     dplyr,
     tidyr,
     utils,
     stats,
+    ashr,
     S4Vectors,
     BiocGenerics,
     GenomicRanges,
@@ -24,7 +27,6 @@ Imports:
     BiocParallel
 Suggests: 
     testthat,
-    ashr,
     BiocStyle, 
     knitr, 
     rmarkdown

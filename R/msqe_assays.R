@@ -43,8 +43,11 @@
 #' \code{\link{assay}} and \code{\link{assay<-}}, for the wrapped methods.
 #'
 #' @examples
-#' example(multiStateQTLExperiment, echo=FALSE) # Using the class example
-#' betas(msqe) <- matrix(rnorm(nrow(msqe)*ncol(msqe)), ncol=ncol(msqe))
+#' msqe <- mockMSQE()
+#' new_betas <- matrix(rnorm(nrow(msqe)*ncol(msqe)), ncol=ncol(msqe))
+#' row.names(new_betas) <- row.names(msqe)
+#' colnames(new_betas) <- colnames(msqe)
+#' betas(msqe) <- new_betas
 #' dim(betas(msqe))
 #'
 #' @name msqe-assays
@@ -55,28 +58,23 @@
 #' betas<-
 #' betas,multiStateQTLExperiment-method
 #' betas<-,multiStateQTLExperiment-method
-#' sig
-#' sig<-
-#' sig,multiStateQTLExperiment-method
-#' sig<-,multiStateQTLExperiment-method
-#' se
-#' se<-
-#' se,multiStateQTLExperiment-method
-#' se<-,multiStateQTLExperiment-method
-#' adj_betas
-#' adj_betas<-
-#' adj_betas,multiStateQTLExperiment-method
-#' adj_betas<-,multiStateQTLExperiment-method
-#' adj_sig
-#' adj_sig<-
-#' adj_sig,multiStateQTLExperiment-method
-#' adj_sig<-,multiStateQTLExperiment-method
-#' adj_se
-#' adj_se<-
-#' adj_se,multiStateQTLExperiment-method
-#' adj_se<-,multiStateQTLExperiment-method
+#' error
+#' error<-
+#' error,multiStateQTLExperiment-method
+#' error<-,multiStateQTLExperiment-method
+#' pval
+#' pval<-
+#' pval,multiStateQTLExperiment-method
+#' pval<-,multiStateQTLExperiment-method
+#' lfsr
+#' lfsr<-
+#' lfsr,multiStateQTLExperiment-method
+#' lfsr<-,multiStateQTLExperiment-method
+#'
 NULL
 
+#' @importFrom SummarizedExperiment assay
+#'
 GET_FUN <- function(values, ...) {
   (values) # To ensure evaluation
   function(object, ...) {
@@ -84,6 +82,8 @@ GET_FUN <- function(values, ...) {
   }
 }
 
+#' @importFrom SummarizedExperiment assay<-
+#'
 SET_FUN <- function(values, ...) {
   (values)
   function(object, ..., value) {
@@ -109,24 +109,6 @@ setMethod("pval", "multiStateQTLExperiment", GET_FUN("pval"))
 
 #' @export
 setReplaceMethod("pval", c("multiStateQTLExperiment", "ANY"), SET_FUN("pval"))
-
-#' @export
-setMethod("adj_betas", "multiStateQTLExperiment", GET_FUN("adj_betas"))
-
-#' @export
-setReplaceMethod("adj_betas", c("multiStateQTLExperiment", "ANY"), SET_FUN("adj_betas"))
-
-#' @export
-setMethod("adj_error", "multiStateQTLExperiment", GET_FUN("adj_error"))
-
-#' @export
-setReplaceMethod("adj_error", c("multiStateQTLExperiment", "ANY"), SET_FUN("adj_error"))
-
-#' @export
-setMethod("adj_pval", "multiStateQTLExperiment", GET_FUN("adj_pval"))
-
-#' @export
-setReplaceMethod("adj_pval", c("multiStateQTLExperiment", "ANY"), SET_FUN("adj_pval"))
 
 #' @export
 setMethod("lfsr", "multiStateQTLExperiment", GET_FUN("lfsr"))

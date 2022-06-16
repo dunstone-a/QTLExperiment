@@ -3,8 +3,8 @@ title: "An introduction to the multiStateQTLExperiment class"
 author:
   - "Christina B Azodi"
   - "Davis McCarthy"
-package: splatter
-date: "Last updated: 31 January 2022"
+package: multiStateQTLExperiment
+date: "Last updated: 14 June 2022"
 output:
     BiocStyle::html_document:
         toc: true
@@ -17,7 +17,8 @@ vignette: >
 
 ```{r knitr-options, echo = FALSE}
 suppressPackageStartupMessages({
-  devtools::load_all(".")
+  library(multiStateQTLExperiment)
+  #devtools::load_all(".")
 })
 
 knitr::opts_chunk$set(warning=FALSE, error=FALSE, message=FALSE, 
@@ -26,40 +27,36 @@ knitr::opts_chunk$set(warning=FALSE, error=FALSE, message=FALSE,
 
 # 1. Motivation
 
-The `multiStateQTLExperiment` class is a Bioconductor container for storing and manipulating QTL summary statistics (effect sizes, standard errors, significance metrics) from multiple states (e.g., tissues, celltypes, environmental conditions). It extends the RangedSummarizedExperiment class, where rows represent QTL associations, columns represent states, and assays are the various summary statistics. Each row is named as "featureID|snpID", for example ENSG00000103888|rs112057726 or ENSG00000103888|15:81925049. This package provides methods for reading, merging, and subseting multi-state QTL data. Further, as features generally are tested against multiple variants,multiStateQTLExperiment also provides methods for summarizing QTL statistics based by feature. 
+The `multiStateQTLExperiment` class is a Bioconductor container for storing and manipulating QTL summary statistics (effect sizes, standard errors, significance metrics) from multiple states (e.g., tissues, celltypes, environmental conditions). It extends the RangedSummarizedExperiment class, where rows represent QTL associations, columns represent states, and assays are the various summary statistics. Each row is named as "feature_id|variant_id", for example ENSG00000103888|rs112057726 or ENSG00000103888|15:81925049. This package provides methods for reading, merging, and subseting multi-state QTL data. Further, as features generally are tested against multiple variants,multiStateQTLExperiment also provides methods for summarizing QTL statistics based by feature. 
 
 
 # 2. Creating multiStateQTLExperiment instances
 
 ## Manual generation
 
-`multiStateQTLExperiment` objects can be created by passing a list of named matrices of summary statistics to the `multiStateQTLExperiment` function:
+`multiStateQTLExperiment` objects can be created by passing required information to the `multiStateQTLExperiment` function. Required information includes the assays *betas* and *error* and the rowData information *feature_id* and *variant_id*. Additional assays, rowData, colData, metadata, and dimension-reduction data can also be included.
+
 
 ```{r create-mock-MSQE-manual}
 set.seed(42)
-nStates <- 10
-nQTL <- 100
+nStates <- 6
+nQTL <- 40
 
 mockBeta <- mockBeta(nStates=nStates, nQTL=nQTL)
 mockSE <- mockSE(nStates=nStates, nQTL=nQTL)
 mockPval <- mockPval(nStates=nStates, nQTL=nQTL)
 
-msqe <- multiStateQTLExperiment(assays = list(beta=mockBeta, se=mockSE, pval=mockPval))
-msqe
-```
-
-It is similarly easy to set the column and row metadata by passing values to the appropriate arguments, these functions work as described in detail in the SummarizedExperiment documentation. 
-
-```{r add-rowData-colData-to-mock-MSQE}
 mock.states <- paste0("state_", LETTERS[seq(from = 1, to = nStates)])
 mock.feature_ids <- sample(paste0("gene", LETTERS[seq(from = 1, to = 10)]), 
                               nQTL, replace=TRUE)
-mock.snp_ids <- paste0("snp", sample(seq(1e3:1e5), nQTL))
+mock.variant_ids <- paste0("var", sample(seq(1e3:1e5), nQTL))
 
-msqe <- multiStateQTLExperiment(assays = list(beta=mockBeta, se=mockSE, pval=mockPval),
+msqe <- multiStateQTLExperiment(assays = list(betas=mockBeta, 
+                                              error=mockSE, 
+                                              pval=mockPval),
                                 colData=DataFrame(state=mock.states),
                                 rowData=DataFrame(feature_id=mock.feature_ids,
-                                                  snp_id=mock.snp_ids),
+                                                  variant_id=mock.variant_ids),
                                 metadata=list(study="mock-example"))
 msqe
 ```
@@ -68,6 +65,7 @@ Note that a mock `multiStateQTLExperiment` object can also be generated automati
 
 ```{r create-mock-MSQE-wrapper}
 msqe <- mockMSQE(nStates=nStates, nQTL=nQTL)
+msqe
 ```
 
 ## Automate MSQE generation from QTL mapping results
@@ -110,7 +108,7 @@ dim(cbind(msqe, msqe))
 ```
 
 ```{r show-subset-functions}
-msqe.subset <- msqe[rowData(msqe)$featureID == "geneA", ]
+msqe.subset <- msqe[rowData(msqe)$feature_id == "geneA", ]
 dim(msqe.subset)
 
 msqe.subset <- msqe[, c("state1", "state2")]
@@ -122,49 +120,46 @@ dim(msqe.subset)
 
 # 4. Named assay conventions
 
-In the `multiStateQTLExperiment`, users can assign arbitrary names to assay entries= (however using common assay names will allow `MSQE` functions to function with specifying different assay names). To assist interoperability between packages, we provide some suggestions for what the names should be for particular types of data:
-
-- betas: Raw estimated betas (effect sizes) for each association test for each state.
-- error: Raw estimated error of the betas (e.g. standard error, standard deviation).
-- pval: Raw estimated significance scores. 
-- adj.betas: Multi-test adjusted betas (e.g. posterior means from mashr)
-- adj.se: Multi-test adjusted betas (e.g. posterior standard deviation from mashr)
-- adj.lfsr: Local false sign rate (e.g. lfsr from mashr that is analogous to a false discovery rate, but more stringent because it requires true discoveries to be non-zero and correctly signed)
+In the `multiStateQTLExperiment`, required information includes the assays *betas* and *error* and the rowData information *feature_id* and *variant_id*. Beyond these features, users can assign arbitrary names to assay entries. For example, multi-test adjusted summary statistics can be added using a setter method and : after applying a multi-test adjustment method (e.g. mashr) to the MSQE, To assist interoperability between packages, we provide some suggestions for what the names should be for particular types of data:
 
 
 Each of these suggested names has an appropriate getter/setter method for convenient manipulation of the `multiStateQTLExperiment`. For example, we can take gtex_slope and assign it to beta instead:
 
 ```{r set-as-common-assay}
-msqe <- multiStateQTLExperiment(assays = list(gtex_slope=mockBeta, se=mockSE, pval=mockPval))
+msqe <- multiStateQTLExperiment(assays = list(betas=mockBeta, 
+                                              error=mockSE, 
+                                              adj.betas=mockBeta*0.5, 
+                                              adj.error=mockSE*0.5),
+                                rowData=DataFrame(feature_id=mock.feature_ids,
+                                                  variant_id=mock.variant_ids))
 names(assays(msqe))
-betas(msqe) <- assay(msqe, "gtex_slope")
-names(assays(msqe))
+
+betas(msqe)[1:4,1:4]
+assay(msqe, "adj.betas")[1:4,1:4]
 ```
 
 
 # 4. Adding low-dimensional representations to MSQE
 
-We obtain the PCA and t-SNE representations of the data and add them to the object with the reducedDims()<- method. Alternatively, we can add representations one at a time with the reducedDim()<- method (note the missing s).
+We can add one or multiple low-dimensional representations to the `MSQE ` object with the `reducedDim` and `reducedDims` methods, respectively. The coordinates for all representations can be retrieved from a `multiStateQTLExperiment` with reducedDims() or one at a time by name/index with reducedDim(). Each row of the coordinate matrix is assumed to correspond to a state while each column represents a dimension.
 
-```{r set-reducedDim-PCA}
+```{r set-reducedDims}
 pca_data <- prcomp(t(betas(msqe)), rank=50)
+pca_data2 <- prcomp(t(betas(msqe)), rank=10)
 
-reducedDims(msqe) <- list(PCA=pca_data$x)
+reducedDims(msqe) <- list(PCA_50=pca_data$x, PCA_10=pca_data2$x)
 reducedDims(msqe)
 ```
 
-The coordinates for all representations can be retrieved from a multiStateQTLExperiment with reducedDims() or one at a time by name/index with reducedDim(). Each row of the coordinate matrix is assumed to correspond to a state while each column represents a dimension.
 
-```{r show-PCA}
-head(reducedDim(msqe, "PCA")[,1:2])
-```
-
-Any subsetting by column of sce_sub will also lead to subsetting of the dimensionality reduction results by cell. This is convenient as it ensures our low-dimensional results are always synchronized with the gene expression data.
+Any subsetting by column of msqe_sub will also lead to subsetting of the dimensionality reduction results by state. This is convenient as it ensures our low-dimensional results are always synchronized with the QTL data.
 
 ```{r show-subset-of-PCA}
-dim(reducedDim(msqe, "PCA"))
-dim(reducedDim(msqe[, 1:4], "PCA"))
+dim(reducedDim(msqe, "PCA_50"))
+dim(reducedDim(msqe[, 1:4], "PCA_50"))
 ```
+
+
 
 
 # Session Info

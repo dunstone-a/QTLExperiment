@@ -6,6 +6,14 @@
 \usage{
 fillNAs(object, verbose)
 }
+\arguments{
+\item{object}{Named array or data.frame with state name and the file to the
+QTL summary statistics for that state. If data.frame is
+provided, additional columns will be stored in the colData
+annotation.}
+
+\item{verbose}{logical. Whether to print progress messages.}
+}
 \description{
 Return MSQE object with NAs filled in
 }

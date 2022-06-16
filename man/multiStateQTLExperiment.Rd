@@ -11,7 +11,12 @@
 multiStateQTLExperiment(..., reducedDims = list())
 }
 \arguments{
-\item{...}{Arguments passed to the \code{\link{SummarizedExperiment}} constructor to fill the slots of the base class.}
+\item{...}{Arguments passed to the \code{\link{SummarizedExperiment}}
+constructor to fill the slots of the base class.}
+
+\item{reducedDims}{A list of matrix-like objects containing dimensionality
+reduction results, each of which should have the same number of rows as the
+output multiStateQTLExperiment object.}
 }
 \value{
 A multiStateQTLExperiment object.
@@ -21,12 +26,12 @@ The multiStateQTLExperiment class is designed to represent multi-state QTL
 data. It inherits from the \linkS4class{RangedSummarizedExperiment} class.
 In addition, the class supports storage of multi-state adjusted
 beta and betaSE results (e.g., mash) and
-storage of summary results (e.g., pairwise sharing) via
-\code{\link{getPairwiseSharing}}.
+storage of summary results (e.g., pairwise sharing).
 }
 \details{
-In this class, rows should represent associations (feature:variant pairs)
-while columns represent states (e.g. cell types). Assays include beta and betaSE.
+In this class, rows should represent associations (feature_id:variant_id pairs)
+while columns represent states (e.g. cell types). Assays include betas and
+error associated with the betas (e.g. standard errors).
 As with any \linkS4class{SummarizedExperiment} derivative,
 different quantifications (e.g., counts, CPMs, log-expression) can be stored
 simultaneously in the \code{\link{assays}} slot,
@@ -45,17 +50,18 @@ A MSQE can also be coerced from a \linkS4class{SummarizedExperiment} or
 \examples{
 nStates <- 10
 nQTL <- 100
-b <- matrix(rnorm(nStates * nQTL), ncol=nStates)
-se <- matrix(abs(rnorm(nStates * nQTL)), ncol=nStates)
+betas <- matrix(rnorm(nStates * nQTL), ncol=nStates)
+error <- matrix(abs(rnorm(nStates * nQTL)), ncol=nStates)
+rowdata <- DataFrame(feature_id = sample(1:10, nQTL, replace=TRUE),
+                     variant_id = sample(seq(1e3:1e5), nQTL))
 
-pca <- matrix(runif(nStates*5), nStates)
-
-msqe <- multiStateQTLExperiment(assays=list(betas=b, se=se),
-                                reducedDims=SimpleList(PCA=pca))
+msqe <- multiStateQTLExperiment(assays=list(betas=betas, error=error),
+                                rowData=rowdata)
 msqe
 
 ## coercion from SummarizedExperiment
-se <- SummarizedExperiment(assays=list(betas=b, se=se))
+se <- SummarizedExperiment(assays=list(betas=betas, error=error),
+                           rowData=rowdata)
 as(se, "multiStateQTLExperiment")
 
 }

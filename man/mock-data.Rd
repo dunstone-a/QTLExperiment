@@ -2,14 +2,25 @@
 % Please edit documentation in R/mockData.R
 \name{mockMSQE}
 \alias{mockMSQE}
+\alias{mockBeta}
+\alias{mockSE}
+\alias{mockPval}
 \title{Mock MSQE object}
 \usage{
 mockMSQE(nStates = 10, nQTL = 100, seed = NULL)
+
+mockBeta(nStates = 10, nQTL = 100, seed = NULL)
+
+mockSE(nStates = 10, nQTL = 100, seed = NULL)
+
+mockPval(nStates = 10, nQTL = 100, seed = NULL)
 }
 \arguments{
 \item{nStates}{Number of states}
 
 \item{nQTL}{Number of QTL associations}
+
+\item{seed}{Random seed}
 }
 \description{
 Mock MSQE object

@@ -4,14 +4,19 @@
 \alias{getSignificantQTL}
 \title{Return an array of the QTL significant in at least one state}
 \usage{
-getSignificantQTL(
-  input,
-  feature = feature,
-  snp = snp,
-  sig = sig,
-  thresh = thresh,
-  verbose = verbose
-)
+getSignificantQTL(input, sig = sig, thresh = thresh, verbose = verbose)
+}
+\arguments{
+\item{input}{Named array or data.frame with state name and the file to the
+QTL summary statistics for that state. If data.frame is
+provided, additional columns will be stored in the colData
+annotation.}
+
+\item{sig}{The name/index of the column with the significance score.}
+
+\item{thresh}{Significance threshold if `mode=significant`.}
+
+\item{verbose}{logical. Whether to print progress messages.}
 }
 \description{
 Return an array of the QTL significant in at least one state

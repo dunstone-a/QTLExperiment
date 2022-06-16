@@ -4,7 +4,17 @@
 \alias{getTopQTL}
 \title{Return an array of the top QTL for each feature across all states}
 \usage{
-getTopQTL(input, feature = feature, snp = snp, sig = sig, verbose = verbose)
+getTopQTL(input, sig = sig, verbose = verbose)
+}
+\arguments{
+\item{input}{Named array or data.frame with state name and the file to the
+QTL summary statistics for that state. If data.frame is
+provided, additional columns will be stored in the colData
+annotation.}
+
+\item{sig}{The name/index of the column with the significance score.}
+
+\item{verbose}{logical. Whether to print progress messages.}
 }
 \description{
 Return an array of the top QTL for each feature across all states

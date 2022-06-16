@@ -10,8 +10,6 @@ loadSummaryStatistics(
   na.rm = FALSE,
   thresh = 0.05,
   nRandom = 1000,
-  feature = "feature_id",
-  snp = "snp_id",
   beta = "beta",
   se = "beta_se",
   sig = "empirical_feature_p_value",
@@ -31,10 +29,6 @@ annotation.}
 \item{thresh}{Significance threshold if `mode=significant`.}
 
 \item{nRandom}{Number of QTL to sample if `mode=random`.}
-
-\item{feature}{The name/index of the column with the feature ID.}
-
-\item{snp}{The name/index of the column with the SNP ID.}
 
 \item{beta}{The name/index of the column with the effect size/beta value.}
 

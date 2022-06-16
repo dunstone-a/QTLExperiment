@@ -50,12 +50,6 @@ setGeneric("colLabels", function(x, ...) standardGeneric("colLabels"))
 setGeneric("colLabels<-", function(x, ..., value) standardGeneric("colLabels<-"))
 
 #' @export
-setGeneric("rowSubset", function(x, ...) standardGeneric("rowSubset"))
-
-#' @export
-setGeneric("rowSubset<-", function(x, ..., value) standardGeneric("rowSubset<-"))
-
-#' @export
 setGeneric("objectVersion", function(x) standardGeneric("objectVersion"))
 
 ########################################
@@ -87,24 +81,6 @@ setGeneric("pval", function(object, ...) standardGeneric("pval"))
 
 #' @export
 setGeneric("pval<-", function(object, ..., value) standardGeneric("pval<-"))
-
-#' @export
-setGeneric("adj_betas", function(object, ...) standardGeneric("adj_betas"))
-
-#' @export
-setGeneric("adj_betas<-", function(object, ..., value) standardGeneric("adj_betas<-"))
-
-#' @export
-setGeneric("adj_error", function(object, ...) standardGeneric("adj_error"))
-
-#' @export
-setGeneric("adj_error<-", function(object, ..., value) standardGeneric("adj_error<-"))
-
-#' @export
-setGeneric("adj_pval", function(object, ...) standardGeneric("adj_pval"))
-
-#' @export
-setGeneric("adj_pval<-", function(object, ..., value) standardGeneric("adj_pval<-"))
 
 #' @export
 setGeneric("lfsr", function(object, ...) standardGeneric("lfsr"))

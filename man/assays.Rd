@@ -7,26 +7,18 @@
 \alias{betas<-}
 \alias{betas,multiStateQTLExperiment-method}
 \alias{betas<-,multiStateQTLExperiment-method}
-\alias{sig}
-\alias{sig<-}
-\alias{sig,multiStateQTLExperiment-method}
-\alias{sig<-,multiStateQTLExperiment-method}
-\alias{se}
-\alias{se<-}
-\alias{se,multiStateQTLExperiment-method}
-\alias{se<-,multiStateQTLExperiment-method}
-\alias{adj_betas}
-\alias{adj_betas<-}
-\alias{adj_betas,multiStateQTLExperiment-method}
-\alias{adj_betas<-,multiStateQTLExperiment-method}
-\alias{adj_sig}
-\alias{adj_sig<-}
-\alias{adj_sig,multiStateQTLExperiment-method}
-\alias{adj_sig<-,multiStateQTLExperiment-method}
-\alias{adj_se}
-\alias{adj_se<-}
-\alias{adj_se,multiStateQTLExperiment-method}
-\alias{adj_se<-,multiStateQTLExperiment-method}
+\alias{error}
+\alias{error<-}
+\alias{error,multiStateQTLExperiment-method}
+\alias{error<-,multiStateQTLExperiment-method}
+\alias{pval}
+\alias{pval<-}
+\alias{pval,multiStateQTLExperiment-method}
+\alias{pval<-,multiStateQTLExperiment-method}
+\alias{lfsr}
+\alias{lfsr<-}
+\alias{lfsr,multiStateQTLExperiment-method}
+\alias{lfsr<-,multiStateQTLExperiment-method}
 \title{Named assay getters and setters}
 \description{
 These are methods for getting or setting \code{assay(msqe, i=X, ...)}
@@ -66,8 +58,11 @@ output from mashr)
 }
 
 \examples{
-example(multiStateQTLExperiment, echo=FALSE) # Using the class example
-betas(msqe) <- matrix(rnorm(nrow(msqe)*ncol(msqe)), ncol=ncol(msqe))
+msqe <- mockMSQE()
+new_betas <- matrix(rnorm(nrow(msqe)*ncol(msqe)), ncol=ncol(msqe))
+row.names(new_betas) <- row.names(msqe)
+colnames(new_betas) <- colnames(msqe)
+betas(msqe) <- new_betas
 dim(betas(msqe))
 
 }
