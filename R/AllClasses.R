@@ -5,16 +5,15 @@
 #' @importFrom stats setNames
 #' @importClassesFrom SummarizedExperiment RangedSummarizedExperiment
 #' @importClassesFrom S4Vectors DataFrame SimpleList
-#' 
+#'
 setClass("multiStateQTLExperiment",
-         slots=c(int_elementMetadata = "DataFrame",
+         slots=c(int_rowData = "DataFrame",
                  int_colData = "DataFrame",
                  int_metadata = "list"),
          contains = "RangedSummarizedExperiment",
          prototype = prototype(
            int_metadata=list(
-             #version=packageVersion("multiStateQTLExperiment"),
-             version="beta.testing.v0",
+             version=packageVersion("multiStateQTLExperiment"),
              mainExpName=NULL
            )
          ))

@@ -10,7 +10,7 @@
 #' @section Getters:
 #' Here \code{x} is a \linkS4class{multiStateQTLExperiment}.
 #' \describe{
-#' \item{\code{int_elementMetadata(x)}:}{Returns a \linkS4class{DataFrame} of
+#' \item{\code{int_rowData(x)}:}{Returns a \linkS4class{DataFrame} of
 #' internal row metadata, with number of rows equal to \code{nrow(x)} (analogous
 #' to the user-visible \code{\link{rowData}}).}
 #' \item{\code{int_colData(x)}:}{Returns a \linkS4class{DataFrame} of internal
@@ -39,7 +39,7 @@
 #' @section Setters:
 #' Here \code{x} is a \linkS4class{multiStateQTLExperiment}.
 #' \describe{
-#' \item{\code{int_elementMetadata(x) <- value}:}{Replaces the internal row
+#' \item{\code{int_rowData(x) <- value}:}{Replaces the internal row
 #' metadata with \code{value}, a \linkS4class{DataFrame} with number of rows
 #' equal to \code{nrow(x)} (analogous to the user-visible
 #' \code{\link{rowData<-}}).}
@@ -74,16 +74,16 @@
 #' @docType methods
 #' @aliases
 #' int_colData
-#' int_elementMetadata
+#' int_rowData
 #' int_metadata
 #' int_colData,multiStateQTLExperiment-method
-#' int_elementMetadata,multiStateQTLExperiment-method
+#' int_rowData,multiStateQTLExperiment-method
 #' int_metadata,multiStateQTLExperiment-method
 #' int_colData<-
-#' int_elementMetadata<-
+#' int_rowData<-
 #' int_metadata<-
 #' int_colData<-,multiStateQTLExperiment-method
-#' int_elementMetadata<-,multiStateQTLExperiment-method
+#' int_rowData<-,multiStateQTLExperiment-method
 #' int_metadata<-,multiStateQTLExperiment-method
 #' colData,multiStateQTLExperiment-method
 #' rowData,multiStateQTLExperiment-method
@@ -95,18 +95,18 @@
 NULL
 
 #' @export
-setMethod("int_elementMetadata", "multiStateQTLExperiment", function(x) x@int_elementMetadata)
+setMethod("int_rowData", "multiStateQTLExperiment", function(x) x@int_rowData)
 
 #' @export
-setReplaceMethod("int_elementMetadata", "multiStateQTLExperiment", function(x, value) {
-    x@int_elementMetadata <- value
+setReplaceMethod("int_rowData", "multiStateQTLExperiment", function(x, value) {
+    x@int_rowData <- value
     return(x)
 })
 
 #' @export
 #' @importFrom S4Vectors parallel_slot_names
 setMethod("parallel_slot_names", "multiStateQTLExperiment", function(x) {
-    c("int_elementMetadata", callNextMethod())
+    c("int_rowData", callNextMethod())
 })
 
 #' @export
@@ -131,7 +131,7 @@ setReplaceMethod("int_metadata", "multiStateQTLExperiment", function(x, value) {
 #' @importFrom SummarizedExperiment colData
 setMethod("colData", "multiStateQTLExperiment", function(x, ..., internal=FALSE) {
     if(internal) {
-        cn <- colnames(x@colData) # need explicit slot reference to avoid recursive colData() calling.
+        cn <- colnames(x@colData) # explicit slot ref to avoid recursive colData() calling.
         conflict <- cn %in% colnames(int_colData(x))
         if (any(conflict)) {
             cn <- cn[conflict]
@@ -152,7 +152,7 @@ setMethod("colData", "multiStateQTLExperiment", function(x, ..., internal=FALSE)
 setMethod("rowData", "multiStateQTLExperiment", function(x, ..., internal=FALSE) {
     if (internal) {
         cn <- colnames(mcols(x))
-        conflict <- cn %in% colnames(int_elementMetadata(x))
+        conflict <- cn %in% colnames(int_rowData(x))
         if (any(conflict)) {
             cn <- cn[conflict]
             if (length(cn) > 2) {
@@ -160,7 +160,7 @@ setMethod("rowData", "multiStateQTLExperiment", function(x, ..., internal=FALSE)
             }
             warning("overlapping names in internal and external rowData (", paste(cn, collapse = ", "), ")")
         }
-        cbind(callNextMethod(x, ...), int_elementMetadata(x))
+        cbind(callNextMethod(x, ...), int_rowData(x))
     } else {
         callNextMethod(x, ...)
     }

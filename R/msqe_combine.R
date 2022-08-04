@@ -63,7 +63,8 @@ setMethod("cbind", "multiStateQTLExperiment", function(..., deparse.level=1) {
 
   args <- list(...)
   args <- lapply(args, updateObject)
-  int_meta <- do.call(c, unname(lapply(args, int_metadata)))
+
+  int_meta <- do.call(c, lapply(args, int_metadata))
 
   tryCatch({
     int_colD <- do.call(rbind, lapply(args, int_colData))
@@ -79,13 +80,13 @@ setMethod("cbind", "multiStateQTLExperiment", function(..., deparse.level=1) {
   tryCatch({
     combined <- do.call(SummarizedExperiment::cbind, row_shells)
   }, error=function(err) {
-    stop( "failed to combine 'int_elementMetadata' in 'cbind(<",
+    stop( "failed to combine 'int_rowData' in 'cbind(<",
           class(args[[1]]), ">)':\n  ", conditionMessage(err))
   })
   int_eleMetaD <- rowData(combined)
 
   BiocGenerics:::replaceSlots(out, int_colData=int_colD,
-                              int_elementMetadata=int_eleMetaD,
+                              int_rowData=int_eleMetaD,
                               int_metadata=int_meta, check=FALSE)
 })
 
@@ -104,9 +105,9 @@ setMethod("rbind", "multiStateQTLExperiment", function(..., deparse.level=1) {
   int_meta <- do.call(c, unname(lapply(args, int_metadata)))
 
   tryCatch({
-    int_eleMetaD <- do.call(rbind, lapply(args, int_elementMetadata))
+    int_eleMetaD <- do.call(rbind, lapply(args, int_rowData))
   }, error=function(err) {
-    stop("failed to combine 'int_elementMetadata' in 'rbind(<",
+    stop("failed to combine 'int_rowData' in 'rbind(<",
          class(args[[1]]), ">)':\n  ", conditionMessage(err))
   })
 
@@ -122,7 +123,7 @@ setMethod("rbind", "multiStateQTLExperiment", function(..., deparse.level=1) {
   int_colD <- colData(combined)
 
   BiocGenerics:::replaceSlots(out, int_colData=int_colD,
-               int_elementMetadata=int_eleMetaD,
+               int_rowData=int_eleMetaD,
                int_metadata=int_meta, check=FALSE)
 })
 
@@ -133,6 +134,6 @@ setMethod("rbind", "multiStateQTLExperiment", function(..., deparse.level=1) {
 
 #' @importFrom SummarizedExperiment SummarizedExperiment
 .create_shell_rowdata <- function(x) {
-  SummarizedExperiment(rowData=int_elementMetadata(x))
+  SummarizedExperiment(rowData=int_rowData(x))
 }
 

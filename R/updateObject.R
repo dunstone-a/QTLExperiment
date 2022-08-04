@@ -51,7 +51,7 @@ setMethod("updateObject", "multiStateQTLExperiment",
             old.ver, ". ", "Updating it ...\n", appendLF = FALSE)
   }
 
-  #int_metadata(object)$version <- packageVersion("multiStateQTLExperiment")
-  int_metadata(object)$version <- "testing.object.update"
+  int_metadata(object)$version <- packageVersion("multiStateQTLExperiment")
+  #int_metadata(object)$version <- "testing.object.update"
   callNextMethod()
 })

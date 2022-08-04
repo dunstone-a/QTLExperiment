@@ -16,6 +16,8 @@ Imports:
     rlang,
     checkmate,
     dplyr,
+    collapse,
+    vroom,
     tidyr,
     utils,
     stats,

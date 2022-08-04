@@ -23,10 +23,10 @@ setGeneric("reducedDims<-", function(x, withDimnames=TRUE, ..., value) standardG
 # Hidden getter/setters for internal slots.
 
 #' @export
-setGeneric("int_elementMetadata", function(x) standardGeneric("int_elementMetadata"))
+setGeneric("int_rowData", function(x) standardGeneric("int_rowData"))
 
 #' @export
-setGeneric("int_elementMetadata<-", function(x, value) standardGeneric("int_elementMetadata<-"))
+setGeneric("int_rowData<-", function(x, value) standardGeneric("int_rowData<-"))
 
 #' @export
 setGeneric("int_colData", function(x) standardGeneric("int_colData"))
@@ -44,21 +44,19 @@ setGeneric("int_metadata<-", function(x, value) standardGeneric("int_metadata<-"
 # Miscellaneous methods.
 
 #' @export
-setGeneric("colLabels", function(x, ...) standardGeneric("colLabels"))
-
-#' @export
-setGeneric("colLabels<-", function(x, ..., value) standardGeneric("colLabels<-"))
-
-#' @export
 setGeneric("objectVersion", function(x) standardGeneric("objectVersion"))
-
-########################################
 
 #' @export
 setGeneric("mainExpName", function(x) standardGeneric("mainExpName"))
 
 #' @export
 setGeneric("mainExpName<-", function(x, value) standardGeneric("mainExpName<-"))
+
+#' @export
+setGeneric("colLabels", function(x, ...) standardGeneric("colLabels"))
+
+#' @export
+setGeneric("colLabels<-", function(x, ..., value) standardGeneric("colLabels<-"))
 
 
 ########################################

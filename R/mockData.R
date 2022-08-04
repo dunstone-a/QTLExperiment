@@ -6,18 +6,22 @@
 #'
 #' @rdname mock-data
 #' @export
+#' @importFrom stats prcomp
+
 mockMSQE <- function(nStates = 10, nQTL = 100, seed=NULL){
   set.seed(seed)
 
   betas <- mockBeta(nStates=nStates, nQTL=nQTL, seed=seed)
-  se <- mockSE(nStates=nStates, nQTL=nQTL, seed=seed)
+  error <- mockError(nStates=nStates, nQTL=nQTL, seed=seed)
   pval <- mockPval(nStates=nStates, nQTL=nQTL, seed=seed)
   feature_ids <- sample(c("geneA", "geneB", "geneC"), nQTL, replace=TRUE)
   var_ids <- paste0("snp", sample(seq(1e3:1e5), nQTL))
+  pca <- prcomp(t(betas), rank=5)
 
-  msqe <- multiStateQTLExperiment(assay = list(betas=betas, error=se, pval=pval),
+  msqe <- multiStateQTLExperiment(assay = list(betas=betas, error=error, pval=pval),
                                   rowData=DataFrame(feature_id=feature_ids,
-                                                    variant_id=var_ids))
+                                                    variant_id=var_ids),
+                                  reducedDims=list(PCA=pca$x))
 
   rownames(msqe) <- paste(rowData(msqe)$feature_id, rowData(msqe)$variant_id, sep="|")
 
@@ -41,7 +45,7 @@ mockBeta <- function(nStates = 10, nQTL = 100, seed=NULL){
 #' @importFrom stats rnorm
 #' @rdname mock-data
 #' @export
-mockSE <- function(nStates = 10, nQTL = 100, seed=NULL){
+mockError <- function(nStates = 10, nQTL = 100, seed=NULL){
   matrix(abs(rnorm(nStates * nQTL)), ncol=nStates)
 }
 

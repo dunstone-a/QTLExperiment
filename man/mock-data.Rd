@@ -3,7 +3,7 @@
 \name{mockMSQE}
 \alias{mockMSQE}
 \alias{mockBeta}
-\alias{mockSE}
+\alias{mockError}
 \alias{mockPval}
 \title{Mock MSQE object}
 \usage{
@@ -11,7 +11,7 @@ mockMSQE(nStates = 10, nQTL = 100, seed = NULL)
 
 mockBeta(nStates = 10, nQTL = 100, seed = NULL)
 
-mockSE(nStates = 10, nQTL = 100, seed = NULL)
+mockError(nStates = 10, nQTL = 100, seed = NULL)
 
 mockPval(nStates = 10, nQTL = 100, seed = NULL)
 }

@@ -27,15 +27,14 @@ knitr::opts_chunk$set(warning=FALSE, error=FALSE, message=FALSE,
 
 # 1. Motivation
 
-The `multiStateQTLExperiment` class is a Bioconductor container for storing and manipulating QTL summary statistics (effect sizes, standard errors, significance metrics) from multiple states (e.g., tissues, celltypes, environmental conditions). It extends the RangedSummarizedExperiment class, where rows represent QTL associations, columns represent states, and assays are the various summary statistics. Each row is named as "feature_id|variant_id", for example ENSG00000103888|rs112057726 or ENSG00000103888|15:81925049. This package provides methods for reading, merging, and subseting multi-state QTL data. Further, as features generally are tested against multiple variants,multiStateQTLExperiment also provides methods for summarizing QTL statistics based by feature. 
+The `multiStateQTLExperiment` class is a Bioconductor container for storing and manipulating QTL summary statistics (effect sizes, standard errors, significance metrics) from multiple states (e.g., tissues, celltypes, environmental conditions). It extends the RangedSummarizedExperiment class, where rows represent QTL associations, columns represent states, and assays are the various summary statistics. Each row is named as "feature_id|variant_id", for example ENSG00000103888|rs112057726 or ENSG00000103888|15:81925049. This package provides methods for reading, merging, and subsetting multi-state QTL data. Further, as features generally are tested against multiple variants,multiStateQTLExperiment also provides methods for summarizing QTL statistics based by feature. 
 
 
 # 2. Creating multiStateQTLExperiment instances
 
 ## Manual generation
 
-`multiStateQTLExperiment` objects can be created by passing required information to the `multiStateQTLExperiment` function. Required information includes the assays *betas* and *error* and the rowData information *feature_id* and *variant_id*. Additional assays, rowData, colData, metadata, and dimension-reduction data can also be included.
-
+`multiStateQTLExperiment` objects can be created by passing required information to the `multiStateQTLExperiment` function. Required information includes the assays *betas* and *error* and the rowData information *feature_id* and *variant_id*. Additional in the form of assays, rowData, colData, metadata, and dimension-reduction data can also be added to the object.
 
 ```{r create-mock-MSQE-manual}
 set.seed(42)
@@ -46,10 +45,9 @@ mockBeta <- mockBeta(nStates=nStates, nQTL=nQTL)
 mockSE <- mockSE(nStates=nStates, nQTL=nQTL)
 mockPval <- mockPval(nStates=nStates, nQTL=nQTL)
 
-mock.states <- paste0("state_", LETTERS[seq(from = 1, to = nStates)])
-mock.feature_ids <- sample(paste0("gene", LETTERS[seq(from = 1, to = 10)]), 
-                              nQTL, replace=TRUE)
-mock.variant_ids <- paste0("var", sample(seq(1e3:1e5), nQTL))
+mock.states <- paste0("state_", c(1:nStates))
+mock.feature_ids <- sample(c("A", "B", "C", "D", "E"), nQTL, replace=TRUE)
+mock.variant_ids <- sample(seq(1:1e5), nQTL)
 
 msqe <- multiStateQTLExperiment(assays = list(betas=mockBeta, 
                                               error=mockSE, 
@@ -68,23 +66,49 @@ msqe <- mockMSQE(nStates=nStates, nQTL=nQTL)
 msqe
 ```
 
-## Automate MSQE generation from QTL mapping results
+## From QTL summary statistics for each state 
 
-`multiStateQTLExperiment` objects can be generated using one of a number of import functions that automatically convert QTL summary statistics from common QTL mapping software into `multiStateQTLExperiment` objects.
+Typically QTL summary statistics are stored separately for each state. The `summaryStats_2_msqe()` function will load summary statistics from multiple files and convert them into a `multiStateQTLExperiment` object. Because different QTL mapping software produce summary statistics in different formats, this function is flexible, allowing users to specify the column name or index where required data is stored. This function can also utilize parallel processing (cores available are automatically detected, see [vroom documentation](https://vroom.r-lib.org/index.html) for details. 
 
-These include:
+Required arguments:
+
+  - input: A named list (name=`state`; value=`path`) or matrix with two columns (`state` and `path`) where the state is the desired name and the path is the full local path or the weblink to the summary statistics for that state. 
+  - feature_id: The index or name of the column in the summary statistic files containing the feature ID
+  - variant_id: The index or name of the column in the summary statistic files containing the variant ID
+  - betas: The index or name of the column in the summary statistic files containing the estimated betas
+  - error: The index or name of the column in the summary statistic files containing the estimated beta errors
+
+Optional arguments:
+  - na.rm: Logical. To remove QTL tests (rows) with missing data for any state.
+  - pval: The index or name of the column in the summary statistic files containing test statistics.
+  - n_max: The number of rows to read from each file (useful for testing purposes)
   
-  - limix
-  - GTEx
+  
+For example, we can load summary statistics from the [EBI eQTL database](https://www.ebi.ac.uk/eqtl/Data_access/):
 
+```{r demo-summaryStats_2_msqe}
+input_web <- list(lung="http://ftp.ebi.ac.uk/pub/databases/spot/eQTL/sumstats/GTEx/tx/GTEx_tx_lung.all.tsv.gz",
+                  thyroid="http://ftp.ebi.ac.uk/pub/databases/spot/eQTL/sumstats/GTEx/tx/GTEx_tx_thyroid.all.tsv.gz",
+                  spleen="http://ftp.ebi.ac.uk/pub/databases/spot/eQTL/sumstats/GTEx/tx/GTEx_tx_spleen.all.tsv.gz",
+                  blood="http://ftp.ebi.ac.uk/pub/databases/spot/eQTL/sumstats/GTEx/tx/GTEx_tx_blood.all.tsv.gz")
 
-## Automate MSQE generation from multi-state QTL correction results
+msqe4 <- summaryStats_2_msqe(input_web, 
+                            feature_id="molecular_trait_id",
+                            variant_id="rsid", 
+                            betas = "beta", 
+                            error = "se",
+                            pval = "pvalue", 
+                            n_max=1000,
+                            verbose = TRUE)
+```
 
-Finally, `multiStateQTLExperiment` objects can be generated using one of a number of import functions that automatically convert multi-state corrected QTL summary statistics from common software into `multiStateQTLExperiment` objects.
+## From mashr data format
 
-These include:
+A convenience function is also available to convert multi-state QTL data from class `mash` objects into `MSQE` objects.
 
-  - mashr
+```{r mashr-to-msqe}
+
+```
 
 # 3. Basic object manipulation
 
@@ -117,6 +141,29 @@ dim(msqe.subset)
 msqe.subset <- subset(msqe, , sample_size > 100)
 dim(msqe.subset)
 ```
+
+# 4. Smart subset functions
+
+A number of subset functions are also available to make common tasks with `MSQE` objects easier. The `subsetComplete` function allows you to remove QTL tests (i.e. rows) with missing data. 
+
+```{r smart-subset-complete}
+msqe4_subset <- subsetComplete(msqe4, verbose=TRUE)
+```
+
+The `subsetComplete` function can also take the argument "n", which specifies the number (or percent if n <= 1) of states required to have a non-NA value in order to be kept. The remaining NAs can then be left as NAs, or can be filled in using the `naReplace` function. 
+
+
+```{r smart-subset-fill-missing}
+msqe4_subset <- subsetComplete(msqe4, n=3, verbose=TRUE)
+msqe4_subset <- naReplace(msqe4_subset, verbose=TRUE)
+```
+
+You can also subset the `MSQE` object to keep only tests that are below a desired threshold in at least one state.
+
+```{r smart-subset-significant}
+msqe4_sig <- subsetSignificant(msqe4_subset, assay="pval", thresh=0.1, verbose=TRUE)
+```
+
 
 # 4. Named assay conventions
 

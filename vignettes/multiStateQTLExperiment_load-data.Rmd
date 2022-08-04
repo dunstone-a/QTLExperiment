@@ -1,0 +1,38 @@
+---
+title: "Coercing your data into a multiStateQTLExperiment object"
+author:
+  - "Christina B Azodi"
+  - "Davis McCarthy"
+package: multiStateQTLExperiment
+date: "Last updated: 29 June 2022"
+output:
+    BiocStyle::html_document:
+        toc: true
+        toc_float: true
+vignette: >
+  %\VignetteIndexEntry{Coercing your data into a multiStateQTLExperiment object}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r knitr-options, echo = FALSE}
+suppressPackageStartupMessages({
+  library(multiStateQTLExperiment)
+  #devtools::load_all(".")
+})
+
+knitr::opts_chunk$set(warning=FALSE, error=FALSE, message=FALSE, 
+                      fig.height = 6, fig.width = 8)
+```
+
+# 1. Motivation
+
+The multi-state 
+
+```{r load-from}
+
+
+
+```
+
+

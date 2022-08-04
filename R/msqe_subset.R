@@ -73,7 +73,7 @@ setMethod("[", c("multiStateQTLExperiment", "ANY", "ANY"), function(x, i, j, ...
   x <- updateObject(x)
   if (!missing(i)) {
     ii <- .convert_subset_index(i, rownames(x))
-    int_elementMetadata(x) <- int_elementMetadata(x)[ii,,drop=FALSE]
+    int_rowData(x) <- int_rowData(x)[ii,,drop=FALSE]
   }
 
   if (!missing(j)) {
@@ -96,17 +96,17 @@ setMethod("[<-", c("multiStateQTLExperiment", "ANY", "ANY", "multiStateQTLExperi
   }
 
   if (!missing(i)) {
-    left <- int_elementMetadata(x)
-    right <- int_elementMetadata(value)
+    left <- int_rowData(x)
+    right <- int_rowData(value)
     ii <- .convert_subset_index(i, rownames(x))
 
     tryCatch({ left[ii,] <- right
     }, error=function(err) {
       stop(
-        "failed to replace 'int_elementMetadata' in '<", class(x),
+        "failed to replace 'int_rowData' in '<", class(x),
         ">[i,] <- value'\n", conditionMessage(err))
     })
-    int_elementMetadata(x) <- left
+    int_rowData(x) <- left
   }
 
   if (!missing(j)) {

@@ -4,16 +4,16 @@
 \name{MSQE-internals}
 \alias{MSQE-internals}
 \alias{int_colData}
-\alias{int_elementMetadata}
+\alias{int_rowData}
 \alias{int_metadata}
 \alias{int_colData,multiStateQTLExperiment-method}
-\alias{int_elementMetadata,multiStateQTLExperiment-method}
+\alias{int_rowData,multiStateQTLExperiment-method}
 \alias{int_metadata,multiStateQTLExperiment-method}
 \alias{int_colData<-}
-\alias{int_elementMetadata<-}
+\alias{int_rowData<-}
 \alias{int_metadata<-}
 \alias{int_colData<-,multiStateQTLExperiment-method}
-\alias{int_elementMetadata<-,multiStateQTLExperiment-method}
+\alias{int_rowData<-,multiStateQTLExperiment-method}
 \alias{int_metadata<-,multiStateQTLExperiment-method}
 \alias{colData,multiStateQTLExperiment-method}
 \alias{rowData,multiStateQTLExperiment-method}
@@ -29,7 +29,7 @@ ordinary users of the \pkg{multiStateQTLExperiment} package.
 
 Here \code{x} is a \linkS4class{multiStateQTLExperiment}.
 \describe{
-\item{\code{int_elementMetadata(x)}:}{Returns a \linkS4class{DataFrame} of
+\item{\code{int_rowData(x)}:}{Returns a \linkS4class{DataFrame} of
 internal row metadata, with number of rows equal to \code{nrow(x)} (analogous
 to the user-visible \code{\link{rowData}}).}
 \item{\code{int_colData(x)}:}{Returns a \linkS4class{DataFrame} of internal
@@ -60,7 +60,7 @@ metadata column names overlap with the internal fields. Any arguments in
 
 Here \code{x} is a \linkS4class{multiStateQTLExperiment}.
 \describe{
-\item{\code{int_elementMetadata(x) <- value}:}{Replaces the internal row
+\item{\code{int_rowData(x) <- value}:}{Replaces the internal row
 metadata with \code{value}, a \linkS4class{DataFrame} with number of rows
 equal to \code{nrow(x)} (analogous to the user-visible
 \code{\link{rowData<-}}).}

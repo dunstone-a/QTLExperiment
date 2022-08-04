@@ -94,8 +94,6 @@ setValidity("multiStateQTLExperiment", function(object) {
 
 
   if (all(checks == TRUE)) {
-    checks <- c(betas = checkNumeric(betas(object), finite = TRUE),
-                error = checkNumeric(error(object), finite = TRUE))
 
     if (all(checks == TRUE)) {
       valid <- TRUE
@@ -130,7 +128,7 @@ setValidity("multiStateQTLExperiment", function(object) {
 
   out <- new("multiStateQTLExperiment",
              rse,
-             int_elementMetadata=new("DFrame", nrows=nrow(rse)),
+             int_rowData=new("DFrame", nrows=nrow(rse)),
              int_colData=new("DFrame", nrows=ncol(rse)))
 
   reducedDims(out) <- reducedDims
@@ -151,14 +149,4 @@ setAs("SummarizedExperiment", "multiStateQTLExperiment", function(from) {
 })
 
 
-#' @export
-setMethod("mainExpName", "multiStateQTLExperiment", function(x) {
-  int_metadata(x)$mainExpName
-})
-
-#' @export
-setReplaceMethod("mainExpName", c("multiStateQTLExperiment", "character_OR_NULL"), function(x, value) {
-  int_metadata(x)$mainExpName <- value
-  x
-})
 

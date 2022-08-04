@@ -2,26 +2,27 @@
 # library(multiStateQTLExperiment); library(testthat)
 # source("setup.R"); source("test-msqe-subsetting.R")
 
-msqe <- mock
+msqe <- mockMSQE()
+d1 <- reducedDim(msqe, "PCA", withDimnames=FALSE)
 
 test_that("subsetting by row works correctly", {
-  int_elementMetadata(msqe)$indicator <- seq_len(nrow(msqe))
+  int_rowData(msqe)$indicator <- seq_len(nrow(msqe))
   reducedDim(msqe, "PCA") <- d1
   for (i in 1:3) {
     if (i==1L) {
       by.row <- sample(nrow(msqe), 20)
       sub.msqe <- msqe[by.row,]
-      expect_identical(int_elementMetadata(sub.msqe)$indicator, by.row)
+      expect_identical(int_rowData(sub.msqe)$indicator, by.row)
     } else if (i==2L) {
       by.row <- rbinom(nrow(msqe), 1, 0.2)==1
       sub.msqe <- msqe[by.row,]
-      expect_identical(int_elementMetadata(sub.msqe)$indicator, which(by.row))
+      expect_identical(int_rowData(sub.msqe)$indicator, which(by.row))
     } else if (i==3L) {
       by.row <- rownames(msqe)[sample(nrow(msqe), 100)]
       sub.msqe <- msqe[by.row,]
-      expect_identical(int_elementMetadata(sub.msqe)$indicator, match(by.row, rownames(msqe)))
+      expect_identical(int_rowData(sub.msqe)$indicator, match(by.row, rownames(msqe)))
     }
-    ind <- int_elementMetadata(sub.msqe)$indicator
+    ind <- int_rowData(sub.msqe)$indicator
 
     expect_identical(assay(msqe)[ind,,drop=FALSE], assay(sub.msqe))
     expect_identical(rowData(msqe)[ind,], rowData(sub.msqe))
@@ -59,7 +60,7 @@ test_that("subsetting by column works correctly", {
     expect_identical(reducedDim(sub.msqe, "PCA", withDimnames=FALSE), d1[ind,,drop=FALSE])
 
     # Unchanged elements:
-    expect_identical(int_elementMetadata(sub.msqe), int_elementMetadata(msqe))
+    expect_identical(int_rowData(sub.msqe), int_rowData(msqe))
     expect_identical(rowData(sub.msqe), rowData(msqe))
     expect_identical(objectVersion(sub.msqe), objectVersion(msqe))
   }
@@ -100,8 +101,8 @@ test_that("subset replacement by row handles internal fields correctly", {
 
   # Handles mismatch.
   msqex2 <- msqe
-  int_elementMetadata(msqex2)$ERCC <- seq_len(nrow(msqex2))
-  expect_error(msqex2[to,] <- msqe[from,], "'int_elementMetadata'")
+  int_rowData(msqex2)$ERCC <- seq_len(nrow(msqex2))
+  expect_error(msqex2[to,] <- msqe[from,], "'int_rowData'")
 })
 
 test_that("subset replacement by column works correctly for basic cases", {
@@ -121,7 +122,7 @@ test_that("subset replacement by column works correctly for basic cases", {
                           reducedDim(msqe[,from], "PCA", withDimnames=FALSE)))
 
   # Unchanged elements.
-  expect_identical(int_elementMetadata(msqex), int_elementMetadata(msqe))
+  expect_identical(int_rowData(msqex), int_rowData(msqe))
   expect_identical(rowData(msqex), rowData(msqe))
   expect_identical(int_metadata(msqex), int_metadata(msqe))
 })
@@ -156,7 +157,7 @@ test_that("subset replacement by both rows and columns work correctly", {
 
   ref <- msqe.alt
   ref[to,] <- msqe[from,]
-  expect_identical(int_elementMetadata(ref), int_elementMetadata(msqex))
+  expect_identical(int_rowData(ref), int_rowData(msqex))
 
   ref <- msqe.alt
   ref[,to] <- msqe[,from]

@@ -3,7 +3,6 @@
 
 context("multiStateQTLExperiment class")
 
-set.seed(49)
 nStates <- 10
 nQTL <- 100
 b <- matrix(rnorm(1000), ncol=nStates)
@@ -16,10 +15,7 @@ test_that("construction of the MSQE works correctly", {
   msqe <- multiStateQTLExperiment(assay=list(betas=b, error=se, pval=p, lfsr=p),
                                   rowData=DataFrame(feature_id=feature_ids,
                                                     variant_id=variant_ids))
-  expect_equivalent(betas(msqe), b)
-  expect_equivalent(error(msqe), se)
-  expect_equivalent(pval(msqe), p)
-  expect_equivalent(lfsr(msqe), p)
+  expect_equivalent(class(msqe), "multiStateQTLExperiment")
   expect_equivalent(assay(msqe, "betas"), b)
   expect_equivalent(assay(msqe, "error"), se)
   expect_equivalent(assay(msqe, "pval"), p)

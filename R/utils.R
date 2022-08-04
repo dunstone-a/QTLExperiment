@@ -24,13 +24,12 @@
 
 .absent_file_action <- function(input, onAbsence=c("warn", "error")){
 
-  absent <- input$file[!file.exists(input$file)]
+  absent <- input[, "path"]
+  absent <- absent[!file.exists(absent)  & !grepl("http", absent)]
 
-  if (length(absent) == length(input$file)){
+  if (length(absent) == length(input$path)){
     stop("No files were found... stopping.")
-    }
-
-  if(length(absent) != 0){
+  } else if (length(absent) > 0){
     msg <- sprintf("The following files are missing: ", absent)
     if (onAbsence=="warn") {
       warning("The following files are missing and will be skipped: ", absent)
@@ -38,6 +37,9 @@
     } else {
       stop("The following files are missing, loading will stop: ", absent)
     }
+  } else{
+    return(input)
   }
+
 }
 

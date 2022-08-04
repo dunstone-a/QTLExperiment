@@ -2,7 +2,8 @@
 # library(multiStateQTLExperiment); library(testthat)
 # source("setup.R"); source("test-msqe-combine-cols.R")
 
-msqe <- mock
+msqe <- mockMSQE()
+d1 <- prcomp(t(betas(msqe)), rank=5)$x
 
 test_that("cbind works correctly in the basic case", {
   reducedDim(msqe, "PCA") <- d1
@@ -16,7 +17,6 @@ test_that("cbind works correctly in the basic case", {
   expect_identical(reducedDim(msqe2, "PCA"),
                    rbind(reducedDim(msqe, "PCA"),
                          reducedDim(msqe.alt, "PCA")))
-  #expect_identical(altExp(msqe2), cbind(altExp(msqe), altExp(msqe.alt)))
 })
 
 
@@ -40,12 +40,12 @@ test_that("cbind respects the rowData and gives proper error messages", {
 
 
 test_that("cbind respects the internal fields correctly", {
-  # Respects the internal elementMetadata.
+  # Respects the internal rowData
   reducedDim(msqe, "PCA") <- d1
   msqe2 <- msqe
-  int_elementMetadata(msqe2)$X <- runif(nrow(msqe2))
+  int_rowData(msqe2)$X <- runif(nrow(msqe2))
   msqe3 <- cbind(msqe, msqe2)
-  expect_identical(int_elementMetadata(msqe3)$X, int_elementMetadata(msqe2)$X)
+  expect_identical(int_rowData(msqe3)$X, int_rowData(msqe2)$X)
 
   # Respects reducedDims
   expect_identical(reducedDim(msqe3),
@@ -54,10 +54,9 @@ test_that("cbind respects the internal fields correctly", {
   # Respects reordered internal colData.
   alpha <- cbind(msqe, msqe)
   alt.msqe <- msqe
-  int_colData(alt.msqe) <- int_colData(alt.msqe)[,ncol(int_colData(alt.msqe)):1]
+  reducedDims(alt.msqe) <- rev(reducedDims(alt.msqe))
   bravo <- cbind(msqe, alt.msqe)
-  expect_identical(alpha, bravo)
-
+  expect_identical(alpha@int_colData$PCA, bravo@int_colData$PCA)
 })
 
 test_that("cbind handles errors in the internal fields correctly", {
