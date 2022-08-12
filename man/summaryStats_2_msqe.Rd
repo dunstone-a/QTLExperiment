@@ -11,7 +11,6 @@ summaryStats_2_msqe(
   betas = "slope",
   error = "slope_se",
   pval = "pval_perm",
-  na.rm = FALSE,
   n_max = Inf,
   verbose = TRUE
 )
@@ -26,19 +25,17 @@ annotation.}
 
 \item{variant_id}{The name/index of the column with the variant_id info.}
 
+\item{betas}{The name/index of the column with the effect size/beta value.}
+
 \item{error}{The name/index of the column with the effect size/beta standard
 error value.}
 
 \item{pval}{The name/index of the column with the significance score.}
 
-\item{na.rm}{Logical. To remove QTL tests with missing data for any state.}
-
 \item{n_max}{Max number of rows to read per file. This is primarily used
 for testing purposes.}
 
 \item{verbose}{logical. Whether to print progress messages.}
-
-\item{beta}{The name/index of the column with the effect size/beta value.}
 }
 \description{
 A suite of methods to extract QTL mapping summary statistics from common

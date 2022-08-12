@@ -1,15 +1,15 @@
 #' @title Coercing mash data objects into MSQE objects
 #'
-#' @param data A `MSQE` object or named list containing "betas" and "error"
-#'             matricies.
-#' @param thresh Threshold for calling tests as significant (pval or lfsr).
+#' @param data A mashr object output from mashr::mash_set_data or mashr::mash.
+#' @param sep String separating the feature_id from the variant_id in the row.names of the mashr object
+#' @param rowData if feature_id and variant_id are not in the row.names, a rowData matrix can be provided with this information.
 #' @param verbose Logical.
-#'
-#' @examples
 #'
 #' @rdname mash_2_msqe
 #'
 #' @importFrom stats rnorm
+#' @importFrom tidyr separate
+#' @importFrom rlang .data
 #' @export
 #'
 mash_2_msqe <- function(data, sep=NULL, rowData=NULL, verbose=FALSE) {
@@ -26,7 +26,7 @@ mash_2_msqe <- function(data, sep=NULL, rowData=NULL, verbose=FALSE) {
 
   if(!is.null(sep)){
     rowData <- as.data.frame(list(id=as.character(rownames(assay_list[[1]])))) %>%
-      tidyr::separate(id, into=c("feature_id", "variant_id"), sep=sep)
+      separate(.data$id, into=c("feature_id", "variant_id"), sep=sep)
 
     if(verbose){message("# unique features: ",
                         length(unique(rowData$feature_id)))}

@@ -13,16 +13,14 @@ mash_2_msqe(data, sep = NULL, rowData = NULL, verbose = FALSE)
 .mashFit_2_msqe(data)
 }
 \arguments{
-\item{data}{A `MSQE` object or named list containing "betas" and "error"
-matricies.}
+\item{data}{A mashr object output from mashr::mash_set_data or mashr::mash.}
+
+\item{sep}{String separating the feature_id from the variant_id in the row.names of the mashr object}
+
+\item{rowData}{if feature_id and variant_id are not in the row.names, a rowData matrix can be provided with this information.}
 
 \item{verbose}{Logical.}
-
-\item{thresh}{Threshold for calling tests as significant (pval or lfsr).}
 }
 \description{
 Coercing mash data objects into MSQE objects
-}
-\examples{
-
 }

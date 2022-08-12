@@ -17,7 +17,8 @@ vignette: >
 
 ```{r knitr-options, echo = FALSE}
 suppressPackageStartupMessages({
-  library(multiStateQTLExperiment)
+  devtools::load_all("/mnt/mcfiles/cazodi/Software/multiStateQTLExperiment")
+  #library(multiStateQTLExperiment)
   #devtools::load_all(".")
 })
 
@@ -42,7 +43,7 @@ nStates <- 6
 nQTL <- 40
 
 mockBeta <- mockBeta(nStates=nStates, nQTL=nQTL)
-mockSE <- mockSE(nStates=nStates, nQTL=nQTL)
+mockError <- mockError(nStates=nStates, nQTL=nQTL)
 mockPval <- mockPval(nStates=nStates, nQTL=nQTL)
 
 mock.states <- paste0("state_", c(1:nStates))
@@ -50,7 +51,7 @@ mock.feature_ids <- sample(c("A", "B", "C", "D", "E"), nQTL, replace=TRUE)
 mock.variant_ids <- sample(seq(1:1e5), nQTL)
 
 msqe <- multiStateQTLExperiment(assays = list(betas=mockBeta, 
-                                              error=mockSE, 
+                                              error=mockError, 
                                               pval=mockPval),
                                 colData=DataFrame(state=mock.states),
                                 rowData=DataFrame(feature_id=mock.feature_ids,
@@ -68,7 +69,7 @@ msqe
 
 ## From QTL summary statistics for each state 
 
-Typically QTL summary statistics are stored separately for each state. The `summaryStats_2_msqe()` function will load summary statistics from multiple files and convert them into a `multiStateQTLExperiment` object. Because different QTL mapping software produce summary statistics in different formats, this function is flexible, allowing users to specify the column name or index where required data is stored. This function can also utilize parallel processing (cores available are automatically detected, see [vroom documentation](https://vroom.r-lib.org/index.html) for details. 
+The `summaryStats_2_msqe()` function is a generic function to load QTL summary statistics from multiple files, where each file represents a state, and convert them into a `multiStateQTLExperiment` object. Because different QTL mapping software produce summary statistics in different formats, this function is flexible, allowing users to specify the column name or index where required data is stored. This function can also utilize parallel processing (cores available are automatically detected, see [vroom documentation](https://vroom.r-lib.org/index.html) for details. 
 
 Required arguments:
 
@@ -93,21 +94,27 @@ input_web <- list(lung="http://ftp.ebi.ac.uk/pub/databases/spot/eQTL/sumstats/GT
                   blood="http://ftp.ebi.ac.uk/pub/databases/spot/eQTL/sumstats/GTEx/tx/GTEx_tx_blood.all.tsv.gz")
 
 msqe4 <- summaryStats_2_msqe(input_web, 
-                            feature_id="molecular_trait_id",
-                            variant_id="rsid", 
-                            betas = "beta", 
-                            error = "se",
-                            pval = "pvalue", 
-                            n_max=1000,
-                            verbose = TRUE)
+                             feature_id="molecular_trait_id",
+                             variant_id="rsid", 
+                             betas = "beta", 
+                             error = "se",
+                             pval = "pvalue", 
+                             n_max=10000,
+                             verbose = TRUE)
+msqe4
+head(betas(msqe4))
 ```
 
 ## From mashr data format
 
-A convenience function is also available to convert multi-state QTL data from class `mash` objects into `MSQE` objects.
+A convenience function is also available to convert `mash` objects into `MSQE` objects.
 
 ```{r mashr-to-msqe}
+mashr_sim <- mashr::simple_sims(nQTL,5,1) 
 
+msqe2 <- mash_2_msqe(mashr_sim, rowData=DataFrame(feature_id=row.names(mashr_sim$Bhat),
+                                                 variant_id=sample(seq(1:1e5), nQTL)))
+msqe2
 ```
 
 # 3. Basic object manipulation
@@ -115,20 +122,19 @@ A convenience function is also available to convert multi-state QTL data from cl
 Any operation that can be applied to a RangedSummarizedExperiment is also applicable to any instance of a `multiStateQTLExperiment`. This includes access to assay data via assay(), column metadata with colData(), etc. 
 
 ```{r show-dim}
-dim(msqe)
+dim(msqe4)
 ```
 
 ```{r show-state-names}
-colnames(msqe)
+colnames(msqe4)
 ```
 
 ```{r show-feature-snp-ids}
-head(rowData(msqe))
+head(rowData(msqe4))
 ```
 
 ```{r show-bind-functions}
-dim(rbind(msqe, msqe))
-dim(cbind(msqe, msqe))
+dim(cbind(msqe4, msqe4))
 ```
 
 ```{r show-subset-functions}
@@ -142,28 +148,6 @@ msqe.subset <- subset(msqe, , sample_size > 100)
 dim(msqe.subset)
 ```
 
-# 4. Smart subset functions
-
-A number of subset functions are also available to make common tasks with `MSQE` objects easier. The `subsetComplete` function allows you to remove QTL tests (i.e. rows) with missing data. 
-
-```{r smart-subset-complete}
-msqe4_subset <- subsetComplete(msqe4, verbose=TRUE)
-```
-
-The `subsetComplete` function can also take the argument "n", which specifies the number (or percent if n <= 1) of states required to have a non-NA value in order to be kept. The remaining NAs can then be left as NAs, or can be filled in using the `naReplace` function. 
-
-
-```{r smart-subset-fill-missing}
-msqe4_subset <- subsetComplete(msqe4, n=3, verbose=TRUE)
-msqe4_subset <- naReplace(msqe4_subset, verbose=TRUE)
-```
-
-You can also subset the `MSQE` object to keep only tests that are below a desired threshold in at least one state.
-
-```{r smart-subset-significant}
-msqe4_sig <- subsetSignificant(msqe4_subset, assay="pval", thresh=0.1, verbose=TRUE)
-```
-
 
 # 4. Named assay conventions
 
@@ -174,9 +158,9 @@ Each of these suggested names has an appropriate getter/setter method for conven
 
 ```{r set-as-common-assay}
 msqe <- multiStateQTLExperiment(assays = list(betas=mockBeta, 
-                                              error=mockSE, 
+                                              error=mockError, 
                                               adj.betas=mockBeta*0.5, 
-                                              adj.error=mockSE*0.5),
+                                              adj.error=mockError*0.5),
                                 rowData=DataFrame(feature_id=mock.feature_ids,
                                                   variant_id=mock.variant_ids))
 names(assays(msqe))

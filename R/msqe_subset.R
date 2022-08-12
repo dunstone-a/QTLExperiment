@@ -1,11 +1,10 @@
 #' @title Subsetting and replacing data in multiStateQTLExperiment objects
 #'
 #' @description
-#' An overview of methods to subset a
-#' \linkS4class{multiStateQTLExperiment} object by row and/or column, and to
-#' replace all data for the specified rows and/or columns with another value.
-#' These methods ensure that all data fields remain synchronized when states
-#' or associations are removed.
+#' Includes methods to subset a \linkS4class{multiStateQTLExperiment} object by
+#' row and/or column and methods to replace all data for the specified rows
+#' and/or columns with another value. These methods ensure that all data fields
+#' remain synchronized when states or associations are removed.
 #'
 #' @section Subsetting:
 #' In the following, \code{x} is a \linkS4class{multiStateQTLExperiment} object.
@@ -14,9 +13,9 @@
 #' \item{\code{x[i, j, ..., drop=TRUE]}:}{Returns a multiStateQTLExperiment
 #'  containing the specified rows \code{i} and columns \code{j}, where \code{i}
 #'  and \code{j} can be a logical, integer or character vector of subscripts,
-#'  indicating the rows and columns, respectively, to retain. If either is
-#'  missing, subsetting is only performed in the specified dimension. Arguments
-#'  in \code{...} and \code{drop} are passed to
+#'  indicating the rows and columns, respectively, to retain. If either \code{i}
+#'  or \code{j} is missing, than subsetting is only performed in the specified
+#'  dimension. Arguments in \code{...} and \code{drop} are passed to
 #'  \code{\link{[,SummarizedExperiment-method}}.}
 #'}
 #'
@@ -28,10 +27,10 @@
 #' columns {j} with the corresponding fields in a multiStateQTLExperiment
 #' \code{value}, where \code{i} and \code{j} can be a logical, integer, or
 #' character vector of subscripts, indicating the rows and columns,
-#' respectively, to retain. If either is missing, subsetting is only performed
-#' in the specified dimension. If both are missing, \code{x} is replaced
-#' entirely with \code{value}. Arguments in \code{...} are passed to the
-#' corresponding \linkS4class{SummarizedExperiment} method.}
+#' respectively, to retain. If either \code{i} or \code{j} is missing, than
+#' subsetting is only performed in the specified dimension. If both are missing,
+#' \code{x} is replaced entirely with \code{value}. Arguments in \code{...} are
+#' passed to the corresponding \linkS4class{SummarizedExperiment} method.}
 #' }
 #'
 #' @author

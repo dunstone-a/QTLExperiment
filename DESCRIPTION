@@ -9,8 +9,7 @@ Maintainer: Davis McCarthy <dmccarthy@svi.edu.au>
 License: GPL (>= 2)
 Encoding: UTF-8
 Depends: 
-    SummarizedExperiment,
-    data.table
+    SummarizedExperiment
 Imports: 
     methods,
     rlang,
@@ -19,20 +18,18 @@ Imports:
     collapse,
     vroom,
     tidyr,
+    tibble,
     utils,
     stats,
     ashr,
     S4Vectors,
-    BiocGenerics,
-    GenomicRanges,
-    DelayedArray,
-    BiocParallel
+    BiocGenerics
 Suggests: 
     testthat,
     BiocStyle, 
     knitr, 
     rmarkdown
-Description: Defines a S4 class for storing data from multiple QTL mapping 
+Description: Defines a S4 class for storing summary statistics from multi-state QTL mapping 
     experiments.
 VignetteBuilder: knitr
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1

@@ -10,11 +10,10 @@
 #'              annotation.
 #' @param feature_id The name/index of the column with the feature_id info.
 #' @param variant_id The name/index of the column with the variant_id info.
-#' @param beta The name/index of the column with the effect size/beta value.
+#' @param betas The name/index of the column with the effect size/beta value.
 #' @param error The name/index of the column with the effect size/beta standard
 #'           error value.
 #' @param pval The name/index of the column with the significance score.
-#' @param na.rm Logical. To remove QTL tests with missing data for any state.
 #' @param n_max Max number of rows to read per file. This is primarily used
 #'              for testing purposes.
 #' @param verbose logical. Whether to print progress messages.
@@ -24,18 +23,21 @@
 #'
 #' @export
 #' @importFrom vroom vroom
-#' @importFrom collapse ftransform fselect fsubset na_omit
-#' @importFrom tidyr pivot_wider
+#' @importFrom collapse ftransform fselect fsubset na_omit fmutate qDF
+#' @importFrom tidyr pivot_wider all_of
 #' @importFrom dplyr left_join %>%
 #' @importFrom tibble column_to_rownames
 #' @importFrom SummarizedExperiment assay
+#' @importFrom rlang .data
 #'
 summaryStats_2_msqe <- function(input, feature_id = "gene_id",
                                 variant_id = "variant_pos", betas = "slope",
                                 error = "slope_se", pval = "pval_perm",
-                                na.rm = FALSE, n_max=Inf, verbose = TRUE){
+                                n_max=Inf, verbose = TRUE){
 
-  if(class(input)=="list"){
+  path <- state <- id <- NULL
+
+  if(is.list(input)){
     input <- data.frame(list(state=names(input), path=unlist(unname(input))))
   } else if (!all(c("state", "path") %in% colnames(input))){
     error("input a named array or a df with columns `state` and `path`")
@@ -45,19 +47,21 @@ summaryStats_2_msqe <- function(input, feature_id = "gene_id",
 
   if(is.null(pval)){
     data <- vroom(input$path, id="path", show_col_types = FALSE,
-                col_select=list(path, feature_id = all_of(feature_id),
-                                variant_id = all_of(variant_id),
-                                betas = all_of(betas),
-                                error = all_of(error)),
-                progress = verbose, n_max = n_max)
+                  n_max = n_max,
+                  col_select=list(path, feature_id = all_of(feature_id),
+                                  variant_id = all_of(variant_id),
+                                  betas = all_of(betas),
+                                  error = all_of(error)),
+                  progress = verbose)
   } else{
     data <- vroom(input$path, id="path", show_col_types = FALSE,
+                  n_max = n_max,
                   col_select=list(path, feature_id = all_of(feature_id),
                                   variant_id = all_of(variant_id),
                                   betas = all_of(betas),
                                   error = all_of(error),
                                   pval = all_of(pval)),
-                  progress = verbose, n_max = n_max)
+                  progress = verbose)
   }
 
   data <- data %>% left_join(input, "path") %>%
@@ -85,8 +89,6 @@ summaryStats_2_msqe <- function(input, feature_id = "gene_id",
 
     assay(msqe, "pval") <- pval
   }
-
-  if(na.rm) { msqe <- subsetComplete(msqe, 1, verbose) }
 
   return(msqe)
 
