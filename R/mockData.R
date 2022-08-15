@@ -11,23 +11,24 @@
 mockMSQE <- function(nStates = 10, nQTL = 100, seed=NULL){
   set.seed(seed)
 
+
+  feature_ids <- sample(c("geneA", "geneB", "geneC"), nQTL, replace=TRUE)
+  variant_ids <- paste0("snp", sample(seq(1e3:1e5), nQTL))
+  state_ids <- paste0("state", seq(1, nStates))
+
+
   betas <- mockBeta(nStates=nStates, nQTL=nQTL, seed=seed)
   error <- mockError(nStates=nStates, nQTL=nQTL, seed=seed)
   pval <- mockPval(nStates=nStates, nQTL=nQTL, seed=seed)
-  feature_ids <- sample(c("geneA", "geneB", "geneC"), nQTL, replace=TRUE)
-  var_ids <- paste0("snp", sample(seq(1e3:1e5), nQTL))
   pca <- prcomp(t(betas), rank=5)
 
   msqe <- multiStateQTLExperiment(assay = list(betas=betas, error=error, pval=pval),
-                                  rowData=DataFrame(feature_id=feature_ids,
-                                                    variant_id=var_ids),
-                                  reducedDims=list(PCA=pca$x))
+                                  feature_id = feature_ids,
+                                  variant_id = variant_ids,
+                                  state_id = state_ids,
+                                  reducedDims = list("pca"=pca))
 
-  rownames(msqe) <- paste(rowData(msqe)$feature_id, rowData(msqe)$variant_id, sep="|")
-
-  colData(msqe) <- DataFrame(state=paste0("state", seq(1, nStates)),
-                             sample_size=sample(seq(60,120), ncol(msqe)))
-  colnames(msqe) <- msqe$state
+  colData(msqe)$sample_size <- sample(seq(60,120), ncol(msqe))
   mainExpName(msqe) <- "mock-example"
 
   msqe

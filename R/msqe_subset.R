@@ -87,7 +87,9 @@ setMethod("[", c("multiStateQTLExperiment", "ANY", "ANY"), function(x, i, j, ...
 #' @export
 #' @importClassesFrom SummarizedExperiment SummarizedExperiment
 #' @importFrom SummarizedExperiment rowData colData
-setMethod("[<-", c("multiStateQTLExperiment", "ANY", "ANY", "multiStateQTLExperiment"), function(x, i, j, ..., value) {
+setMethod("[<-", c("multiStateQTLExperiment", "ANY", "ANY",
+                   "multiStateQTLExperiment"), function(x, i, j, ..., value) {
+
   x <- updateObject(x)
   value <- updateObject(value)
   if (missing(i) && missing(j)) {

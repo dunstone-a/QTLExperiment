@@ -123,8 +123,8 @@ setMethod("rbind", "multiStateQTLExperiment", function(..., deparse.level=1) {
   int_colD <- colData(combined)
 
   BiocGenerics:::replaceSlots(out, int_colData=int_colD,
-               int_rowData=int_eleMetaD,
-               int_metadata=int_meta, check=FALSE)
+                              int_rowData=int_eleMetaD,
+                              int_metadata=int_meta, check=FALSE)
 })
 
 #' @importFrom SummarizedExperiment SummarizedExperiment

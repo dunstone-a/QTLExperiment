@@ -65,13 +65,15 @@
 #' @importFrom SummarizedExperiment SummarizedExperiment rowData colData assays
 #' @importClassesFrom SummarizedExperiment RangedSummarizedExperiment
 #'
-multiStateQTLExperiment <- function(..., reducedDims=list()) {
+multiStateQTLExperiment <- function(..., state_id, feature_id, variant_id,
+                                    reducedDims=list()) {
 
   se <- SummarizedExperiment(...)
   if(!is(se, "RangedSummarizedExperiment")) {
     se <- as(se, "RangedSummarizedExperiment")
   }
-  .rse_to_msqe(se, reducedDims=reducedDims)
+  .rse_to_msqe(se, state_id = state_id, feature_id = feature_id,
+               variant_id = variant_id, reducedDims = reducedDims)
 }
 
 
@@ -86,11 +88,11 @@ setValidity("multiStateQTLExperiment", function(object) {
   checks <- c(betas = ifelse("betas" %in% assay_names,
                               TRUE, "assay needed"),
               error = ifelse("error" %in% assay_names,
-                             TRUE, "assay needed"),
-              feature_id = ifelse("feature_id" %in% row_data_names,
-                                  TRUE, "needed in rowData"),
-              variant_id = ifelse("variant_id" %in% row_data_names,
-                                  TRUE, "needed in rowData"))
+                             TRUE, "assay needed")) #,
+              #feature_id = ifelse("feature_id" %in% row_data_names,
+              #                    TRUE, "needed in rowData"),
+              #variant_id = ifelse("variant_id" %in% row_data_names,
+              #                    TRUE, "needed in rowData"))
 
 
   if (all(checks == TRUE)) {
@@ -117,8 +119,7 @@ setValidity("multiStateQTLExperiment", function(object) {
 #' @importClassesFrom S4Vectors DataFrame
 #' @importFrom methods new
 #' @importFrom BiocGenerics nrow ncol
-.rse_to_msqe <- function(rse,
-                         reducedDims=list()) {
+.rse_to_msqe <- function(rse, state_id, feature_id, variant_id, reducedDims) {
 
   old <- S4Vectors:::disableValidity()
   if (!isTRUE(old)) {
@@ -126,10 +127,10 @@ setValidity("multiStateQTLExperiment", function(object) {
     on.exit(S4Vectors:::disableValidity(old))
   }
 
-  out <- new("multiStateQTLExperiment",
-             rse,
-             int_rowData=new("DFrame", nrows=nrow(rse)),
-             int_colData=new("DFrame", nrows=ncol(rse)))
+  out <- new("multiStateQTLExperiment", rse,
+             int_rowData=DataFrame(feature_id = feature_id,
+                                   variant_id = variant_id),
+             int_colData=DataFrame(state_id = state_id))
 
   reducedDims(out) <- reducedDims
 

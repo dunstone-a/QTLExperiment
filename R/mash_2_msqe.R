@@ -1,6 +1,6 @@
 #' @title Coercing mash data objects into MSQE objects
 #'
-#' @param data A mashr object output from mashr::mash_set_data or mashr::mash.
+#' @param data A mashr object output from mash_set_data() or mash() from mashr.
 #' @param sep String separating the feature_id from the variant_id in the row.names of the mashr object
 #' @param rowData if feature_id and variant_id are not in the row.names, a rowData matrix can be provided with this information.
 #' @param verbose Logical.
@@ -32,7 +32,9 @@ mash_2_msqe <- function(data, sep=NULL, rowData=NULL, verbose=FALSE) {
                         length(unique(rowData$feature_id)))}
   }
 
-  msqe <- multiStateQTLExperiment(assay=assay_list, rowData=rowData)
+  msqe <- multiStateQTLExperiment(assay=assay_list,
+                                  rowData=rowData,
+                                  int_rowData=rowData)
 
   return(msqe)
 }

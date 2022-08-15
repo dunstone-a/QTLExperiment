@@ -4,10 +4,10 @@
 
 nTests <- 500
 nStates <- 5
-simdata <- mashr::simple_sims(nTests, nStates, 1)
-data <- mashr::mash_set_data(simdata$Bhat, simdata$Shat)
-U.c <- mashr::cov_canonical(data)
-m.c <- mashr::mash(data, U.c)
+simdata <- simple_sims(nTests, nStates, 1)
+data <- mash_set_data(simdata$Bhat, simdata$Shat)
+U.c <- cov_canonical(data)
+m.c <- mash(data, U.c)
 simRowData <- DataFrame(list(feature_id = paste0("F", 1:nTests),
                              variant_id = sample(1:1e10, nTests)))
 

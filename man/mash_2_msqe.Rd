@@ -13,7 +13,7 @@ mash_2_msqe(data, sep = NULL, rowData = NULL, verbose = FALSE)
 .mashFit_2_msqe(data)
 }
 \arguments{
-\item{data}{A mashr object output from mashr::mash_set_data or mashr::mash.}
+\item{data}{A mashr object output from mash_set_data() or mash() from mashr.}
 
 \item{sep}{String separating the feature_id from the variant_id in the row.names of the mashr object}
 

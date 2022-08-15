@@ -80,7 +80,7 @@ summaryStats_2_msqe <- function(input, feature_id = "gene_id",
                             variant_id = gsub(".*\\|", "", row.names(betas))))
 
   msqe <- multiStateQTLExperiment(list(betas = betas, error = error),
-                                  rowData=rowData)
+                                  rowData=rowData, int_rowData=rowData)
 
   if(!is.null(pval)){
     pval <- data %>% pivot_wider(names_from = state, values_from = pval,
