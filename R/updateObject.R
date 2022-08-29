@@ -1,16 +1,16 @@
-#' Update a multiStateQTLExperiment object
+#' Update a QTLExperiment object
 #'
-#' Update \linkS4class{multiStateQTLExperiment} objects to the latest version of
+#' Update \linkS4class{QTLExperiment} objects to the latest version of
 #' the class structure. This is usually called by internal methods rather than
 #' by users or downstream packages.
 #'
-#' @param object A old \linkS4class{multiStateQTLExperiment} object.
+#' @param object A old \linkS4class{QTLExperiment} object.
 #' @param ... Additional arguments that are ignored.
 #' @param verbose Logical scalar indicating whether a message should be emitted
 #'        as the object is updated.
 #'
 #' @details
-#' This function updates the multiStateQTLExperiment to match changes in the
+#' This function updates the QTLExperiment to match changes in the
 #' internal class representation. Changes are as follows:
 #' \itemize{
 #' \item No updates yet.
@@ -26,15 +26,15 @@
 #'
 #' @name updateObject
 #' @export
-#' @aliases updateObject updateObject,multiStateQTLExperiment-method
+#' @aliases updateObject updateObject,QTLExperiment-method
 #' @importFrom BiocGenerics updateObject
 #' @importFrom S4Vectors DataFrame
 #' @importFrom utils packageVersion
-setMethod("updateObject", "multiStateQTLExperiment",
+setMethod("updateObject", "QTLExperiment",
           function(object, ..., verbose=FALSE) {
   old.ver <- objectVersion(object)
   triggered <- FALSE
-
+  class(old.ver) <- "QTLExperiment"
   old <- S4Vectors:::disableValidity()
   if (!isTRUE(old)) {
     S4Vectors:::disableValidity(TRUE)
@@ -44,14 +44,15 @@ setMethod("updateObject", "multiStateQTLExperiment",
   # Update possibly outdated DataFrame object.
   object@int_colData <- updateObject(object@int_colData, ..., verbose=verbose)
 
+  # Make sure row.names and rowData sync
+  object <- .sync_qtle_ids(object)
 
   if (verbose && triggered) {
     message("[updateObject] ", class(object)[1], " object uses ",
-            "internal representation\n", "[updateObject] from multiStateQTLExperiment ",
+            "internal representation\n", "[updateObject] from QTLExperiment ",
             old.ver, ". ", "Updating it ...\n", appendLF = FALSE)
   }
 
-  int_metadata(object)$version <- packageVersion("multiStateQTLExperiment")
-  #int_metadata(object)$version <- "testing.object.update"
+  int_metadata(object)$version <- packageVersion("QTLExperiment")
   callNextMethod()
 })

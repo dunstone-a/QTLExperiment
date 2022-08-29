@@ -7,27 +7,17 @@ setGeneric("feature_id", function(object, ...) standardGeneric("feature_id"))
 #' @export
 setGeneric("feature_id<-", function(object, ..., value) standardGeneric("feature_id<-"))
 
+#' @export
+setGeneric("variant_id", function(object, ...) standardGeneric("variant_id"))
 
-########################################
-# Getter/setters for reducedDim.
-#'
-#' #' @export
-#' setGeneric("reducedDim", function(x, type, ...) standardGeneric("reducedDim"))
-#'
-#' #' @export
-#' setGeneric("reducedDim<-", function(x, type, withDimnames=TRUE, ..., value) standardGeneric("reducedDim<-"))
-#'
-#' #' @export
-#' setGeneric("reducedDimNames", function(x) standardGeneric("reducedDimNames"))
-#'
-#' #' @export
-#' setGeneric("reducedDimNames<-", function(x, value) standardGeneric("reducedDimNames<-"))
-#'
-#' #' @export
-#' setGeneric("reducedDims", function(x, ...) standardGeneric("reducedDims"))
-#'
-#' #' @export
-#' setGeneric("reducedDims<-", function(x, withDimnames=TRUE, ..., value) standardGeneric("reducedDims<-"))
+#' @export
+setGeneric("variant_id<-", function(object, ..., value) standardGeneric("variant_id<-"))
+
+#' @export
+setGeneric("state_id", function(object, ...) standardGeneric("state_id"))
+
+#' @export
+setGeneric("state_id<-", function(object, ..., value) standardGeneric("state_id<-"))
 
 ########################################
 # Hidden getter/setters for internal slots.

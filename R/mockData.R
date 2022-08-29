@@ -1,4 +1,4 @@
-#' Mock MSQE object
+#' Mock QTLe object
 #'
 #' @param nStates Number of states
 #' @param nQTL Number of QTL associations
@@ -8,7 +8,7 @@
 #' @export
 #' @importFrom stats prcomp
 
-mockMSQE <- function(nStates = 10, nQTL = 100, seed=NULL){
+mockQTLe <- function(nStates = 10, nQTL = 100, seed=NULL){
   set.seed(seed)
 
 
@@ -16,22 +16,19 @@ mockMSQE <- function(nStates = 10, nQTL = 100, seed=NULL){
   variant_ids <- paste0("snp", sample(seq(1e3:1e5), nQTL))
   state_ids <- paste0("state", seq(1, nStates))
 
-
   betas <- mockBeta(nStates=nStates, nQTL=nQTL, seed=seed)
   error <- mockError(nStates=nStates, nQTL=nQTL, seed=seed)
   pval <- mockPval(nStates=nStates, nQTL=nQTL, seed=seed)
-  pca <- prcomp(t(betas), rank=5)
 
-  msqe <- multiStateQTLExperiment(assay = list(betas=betas, error=error, pval=pval),
+  object <- QTLExperiment(assay = list(betas=betas, error=error, pval=pval),
                                   feature_id = feature_ids,
                                   variant_id = variant_ids,
-                                  state_id = state_ids,
-                                  reducedDims = list("pca"=pca))
+                                  state_id = state_ids)
 
-  colData(msqe)$sample_size <- sample(seq(60,120), ncol(msqe))
-  mainExpName(msqe) <- "mock-example"
+  colData(object)$sample_size <- sample(seq(60,120), ncol(object))
+  mainExpName(object) <- "mock-example"
 
-  msqe
+  object
 }
 
 
