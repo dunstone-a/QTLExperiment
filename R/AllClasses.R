@@ -1,3 +1,9 @@
+#' An S4 class to represent QTL summary statistics.
+#'
+#' @slot int_rowData A DataFrame containing at minimum feature_id and variant_id information
+#' @slot int_colData A DataFrame containing at minimum state_id information
+#' @slot int_metadata A list of additional metadata items to store
+#'
 #' @export
 #' @rdname QTLExperiment
 #' @importFrom utils packageVersion

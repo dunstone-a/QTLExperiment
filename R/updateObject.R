@@ -33,6 +33,7 @@
 setMethod("updateObject", "QTLExperiment",
           function(object, ..., verbose=FALSE) {
   old.ver <- objectVersion(object)
+
   triggered <- FALSE
   class(old.ver) <- "QTLExperiment"
   old <- S4Vectors:::disableValidity()
@@ -43,9 +44,6 @@ setMethod("updateObject", "QTLExperiment",
 
   # Update possibly outdated DataFrame object.
   object@int_colData <- updateObject(object@int_colData, ..., verbose=verbose)
-
-  # Make sure row.names and rowData sync
-  object <- .sync_qtle_ids(object)
 
   if (verbose && triggered) {
     message("[updateObject] ", class(object)[1], " object uses ",

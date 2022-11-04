@@ -52,11 +52,6 @@ setGeneric("mainExpName", function(x) standardGeneric("mainExpName"))
 #' @export
 setGeneric("mainExpName<-", function(x, value) standardGeneric("mainExpName<-"))
 
-#' @export
-setGeneric("colLabels", function(x, ...) standardGeneric("colLabels"))
-
-#' @export
-setGeneric("colLabels<-", function(x, ..., value) standardGeneric("colLabels<-"))
 
 
 ########################################

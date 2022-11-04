@@ -3,9 +3,9 @@
 #'
 #' @description
 #' Methods to get or set internal fields from the QTLExperiment class.
-#' These functions are intended for package developers who want to add protected
-#' fields to a QTLExperiment. They should \emph{not} be used by
-#' ordinary users of the \pkg{QTLExperiment} package.
+#' These functions are intended for package developers who want to make changes
+#' or improvements to the object without breaking user code or to add protected
+#' fields to a QTLExperiment. They should \emph{not} be used by general users.
 #'
 #' @section Getters:
 #' Here \code{x} is a \linkS4class{QTLExperiment}.
@@ -89,9 +89,15 @@
 #' parallel_slot_names,QTLExperiment-method
 #'
 #' @examples
-#' qtle <- mockQTLe()
+#' qtle <- mockQTLE()
 #' int_metadata(qtle)$whee <- 1
 NULL
+
+
+########################################
+### Defining methods for int_rowData ###
+########################################
+
 
 #' @export
 setMethod("int_rowData", "QTLExperiment", function(x) x@int_rowData)
@@ -103,10 +109,36 @@ setReplaceMethod("int_rowData", "QTLExperiment", function(x, value) {
 })
 
 #' @export
+#' @importFrom S4Vectors mcols
+#' @importFrom SummarizedExperiment rowData
+setMethod("rowData", "QTLExperiment", function(x, ..., internal=FALSE) {
+  if (internal) {
+    cn <- colnames(mcols(x))
+    conflict <- cn %in% colnames(int_rowData(x))
+    if (any(conflict)) {
+      cn <- cn[conflict]
+      if (length(cn) > 2) {
+        cn <- c(cn[seq(2)], "...")
+      }
+      warning("overlapping names in internal and external rowData (",
+              paste(cn, collapse = ", "), ")")
+    }
+    cbind(callNextMethod(x, ...), int_rowData(x))
+  } else {
+    callNextMethod(x, ...)
+  }
+})
+
+#' @export
 #' @importFrom S4Vectors parallel_slot_names
 setMethod("parallel_slot_names", "QTLExperiment", function(x) {
-    c("int_rowData", callNextMethod())
+  c("int_rowData", callNextMethod())
 })
+
+
+########################################
+### Defining methods for int_colData ###
+########################################
 
 #' @export
 setMethod("int_colData", "QTLExperiment", function(x) x@int_colData)
@@ -114,15 +146,6 @@ setMethod("int_colData", "QTLExperiment", function(x) x@int_colData)
 #' @export
 setReplaceMethod("int_colData", "QTLExperiment", function(x, value) {
     x@int_colData <- value
-    return(x)
-})
-
-#' @export
-setMethod("int_metadata", "QTLExperiment", function(x) x@int_metadata)
-
-#' @export
-setReplaceMethod("int_metadata", "QTLExperiment", function(x, value) {
-    x@int_metadata <- value
     return(x)
 })
 
@@ -135,9 +158,10 @@ setMethod("colData", "QTLExperiment", function(x, ..., internal=FALSE) {
         if (any(conflict)) {
             cn <- cn[conflict]
             if (length(cn) > 2) {
-                cn <- c(cn[seq_len(2)], "...")
+                cn <- c(cn[seq(2)], "...")
             }
-            warning("overlapping names in internal and external colData (", paste(cn, collapse = ", "), ")")
+            warning("overlapping names in internal and external colData (",
+                    paste(cn, collapse = ", "), ")")
         }
         cbind(callNextMethod(x, ...), int_colData(x))
     } else {
@@ -145,25 +169,20 @@ setMethod("colData", "QTLExperiment", function(x, ..., internal=FALSE) {
   }
 })
 
+
+#########################################
+### Defining methods for int_metadata ###
+#########################################
+
 #' @export
-#' @importFrom S4Vectors mcols
-#' @importFrom SummarizedExperiment rowData
-setMethod("rowData", "QTLExperiment", function(x, ..., internal=FALSE) {
-    if (internal) {
-        cn <- colnames(mcols(x))
-        conflict <- cn %in% colnames(int_rowData(x))
-        if (any(conflict)) {
-            cn <- cn[conflict]
-            if (length(cn) > 2) {
-                cn <- c(cn[seq_len(2)], "...")
-            }
-            warning("overlapping names in internal and external rowData (", paste(cn, collapse = ", "), ")")
-        }
-        cbind(callNextMethod(x, ...), int_rowData(x))
-    } else {
-        callNextMethod(x, ...)
-    }
+setMethod("int_metadata", "QTLExperiment", function(x) x@int_metadata)
+
+#' @export
+setReplaceMethod("int_metadata", "QTLExperiment", function(x, value) {
+  x@int_metadata <- value
+  return(x)
 })
+
 
 ##################################################
 ### Defining getters/setters for the internals ###
@@ -197,8 +216,11 @@ setMethod("rowData", "QTLExperiment", function(x, ..., internal=FALSE) {
                 " equal to '", xdimstr, "(x)'")
         }
 
-        names(value) <- .clean_internal_names(names(value), N=length(value), msg="names(value)")
-        collected <- do.call(DataFrame, c(lapply(value, I), list(row.names=NULL, check.names=FALSE)))
+        names(value) <- .clean_internal_names(names(value), N=length(value),
+                                              msg="names(value)")
+        collected <- do.call(DataFrame, c(lapply(value, I),
+                                          list(row.names=NULL,
+                                               check.names=FALSE)))
 
         if (is(original, "Annotated")) {
             metadata(collected) <- metadata(original)
@@ -216,10 +238,10 @@ setMethod("rowData", "QTLExperiment", function(x, ..., internal=FALSE) {
 .clean_internal_names <- function(names, N, msg) {
     if (is.null(names) && N > 0) {
         warning("'", msg, "' is NULL, replacing with 'unnamed'")
-        names <- paste0(.unnamed, seq_len(N))
+        names <- paste0(.unnamed, seq(N))
     } else if (any(empty <- names=="")) {
         warning("'", msg, "' contains empty strings, replacing with 'unnamed'")
-        names[empty] <- paste0(.unnamed, seq_along(sum(empty)))
+        names[empty] <- paste0(.unnamed, seq(sum(empty)))
     }
     names
 }

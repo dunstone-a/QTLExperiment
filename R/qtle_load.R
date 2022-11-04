@@ -32,7 +32,7 @@
 #'
 summaryStats_2_qtle <- function(input, feature_id = "gene_id",
                                 variant_id = "variant_pos", betas = "slope",
-                                error = "slope_se", pval = "pval_perm",
+                                error = "slope_se", pval = NULL,
                                 n_max=Inf, verbose = TRUE){
 
   path <- state <- id <- NULL
@@ -40,10 +40,14 @@ summaryStats_2_qtle <- function(input, feature_id = "gene_id",
   if(is.list(input)){
     input <- data.frame(list(state=names(input), path=unlist(unname(input))))
   } else if (!all(c("state", "path") %in% colnames(input))){
-    error("input a named array or a df with columns `state` and `path`")
+    warning("input a named array or a df with columns `state` and `path`")
   }
 
   input <- .absent_file_action(input, onAbsence="warn")
+
+  if(any(endsWith(input$path, '.gz'))){
+    warning("vroom will not load all rows in a compressed file.")
+  }
 
   if(is.null(pval)){
     data <- vroom(input$path, id="path", show_col_types = FALSE,
@@ -77,8 +81,8 @@ summaryStats_2_qtle <- function(input, feature_id = "gene_id",
     tibble::column_to_rownames(var = "id") %>% qDF()
 
   object <- QTLExperiment(list(betas = betas, error = error),
-                                  feature_id = gsub("\\|.*", "", row.names(betas)),
-                                  variant_id = gsub(".*\\|", "", row.names(betas)))
+                          feature_id = gsub("\\|.*", "", row.names(betas)),
+                          variant_id = gsub(".*\\|", "", row.names(betas)))
 
   if(!is.null(pval)){
     pval <- data %>% pivot_wider(names_from = state, values_from = pval,

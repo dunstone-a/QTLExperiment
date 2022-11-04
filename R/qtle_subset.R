@@ -37,14 +37,11 @@
 #' Christina B Azodi
 #'
 #' @examples
-#' qtle <- mockQTLe()
+#' qtle <- mockQTLE()
 #'
 #' # Subsetting:
 #' qtle[1:10,]
 #' qtle[,1:5]
-#'
-#' qtle2 <- qtle
-#' qtle2[1:10,] <- qtle[11:20,]
 #'
 #' # Can also use subset()
 #' qtle$WHEE <- sample(c("A", "B", "C"), ncol(qtle), replace=TRUE)
@@ -122,7 +119,8 @@ setMethod("[<-", c("QTLExperiment", "ANY", "ANY",
     })
     int_colData(x) <- left
   }
-
+  x <- recover_qtle_ids(x)
   int_metadata(x) <- int_metadata(value)
+  validObject(x)
   callNextMethod()
 })

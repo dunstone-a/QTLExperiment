@@ -2,13 +2,13 @@
 % Please edit documentation in R/updateObject.R
 \name{updateObject}
 \alias{updateObject}
-\alias{updateObject,multiStateQTLExperiment-method}
-\title{Update a multiStateQTLExperiment object}
+\alias{updateObject,QTLExperiment-method}
+\title{Update a QTLExperiment object}
 \usage{
-\S4method{updateObject}{multiStateQTLExperiment}(object, ..., verbose = FALSE)
+\S4method{updateObject}{QTLExperiment}(object, ..., verbose = FALSE)
 }
 \arguments{
-\item{object}{A old \linkS4class{multiStateQTLExperiment} object.}
+\item{object}{A old \linkS4class{QTLExperiment} object.}
 
 \item{...}{Additional arguments that are ignored.}
 
@@ -19,12 +19,12 @@ as the object is updated.}
 An updated version of \code{object}.
 }
 \description{
-Update \linkS4class{multiStateQTLExperiment} objects to the latest version of
+Update \linkS4class{QTLExperiment} objects to the latest version of
 the class structure. This is usually called by internal methods rather than
 by users or downstream packages.
 }
 \details{
-This function updates the multiStateQTLExperiment to match changes in the
+This function updates the QTLExperiment to match changes in the
 internal class representation. Changes are as follows:
 \itemize{
 \item No updates yet.

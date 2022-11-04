@@ -1,90 +1,67 @@
 # Checks the row-wise combining methods.
-# library(multiStateQTLExperiment); library(testthat)
-# source("setup.R"); source("test-msqe-combine-rows.R")
+# library(QTLExperiment); library(testthat)
+# source("setup.R"); source("test-qtle-combine-rows.R")
 
-msqe <- mockMSQE()
+qtle <- mockQTLE()
 
 test_that("rbind works correctly in the basic case", {
-  shuffled <- sample(nrow(msqe))
-  msqe.alt <- msqe[shuffled,]
+  shuffled <- sample(nrow(qtle))
+  qtle.alt <- qtle[shuffled,]
+  feature_id(qtle.alt) <- paste0(feature_id(qtle.alt), "_alt")
 
-  msqe2 <- rbind(msqe, msqe.alt)
-  expect_equivalent(assay(msqe2), rbind(assay(msqe), assay(msqe.alt)))
-  expect_identical(colData(msqe2), colData(msqe))
-
-  expect_identical(reducedDim(msqe2, "PCA"),
-                   reducedDim(msqe, "PCA"),
-                   reducedDim(msqe.alt, "PCA"))
+  qtle2 <- rbind(qtle, qtle.alt)
+  expect_equivalent(assay(qtle2), rbind(assay(qtle), assay(qtle.alt)))
+  expect_identical(colData(qtle2), colData(qtle))
 })
 
 
 test_that("rbind gives correct error messages in the basic case", {
-  msqe.alt <- msqe
-  msqe.alt <- msqe[, 1:8]
-  expect_error(rbind(msqe, msqe.alt),
+  qtle.alt <- qtle
+  qtle.alt <- qtle[, 1:8]
+  feature_id(qtle.alt) <- paste0(feature_id(qtle.alt), "_alt")
+  expect_error(rbind(qtle, qtle.alt),
                "'...' objects must have the same colnames")
 })
 
 
 test_that("rbind respects the colData and gives proper error messages", {
-  msqe2 <- msqe
-  colData(msqe2)$X <- runif(ncol(msqe2))
-  msqe3 <- rbind(msqe, msqe2)
-  expect_identical(colData(msqe3)$X, colData(msqe2)$X)
+  qtle2 <- qtle
+  colData(qtle2)$X <- runif(ncol(qtle2))
+  feature_id(qtle2) <- paste0(feature_id(qtle2), "_alt")
+  qtle3 <- rbind(qtle, qtle2)
+  expect_identical(colData(qtle3)$X, colData(qtle2)$X)
 
 
-  colData(msqe3)$X <- runif(ncol(msqe3))
-  expect_error(rbind(msqe2, msqe3),
+  colData(qtle3)$X <- runif(ncol(qtle3))
+  expect_error(rbind(qtle2, qtle3),
                "column(s) 'X' in ‘colData’ are duplicated and the data do not match",
                fixed = TRUE)
 })
 
 
-test_that("rbind respects rowData order", {
-  rowData(msqe) <- cbind(rowData(msqe),
-                                 DataFrame(A=runif(nrow(msqe)),
-                                           B=runif(nrow(msqe))))
-  alpha <- rbind(msqe, msqe)
-  alt.msqe <- msqe
-  rowData(alt.msqe) <- rowData(alt.msqe)[,ncol(rowData(alt.msqe)):1]
-  bravo <- rbind(msqe, alt.msqe)
-  expect_identical(alpha, bravo)
-})
-
-
 test_that("rbind respects the internal fields correctly", {
   # Respects the internal colData.
-  msqe2 <- msqe
-  int_colData(msqe2)$X <- runif(ncol(msqe2))
-  msqe3 <- rbind(msqe, msqe2)
-  expect_identical(int_colData(msqe3)$X, int_colData(msqe2)$X)
-
-  # Respects reordered internal rowData
-  int_rowData(msqe) <- cbind(int_rowData(msqe),
-                                     DataFrame(A=runif(nrow(msqe)),
-                                               B=runif(nrow(msqe))))
-  alpha <- rbind(msqe, msqe)
-  alt.msqe <- msqe
-  int_rowData(alt.msqe) <- int_rowData(alt.msqe)[,ncol(int_rowData(alt.msqe)):1]
-  bravo <- rbind(msqe, alt.msqe)
-  expect_identical(alpha, bravo)
+  qtle2 <- qtle
+  int_colData(qtle2)$X <- runif(ncol(qtle2))
+  feature_id(qtle2) <- paste0(feature_id(qtle2), "_alt")
+  qtle3 <- rbind(qtle, qtle2)
+  expect_identical(int_colData(qtle3)$X, int_colData(qtle2)$X)
 })
 
 
 test_that("rbind handles errors in internal fields correctly", {
   # Throws errors upon mismatch in the internal colData.
-  msqe2 <- msqe
-  int_colData(msqe)$X <- runif(ncol(msqe))
-  int_colData(msqe2)$X <- runif(ncol(msqe2))
-  expect_error(rbind(msqe, msqe2), "'int_colData'")
+  qtle2 <- qtle
+  int_colData(qtle)$X <- runif(ncol(qtle))
+  int_colData(qtle2)$X <- runif(ncol(qtle2))
+  feature_id(qtle2) <- paste0(feature_id(qtle2), "_alt")
+  expect_error(rbind(qtle, qtle2), "'int_colData'")
 
   # Throws errors upon mismatch in the internal rowData.
-  msqe.err <- msqe
-  int_rowData(msqe.err)$X <- "YAY"
-  expect_error(rbind(msqe.err, msqe), "'int_rowData'")
+  qtle.err <- qtle
+  int_rowData(qtle.err)$X <- "YAY"
+  feature_id(qtle.err) <- paste0(feature_id(qtle.err), "_alt")
+  expect_error(rbind(qtle.err, qtle), "'int_rowData'")
 
-  # Don't concatenate names when merging metadata().
-  msqe4 <- rbind(A=msqe, B=msqe)
-  expect_identical(objectVersion(msqe4), objectVersion(msqe))
 })
 

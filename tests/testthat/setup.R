@@ -1,14 +1,19 @@
 # Setting up the options for a mock MultiStateQTLExperiment.
 
 set.seed(42)
-nTests <- 100
+nQTL <- 100
 nStates <- 10
-mock <- mockMSQE()
 
-#########################################
-# Mock reduced dimensions.
+sumstats <- mockSummaryStats(nStates=nStates, nQTL=nQTL, names=TRUE)
+qtle <- QTLExperiment(assay=list(betas=sumstats$betas,
+                                 error=sumstats$errors,
+                                 pval=sumstats$pvalues,
+                                 lfsr=sumstats$pvalues))
 
-d1 <- matrix(rnorm(nStates*4), ncol=4)
-rownames(d1) <- colnames(mock)
-d2 <- matrix(rnorm(nStates*2), ncol=2)
-rownames(d2) <- colnames(mock)
+
+sumstats_noNames <- mockSummaryStats(nStates=nStates, nQTL=nQTL, names=FALSE)
+state_ids <- colnames(sumstats$betas)
+feature_ids <- gsub("\\|.*", "", row.names(sumstats$betas))
+variant_ids <- gsub(".*\\|", "", row.names(sumstats$betas))
+
+mock <- mockQTLE(nStates = nStates, nQTL = nQTL)

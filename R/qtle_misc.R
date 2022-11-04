@@ -26,7 +26,7 @@
 #' and \code{\link{updateObject}} when \code{objectVersion} is used.
 #'
 #' @examples
-#' qtle <- mockQTLe()
+#' qtle <- mockQTLE()
 #' objectVersion(qtle)
 #' mainExpName(qtle)
 #' mainExpName(qtle) <- "test_name"
@@ -39,9 +39,10 @@
 #' objectVersion
 #' objectVersion,QTLExperiment-method
 #' mainExpName
+#' mainExpName
 #' mainExpName,QTLExperiment-method
 #' mainExpName<-
-#' mainExpName<-,QTLExperiment-method
+#' mainExpName<-,QTLExperiment,character_OR_NULL-method
 #'
 NULL
 
@@ -49,7 +50,6 @@ NULL
 setMethod("objectVersion", "QTLExperiment", function(x) {
   int_metadata(x)$version
 })
-
 
 #' @export
 setMethod("mainExpName", "QTLExperiment", function(x) {

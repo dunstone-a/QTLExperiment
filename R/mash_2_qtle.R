@@ -1,11 +1,18 @@
 #' @title Coercing mash data objects into QTLe objects
 #'
+#' @description
+#' Function to coerce a mashr object (class list or mashr) into a QTLe object.
+#'
 #' @param data A mashr object output from mash_set_data() or mash() from mashr.
 #' @param sep String separating the feature_id from the variant_id in the row.names of the mashr object
 #' @param rowData if feature_id and variant_id are not in the row.names, a rowData matrix can be provided with this information.
 #' @param verbose Logical.
 #'
+#' @docType methods
+#' @name QTLe-coerce
 #' @rdname mash_2_qtle
+#'
+#' @author Christina B Azodi
 #'
 #' @importFrom stats rnorm
 #' @importFrom tidyr separate

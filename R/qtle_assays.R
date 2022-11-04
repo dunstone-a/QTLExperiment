@@ -17,22 +17,14 @@
 #' \item{\code{betas(x, ...)}, \code{betas(x, ...) <- value}:}{
 #' Get or set a matrix of raw betas, i.e., QTL effect sizes.
 #' }
-#' \item{\code{se(x, ...)}, \code{se(x, ...) <- value}:}{
+#' \item{\code{error(x, ...)}, \code{error(x, ...) <- value}:}{
 #' Get or set a matrix of raw beta standard errors.
 #' }
-#' \item{\code{sig(x, ...)}, \code{sig(x, ...) <- value}:}{
+#' \item{\code{pval(x, ...)}, \code{pval(x, ...) <- value}:}{
 #' Get or set a matrix of raw significance scores (e.g. pvals, qvals)
 #' }
-#' \item{\code{adj_betas(x, ...)}, \code{adj_betas(x, ...) <- value}:}{
-#' Get or set a matrix of multi-state adjusted betas, i.e., QTL effect sizes
-#' adjusted by mashr.
-#' }
-#' \item{\code{adj_se(x, ...)}, \code{adj_se(x, ...) <- value}:}{
-#' Get or set a matrix of multi-state adjusted beta standard errors.
-#' }
-#' \item{\code{adj_sigl(x, ...)}, \code{adj_sigl(x, ...) <- value}:}{
-#' Get or set a matrix of multi-state adjusted significance scores (e.g. lfsr
-#' output from mashr)
+#' \item{\code{lfsr(x, ...)}, \code{lfsr(x, ...) <- value}:}{
+#' Get or set a matrix of local false sign rates.
 #' }
 #' }
 #'
@@ -43,7 +35,7 @@
 #' \code{\link{assay}} and \code{\link{assay<-}}, for the wrapped methods.
 #'
 #' @examples
-#' qtle <- mockQTLe()
+#' qtle <- mockQTLE()
 #' new_betas <- matrix(rnorm(nrow(qtle)*ncol(qtle)), ncol=ncol(qtle))
 #' row.names(new_betas) <- row.names(qtle)
 #' colnames(new_betas) <- colnames(qtle)

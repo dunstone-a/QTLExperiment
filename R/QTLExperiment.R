@@ -15,9 +15,9 @@
 #' @param variant_id An array of variant IDs the length of nrow(QTLe).
 #'
 #' @details
-#' In this class, rows should represent associations (feature_id:variant_id pairs)
-#' while columns represent states (e.g. tissues). Assays include betas and
-#' error associated with the betas (e.g. standard errors).
+#' In this class, rows should represent associations (feature_id:variant_id
+#' pairs) while columns represent states (e.g. tissues). Assays include betas
+#' and error associated with the betas (e.g. standard errors).
 #' As with any \linkS4class{SummarizedExperiment} derivative,
 #' different information (e.g., test-statistics, significance calls) can be
 #' stored in user defined \code{\link{assay}} slots, and additional row and
@@ -47,14 +47,15 @@
 #' error <- matrix(abs(rnorm(nStates * nQTL)), ncol=nStates)
 #'
 #' qtle <- QTLExperiment(assays=list(betas=betas, error=error),
-#'                                 feature_id = sample(1:10, nQTL, replace=TRUE),
-#'                                 variant_id = sample(seq(1e3:1e5), nQTL))
+#'                       feature_id = sample(1:10, nQTL, replace=TRUE),
+#'                       variant_id = sample(seq(1e3:1e5), nQTL),
+#'                       state_id = LETTERS[1:nStates])
 #' qtle
 #'
 #' ## coercion from SummarizedExperiment
-#' se <- SummarizedExperiment(assays=list(betas=betas, error=error),
-#'                            feature_id = sample(1:10, nQTL, replace=TRUE),
-#'                            variant_id = sample(seq(1e3:1e5), nQTL))
+#' mock_sumstats <- mockSummaryStats(nStates=10, nQTL=100)
+#' se <- SummarizedExperiment(assays=list(betas=mock_sumstats$betas,
+#'                                        error=mock_sumstats$error))
 #' as(se, "QTLExperiment")
 #'
 #' @docType class
@@ -76,45 +77,47 @@ NULL
 #' @importFrom methods is as callNextMethod coerce
 #' @importFrom SummarizedExperiment SummarizedExperiment rowData colData assays
 #' @importClassesFrom SummarizedExperiment RangedSummarizedExperiment
-QTLExperiment <- function(..., state_id=NULL, feature_id=NULL,
-                                    variant_id=NULL) {
+QTLExperiment <- function(..., state_id=NULL, feature_id=NULL, variant_id=NULL){
 
-  se <- SummarizedExperiment(...)
-  if(!is(se, "RangedSummarizedExperiment")) {
-    se <- as(se, "RangedSummarizedExperiment")
+  rse <- SummarizedExperiment(...)
+
+  if(!is(rse, "RangedSummarizedExperiment")) {
+    rse <- as(rse, "RangedSummarizedExperiment")
   }
 
   if(is.null(state_id)){
-    state_id <- colnames(se)
+    rse <- .checkSEcolOrder(rse)
+    state_id <- colnames(rse)
   }
 
-  if(is.null(feature_id)){
-    feature_id <- rowData(se)[[.feat_field]]
+  if(is.null(feature_id) | is.null(variant_id)){
+    rse <- .checkSErowOrder(rse)
+    test_id <- row.names(rse)
+    feature_id <- gsub("\\|.*", "", test_id)
+    variant_id <- gsub(".*\\|", "", test_id)
   }
 
-  if(is.null(variant_id)){
-    variant_id <- rowData(se)[[.var_field]]
-  }
-
-  .rse_to_qtle(se, state_id, feature_id, variant_id)
+  .rse_to_qtle(rse, state_id, feature_id, variant_id)
 }
 
 #' @importFrom checkmate checkInt checkIntegerish checkNumber checkNumeric
-#' @importFrom checkmate checkLogical
-#' checkFlag
+#' @importFrom checkmate checkLogical checkFlag
+#'
 setValidity("QTLExperiment", function(object) {
 
   row_data_names <- names(int_rowData(object))
   assay_names <- names(assays(object))
+  x.rownames <- rownames(object)
+  x.colnames <- colnames(object)
 
   checks <- c(betas = ifelse("betas" %in% assay_names,
-                              TRUE, "assay needed"),
+                             TRUE, "assay needed"),
               error = ifelse("error" %in% assay_names,
-                             TRUE, "assay needed")) #,
-              #feature_id = ifelse("feature_id" %in% row_data_names,
-              #                    TRUE, "needed in rowData"),
-              #variant_id = ifelse("variant_id" %in% row_data_names,
-              #                    TRUE, "needed in rowData"))
+                             TRUE, "assay needed"),
+              test_ids = ifelse(any(duplicated(x.rownames)),
+                                "duplicate feature|variant rows", TRUE),
+              colnames = ifelse(any(duplicated(x.colnames)),
+                                "duplicate state_id columns", TRUE))
 
 
   if (all(checks == TRUE)) {
@@ -140,7 +143,7 @@ setValidity("QTLExperiment", function(object) {
 #' @importClassesFrom S4Vectors DataFrame
 #' @importFrom methods new
 #' @importFrom BiocGenerics nrow ncol
-
+#'
 .rse_to_qtle <- function(rse, state_id, feature_id, variant_id) {
 
   old <- S4Vectors:::disableValidity()
@@ -149,16 +152,16 @@ setValidity("QTLExperiment", function(object) {
     on.exit(S4Vectors:::disableValidity(old))
   }
 
-  colData = DataFrame(state_id)
-  names(colData) <- .state_field
+  colData <- DataFrame(state_id)
+  names(colData) <- paste0(".", .state_field)
 
-  rowData = DataFrame(feature_id, variant_id)
-  names(rowData) <- c(.feat_field, .var_field)
+  rowData <- DataFrame(feature_id, variant_id)
+  names(rowData) <- paste0(".", c(.feat_field, .var_field))
 
   out <- new("QTLExperiment", rse,
              int_colData = colData,
              int_rowData = rowData)
-  out <- .sync_qtle_ids(out)
+  out <- recover_qtle_ids(out)
   out
 
 }
@@ -167,40 +170,33 @@ setValidity("QTLExperiment", function(object) {
 #' @importClassesFrom SummarizedExperiment RangedSummarizedExperiment
 setAs("RangedSummarizedExperiment", "QTLExperiment", function(from) {
 
-    if(any(length(colnames(from)) != ncol(from),
-           ! .feat_field %in% names(rowData(from)),
-           ! .var_field %in% names(rowData(from)))){
-      warning("state_ids need to be provided in the colnames and
-      feature_ids and variant_ids need to be provided in the rowData")
-    }
+  if(! all(grepl("|", rownames(from), fixed=TRUE))) {
+    warning("rse rownames must be in the format feature_id|variant_id...")
+  }
 
-    .rse_to_qtle(from)
+  state_id <- colnames(from)
+  feature_id <- gsub("\\|.*", "", rownames(from))
+  variant_id <- gsub(".*\\|", "", rownames(from))
+
+  .rse_to_qtle(from, state_id = state_id, feature_id = feature_id,
+               variant_id = variant_id)
 })
 
 #' @exportMethod coerce
 #' @importClassesFrom SummarizedExperiment RangedSummarizedExperiment
 setAs("SummarizedExperiment", "QTLExperiment", function(from) {
 
-  if(any(length(colnames(from)) != ncol(from),
-         ! .feat_field %in% names(rowData(from)),
-         ! .var_field %in% names(rowData(from)))){
-      warning("state_ids need to be provided in the colnames and
-      feature_ids and variant_ids need to be provided in the rowData")
+  if(! all(grepl("|", rownames(from), fixed=TRUE))) {
+    warning("se rownames must be in the format feature_id|variant_id...")
   }
 
-  .rse_to_qtle(as(from, "RangedSummarizedExperiment"))
+  state_id <- colnames(from)
+  feature_id <- gsub("\\|.*", "", rownames(from))
+  variant_id <- gsub(".*\\|", "", rownames(from))
+
+  .rse_to_qtle(as(from, "RangedSummarizedExperiment"),
+               state_id = state_id, feature_id = feature_id,
+               variant_id = variant_id)
 })
 
-
-#' @importFrom SummarizedExperiment rowData
-.sync_qtle_ids <- function(x){
-
-  rowData(x)[[.var_field]]  <- int_rowData(x)[[.var_field]]
-  rowData(x)[[.feat_field]]  <- int_rowData(x)[[.feat_field]]
-
-  row.names(x) <- paste(rowData(x)[[.feat_field]],
-                        rowData(x)[[.var_field]], sep="|")
-
-  x
-}
 

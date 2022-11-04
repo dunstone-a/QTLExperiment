@@ -31,11 +31,15 @@
 #' Christina B Azodi
 #'
 #' @examples
-#' qtle <- mockQTLe()
+#' qtle <- mockQTLE()
+#' qtle2 <- qtle
+#' feature_id(qtle2) <- paste0("x", feature_id(qtle2))
+#' rbind(qtle, qtle2)
 #'
-#' # Combining:
-#' rbind(qtle, qtle)
-#' cbind(qtle, qtle)
+#' qtle2 <- qtle
+#' state_id(qtle2) <- paste0("x", state_id(qtle2))
+#' cbind(qtle, qtle2)
+#'
 #'
 #' @docType methods
 #' @aliases
@@ -81,9 +85,11 @@ setMethod("cbind", "QTLExperiment", function(..., deparse.level=1) {
   })
   int_eleMetaD <- rowData(combined)
 
-  BiocGenerics:::replaceSlots(out, int_colData=int_colD,
+  out <- BiocGenerics:::replaceSlots(out, int_colData=int_colD,
                               int_rowData=int_eleMetaD,
                               int_metadata=int_meta, check=FALSE)
+
+  recover_qtle_ids(out)
 })
 
 #' @export
@@ -118,9 +124,11 @@ setMethod("rbind", "QTLExperiment", function(..., deparse.level=1) {
   })
   int_colD <- colData(combined)
 
-  BiocGenerics:::replaceSlots(out, int_colData=int_colD,
+
+  out <- BiocGenerics:::replaceSlots(out, int_colData=int_colD,
                               int_rowData=int_eleMetaD,
                               int_metadata=int_meta, check=FALSE)
+  recover_qtle_ids(out)
 })
 
 #' @importFrom SummarizedExperiment SummarizedExperiment
