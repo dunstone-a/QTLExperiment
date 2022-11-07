@@ -21,8 +21,8 @@ mockQTLE <- function(nStates = 10, nQTL = 100, names=TRUE){
                                names=names)
 
   object <- QTLExperiment(assay = list(betas=sumstats$betas,
-                                       error=sumstats$errors,
-                                       pval=sumstats$pvalues))
+                                       errors=sumstats$errors,
+                                       pvalues=sumstats$pvalues))
 
   colData(object)$sample_size <- sample(seq(60,120), ncol(object))
   mainExpName(object) <- "mock-example"

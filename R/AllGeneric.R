@@ -64,21 +64,21 @@ setGeneric("betas", function(object, ...) standardGeneric("betas"))
 setGeneric("betas<-", function(object, ..., value) standardGeneric("betas<-"))
 
 #' @export
-setGeneric("error", function(object, ...) standardGeneric("error"))
+setGeneric("errors", function(object, ...) standardGeneric("errors"))
 
 #' @export
-setGeneric("error<-", function(object, ..., value) standardGeneric("error<-"))
+setGeneric("errors<-", function(object, ..., value) standardGeneric("errors<-"))
 
 #' @export
-setGeneric("pval", function(object, ...) standardGeneric("pval"))
+setGeneric("pvalues", function(object, ...) standardGeneric("pvalues"))
 
 #' @export
-setGeneric("pval<-", function(object, ..., value) standardGeneric("pval<-"))
+setGeneric("pvalues<-", function(object, ..., value) standardGeneric("pvalues<-"))
 
 #' @export
-setGeneric("lfsr", function(object, ...) standardGeneric("lfsr"))
+setGeneric("lfsrs", function(object, ...) standardGeneric("lfsrs"))
 
 #' @export
-setGeneric("lfsr<-", function(object, ..., value) standardGeneric("lfsr<-"))
+setGeneric("lfsrs<-", function(object, ..., value) standardGeneric("lfsrs<-"))
 
 

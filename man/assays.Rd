@@ -7,18 +7,18 @@
 \alias{betas<-}
 \alias{betas,QTLExperiment-method}
 \alias{betas<-,QTLExperiment-method}
-\alias{error}
-\alias{error<-}
-\alias{error,QTLExperiment-method}
-\alias{error<-,QTLExperiment-method}
-\alias{pval}
-\alias{pval<-}
-\alias{pval,QTLExperiment-method}
-\alias{pval<-,QTLExperiment-method}
-\alias{lfsr}
-\alias{lfsr<-}
-\alias{lfsr,QTLExperiment-method}
-\alias{lfsr<-,QTLExperiment-method}
+\alias{errors}
+\alias{errors<-}
+\alias{errors,QTLExperiment-method}
+\alias{errors<-,QTLExperiment-method}
+\alias{pvalues}
+\alias{pvalues<-}
+\alias{pvalues,QTLExperiment-method}
+\alias{pvalues<-,QTLExperiment-method}
+\alias{lfsrs}
+\alias{lfsrs<-}
+\alias{lfsrs,QTLExperiment-method}
+\alias{lfsrs<-,QTLExperiment-method}
 \title{Named assay getters and setters}
 \description{
 These are methods for getting or setting \code{assay(qtle, i=X, ...)}
@@ -37,13 +37,13 @@ and \code{...} are further arguments passed to \code{\link{assay}}
 \item{\code{betas(x, ...)}, \code{betas(x, ...) <- value}:}{
 Get or set a matrix of raw betas, i.e., QTL effect sizes.
 }
-\item{\code{error(x, ...)}, \code{error(x, ...) <- value}:}{
+\item{\code{errors(x, ...)}, \code{errors(x, ...) <- value}:}{
 Get or set a matrix of raw beta standard errors.
 }
-\item{\code{pval(x, ...)}, \code{pval(x, ...) <- value}:}{
+\item{\code{pvalues(x, ...)}, \code{pvalues(x, ...) <- value}:}{
 Get or set a matrix of raw significance scores (e.g. pvals, qvals)
 }
-\item{\code{lfsr(x, ...)}, \code{lfsr(x, ...) <- value}:}{
+\item{\code{lfsrs(x, ...)}, \code{lfsrs(x, ...) <- value}:}{
 Get or set a matrix of local false sign rates.
 }
 }

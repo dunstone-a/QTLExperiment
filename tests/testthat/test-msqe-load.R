@@ -13,9 +13,9 @@ input_web <- list(lung="http://ftp.ebi.ac.uk/pub/databases/spot/eQTL/sumstats/GT
 
 
 test_that("Test that mash SET data can be coerced to qtle", {
-  web <- summaryStats_2_qtle(input_web, feature_id="molecular_trait_id",
+  web <- sumstats2qtle(input_web, feature_id="molecular_trait_id",
                               variant_id="variant", betas = "beta",
-                              error = "se", pval = "pvalue", n_max=100)
+                              errors = "se", pvalues = "pvalue", n_max=100)
 
   expect_equivalent(class(web), "QTLExperiment")
 })

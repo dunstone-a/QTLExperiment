@@ -11,9 +11,9 @@
 #' @param feature_id The name/index of the column with the feature_id info.
 #' @param variant_id The name/index of the column with the variant_id info.
 #' @param betas The name/index of the column with the effect size/beta value.
-#' @param error The name/index of the column with the effect size/beta standard
+#' @param errors The name/index of the column with the effect size/beta standard
 #'           error value.
-#' @param pval The name/index of the column with the significance score.
+#' @param pvalues The name/index of the column with the significance score.
 #' @param n_max Max number of rows to read per file. This is primarily used
 #'              for testing purposes.
 #' @param verbose logical. Whether to print progress messages.
@@ -30,9 +30,9 @@
 #' @importFrom SummarizedExperiment assay
 #' @importFrom rlang .data
 #'
-summaryStats_2_qtle <- function(input, feature_id = "gene_id",
+sumstats2qtle <- function(input, feature_id = "gene_id",
                                 variant_id = "variant_pos", betas = "slope",
-                                error = "slope_se", pval = NULL,
+                                errors = "slope_se", pvalues = NULL,
                                 n_max=Inf, verbose = TRUE){
 
   path <- state <- id <- NULL
@@ -49,13 +49,13 @@ summaryStats_2_qtle <- function(input, feature_id = "gene_id",
     warning("vroom will not load all rows in a compressed file.")
   }
 
-  if(is.null(pval)){
+  if(is.null(pvalues)){
     data <- vroom(input$path, id="path", show_col_types = FALSE,
                   n_max = n_max,
                   col_select=list(path, feature_id = all_of(feature_id),
                                   variant_id = all_of(variant_id),
                                   betas = all_of(betas),
-                                  error = all_of(error)),
+                                  errors = all_of(pvalues)),
                   progress = verbose)
   } else{
     data <- vroom(input$path, id="path", show_col_types = FALSE,
@@ -63,8 +63,8 @@ summaryStats_2_qtle <- function(input, feature_id = "gene_id",
                   col_select=list(path, feature_id = all_of(feature_id),
                                   variant_id = all_of(variant_id),
                                   betas = all_of(betas),
-                                  error = all_of(error),
-                                  pval = all_of(pval)),
+                                  errors = all_of(errors),
+                                  pvalues = all_of(pvalues)),
                   progress = verbose)
   }
 
@@ -76,20 +76,20 @@ summaryStats_2_qtle <- function(input, feature_id = "gene_id",
                                 id_cols = id) %>%
     tibble::column_to_rownames(var = "id") %>% qDF()
 
-  error <- data %>% pivot_wider(names_from = state, values_from = error,
+  errors <- data %>% pivot_wider(names_from = state, values_from = errors,
                                 id_cols = id) %>%
     tibble::column_to_rownames(var = "id") %>% qDF()
 
-  object <- QTLExperiment(list(betas = betas, error = error),
+  object <- QTLExperiment(list(betas = betas, errors = errors),
                           feature_id = gsub("\\|.*", "", row.names(betas)),
                           variant_id = gsub(".*\\|", "", row.names(betas)))
 
-  if(!is.null(pval)){
-    pval <- data %>% pivot_wider(names_from = state, values_from = pval,
+  if(!is.null(pvalues)){
+    pvalues <- data %>% pivot_wider(names_from = state, values_from = pvalues,
                                  id_cols = id) %>%
       tibble::column_to_rownames(var = "id") %>% qDF()
 
-    assay(object, "pval") <- pval
+    assay(object, "pvalues") <- pvalues
   }
 
   return(object)

@@ -6,9 +6,9 @@ nStates <- 10
 
 sumstats <- mockSummaryStats(nStates=nStates, nQTL=nQTL, names=TRUE)
 qtle <- QTLExperiment(assay=list(betas=sumstats$betas,
-                                 error=sumstats$errors,
-                                 pval=sumstats$pvalues,
-                                 lfsr=sumstats$pvalues))
+                                 errors=sumstats$errors,
+                                 pvalues=sumstats$pvalues,
+                                 lfsrs=sumstats$pvalues))
 
 
 sumstats_noNames <- mockSummaryStats(nStates=nStates, nQTL=nQTL, names=FALSE)

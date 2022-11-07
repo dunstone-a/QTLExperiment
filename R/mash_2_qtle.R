@@ -10,7 +10,7 @@
 #'
 #' @docType methods
 #' @name QTLe-coerce
-#' @rdname mash_2_qtle
+#' @rdname mash2qtle
 #'
 #' @author Christina B Azodi
 #'
@@ -19,7 +19,7 @@
 #' @importFrom rlang .data
 #' @export
 #'
-mash_2_qtle <- function(data, sep=NULL, rowData=NULL, verbose=FALSE) {
+mash2qtle <- function(data, sep=NULL, rowData=NULL, verbose=FALSE) {
 
   if(all(is.null(sep), is.null(rowData))){
     stop("Must specify sep or rowData.")
@@ -47,7 +47,7 @@ mash_2_qtle <- function(data, sep=NULL, rowData=NULL, verbose=FALSE) {
 }
 
 
-#' @rdname mash_2_qtle
+#' @rdname mash2qtle
 #' @importFrom SummarizedExperiment assay assay<-
 #' @importFrom tidyr separate
 #' @export
@@ -55,32 +55,32 @@ mash_2_qtle <- function(data, sep=NULL, rowData=NULL, verbose=FALSE) {
 .mashData_2_qtle <- function(data) {
 
   betas <- as.matrix(data$Bhat)
-  error <- as.matrix(data$Shat)
+  errors <- as.matrix(data$Shat)
 
   assay_list <- list(betas = betas,
-                     error = error)
+                     errors = errors)
 
-  if("pval" %in% names(data)){
-    assay_list[["pval"]] <- as.matrix(data$pval)
+  if("pvalues" %in% names(data)){
+    assay_list[["pvalue"]] <- as.matrix(data$pval)
   }
 
-  if("lfsr" %in% names(data)){
-    assay_list[["lfsr"]] <- as.matrix(data$lfsr)
+  if("lfsrs" %in% names(data)){
+    assay_list[["lfsrs"]] <- as.matrix(data$lfsr)
   }
 
   return(assay_list)
 }
 
-#' @rdname mash_2_qtle
+#' @rdname mash2qtle
 #' @importFrom ashr get_pm get_psd get_lfsr
 #'
 .mashFit_2_qtle <- function(data){
 
-    beta <- as.matrix(get_pm(data))
-    error <- as.matrix(get_psd(data))
-    lfsr <- as.matrix(get_lfsr(data))
+    betas <- as.matrix(get_pm(data))
+    errors <- as.matrix(get_psd(data))
+    lfsrs <- as.matrix(get_lfsr(data))
 
-    assay_list <- list(betas = beta, error = error, lfsr = lfsr)
+    assay_list <- list(betas = betas, errors = errors, lfsrs = lfsrs)
 
     return(assay_list)
 }

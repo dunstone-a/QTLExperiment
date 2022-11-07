@@ -27,7 +27,8 @@ Suggests:
     testthat,
     BiocStyle, 
     knitr, 
-    rmarkdown
+    rmarkdown,
+    covr
 Description: QLTExperiment defines an S4 class for storing and manipulating summary statistics from QTL mapping experiments in one or more states.
 biocViews: FunctionalGenomics, ExperimentData, DataImport, Infrastructure
 VignetteBuilder: knitr

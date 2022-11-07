@@ -17,13 +17,13 @@
 #' \item{\code{betas(x, ...)}, \code{betas(x, ...) <- value}:}{
 #' Get or set a matrix of raw betas, i.e., QTL effect sizes.
 #' }
-#' \item{\code{error(x, ...)}, \code{error(x, ...) <- value}:}{
+#' \item{\code{errors(x, ...)}, \code{errors(x, ...) <- value}:}{
 #' Get or set a matrix of raw beta standard errors.
 #' }
-#' \item{\code{pval(x, ...)}, \code{pval(x, ...) <- value}:}{
+#' \item{\code{pvalues(x, ...)}, \code{pvalues(x, ...) <- value}:}{
 #' Get or set a matrix of raw significance scores (e.g. pvals, qvals)
 #' }
-#' \item{\code{lfsr(x, ...)}, \code{lfsr(x, ...) <- value}:}{
+#' \item{\code{lfsrs(x, ...)}, \code{lfsrs(x, ...) <- value}:}{
 #' Get or set a matrix of local false sign rates.
 #' }
 #' }
@@ -50,18 +50,18 @@
 #' betas<-
 #' betas,QTLExperiment-method
 #' betas<-,QTLExperiment-method
-#' error
-#' error<-
-#' error,QTLExperiment-method
-#' error<-,QTLExperiment-method
-#' pval
-#' pval<-
-#' pval,QTLExperiment-method
-#' pval<-,QTLExperiment-method
-#' lfsr
-#' lfsr<-
-#' lfsr,QTLExperiment-method
-#' lfsr<-,QTLExperiment-method
+#' errors
+#' errors<-
+#' errors,QTLExperiment-method
+#' errors<-,QTLExperiment-method
+#' pvalues
+#' pvalues<-
+#' pvalues,QTLExperiment-method
+#' pvalues<-,QTLExperiment-method
+#' lfsrs
+#' lfsrs<-
+#' lfsrs,QTLExperiment-method
+#' lfsrs<-,QTLExperiment-method
 #'
 NULL
 
@@ -91,20 +91,20 @@ setMethod("betas", "QTLExperiment", GET_FUN("betas"))
 setReplaceMethod("betas", c("QTLExperiment", "ANY"), SET_FUN("betas"))
 
 #' @export
-setMethod("error", "QTLExperiment", GET_FUN("error"))
+setMethod("errors", "QTLExperiment", GET_FUN("errors"))
 
 #' @export
-setReplaceMethod("error", c("QTLExperiment", "ANY"), SET_FUN("error"))
+setReplaceMethod("errors", c("QTLExperiment", "ANY"), SET_FUN("errors"))
 
 #' @export
-setMethod("pval", "QTLExperiment", GET_FUN("pval"))
+setMethod("pvalues", "QTLExperiment", GET_FUN("pvalues"))
 
 #' @export
-setReplaceMethod("pval", c("QTLExperiment", "ANY"), SET_FUN("pval"))
+setReplaceMethod("pvalues", c("QTLExperiment", "ANY"), SET_FUN("pvalues"))
 
 #' @export
-setMethod("lfsr", "QTLExperiment", GET_FUN("lfsr"))
+setMethod("lfsrs", "QTLExperiment", GET_FUN("lfsrs"))
 
 #' @export
-setReplaceMethod("lfsr", c("QTLExperiment", "ANY"), SET_FUN("lfsr"))
+setReplaceMethod("lfsrs", c("QTLExperiment", "ANY"), SET_FUN("lfsrs"))
 

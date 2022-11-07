@@ -46,7 +46,7 @@
 #' betas <- matrix(rnorm(nStates * nQTL), ncol=nStates)
 #' error <- matrix(abs(rnorm(nStates * nQTL)), ncol=nStates)
 #'
-#' qtle <- QTLExperiment(assays=list(betas=betas, error=error),
+#' qtle <- QTLExperiment(assays=list(betas=betas, errors=error),
 #'                       feature_id = sample(1:10, nQTL, replace=TRUE),
 #'                       variant_id = sample(seq(1e3:1e5), nQTL),
 #'                       state_id = LETTERS[1:nStates])
@@ -55,7 +55,7 @@
 #' ## coercion from SummarizedExperiment
 #' mock_sumstats <- mockSummaryStats(nStates=10, nQTL=100)
 #' se <- SummarizedExperiment(assays=list(betas=mock_sumstats$betas,
-#'                                        error=mock_sumstats$error))
+#'                                        errors=mock_sumstats$error))
 #' as(se, "QTLExperiment")
 #'
 #' @docType class
@@ -112,7 +112,7 @@ setValidity("QTLExperiment", function(object) {
 
   checks <- c(betas = ifelse("betas" %in% assay_names,
                              TRUE, "assay needed"),
-              error = ifelse("error" %in% assay_names,
+              errors = ifelse("errors" %in% assay_names,
                              TRUE, "assay needed"),
               test_ids = ifelse(any(duplicated(x.rownames)),
                                 "duplicate feature|variant rows", TRUE),

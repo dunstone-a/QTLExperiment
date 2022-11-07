@@ -3,12 +3,12 @@
 \docType{methods}
 \name{QTLe-coerce}
 \alias{QTLe-coerce}
-\alias{mash_2_qtle}
+\alias{mash2qtle}
 \alias{.mashData_2_qtle}
 \alias{.mashFit_2_qtle}
 \title{Coercing mash data objects into QTLe objects}
 \usage{
-mash_2_qtle(data, sep = NULL, rowData = NULL, verbose = FALSE)
+mash2qtle(data, sep = NULL, rowData = NULL, verbose = FALSE)
 
 .mashData_2_qtle(data)
 

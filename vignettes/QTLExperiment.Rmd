@@ -51,7 +51,7 @@ With input data in this format, the `qtle` object can be generated as shown belo
 
 ```{r create-mock-QTLe-manual}
 qtle <- QTLExperiment(assays = list(betas=mock_summary_stats$betas, 
-                                    error=mock_summary_stats$errors),
+                                    errors=mock_summary_stats$errors),
                       metadata=list(study="mock-example"))
 qtle
 ```
@@ -62,7 +62,7 @@ Alternatively, the state IDs, feature IDs, and variant IDs can be provided manua
 mock_summary_stats <- mockSummaryStats(nStates=nStates, nQTL=nQTL, names=FALSE)
 mock_summary_stats$betas[1:5,1:5]
 qtle <- QTLExperiment(assays = list(betas=mock_summary_stats$betas, 
-                                    error=mock_summary_stats$errors),
+                                    errors=mock_summary_stats$errors),
                       feature_id = paste0("gene_", 1:nQTL),
                       variant_id = sample(1:1e6, nQTL),
                       state_id = paste0("state_", LETTERS[1:nStates]),
@@ -79,7 +79,7 @@ qtle
 
 ## From QTL summary statistics for each state 
 
-The `summaryStats_2_qtle()` function is a generic function to load QTL summary statistics from multiple files, where each file represents a state, and convert them into a `QTLExperiment` object. Because different QTL mapping software produce summary statistics in different formats, this function is flexible, allowing users to specify the column name or index where required data is stored. This function can also utilize parallel processing (cores available are automatically detected, see [vroom documentation](https://vroom.r-lib.org/index.html) for details. 
+The `sumstats2qtle()` function is a generic function to load QTL summary statistics from multiple files, where each file represents a state, and convert them into a `QTLExperiment` object. Because different QTL mapping software produce summary statistics in different formats, this function is flexible, allowing users to specify the column name or index where required data is stored. This function can also utilize parallel processing (cores available are automatically detected, see [vroom documentation](https://vroom.r-lib.org/index.html) for details. 
 
 Required arguments:
 
@@ -97,19 +97,19 @@ Optional arguments:
   
 For example, we can load summary statistics from the [EBI eQTL database](https://www.ebi.ac.uk/eqtl/Data_access/). Note that vroom does not handle compressed files well, here it only loads the first 655 rows, which is convenient for this tutorial, but in a real setting provide vroom with uncompressed objects.
 
-```{r demo-summaryStats_2_qtle}
+```{r demo-sumstats2qtle}
 ftp <- "http://ftp.ebi.ac.uk/pub/databases/spot/eQTL/sumstats/GTEx/tx/GTEx_tx_"
 input_web <- list(lung=paste0(ftp, "lung.all.tsv.gz"),
                   thyroid=paste0(ftp, "thyroid.all.tsv.gz"),
                   spleen=paste0(ftp, "spleen.all.tsv.gz"),
                   blood=paste0(ftp, "blood.all.tsv.gz"))
 
-qtle4 <- summaryStats_2_qtle(input_web, 
+qtle4 <- sumstats2qtle(input_web, 
                              feature_id="molecular_trait_id",
                              variant_id="rsid", 
                              betas = "beta", 
-                             error = "se",
-                             pval = "pvalue", 
+                             errors = "se",
+                             pvalues = "pvalue", 
                              verbose = TRUE)
 qtle4
 head(betas(qtle4))
@@ -122,7 +122,7 @@ A convenience function is also available to convert `mash` objects (generated he
 ```{r mashr-to-qtle}
 mashr_sim <-mockMASHR(nStates=nStates, nQTL=nQTL)
 
-qtle2 <- mash_2_qtle(mashr_sim, rowData=DataFrame(feature_id=row.names(mashr_sim$Bhat),
+qtle2 <- mash2qtle(mashr_sim, rowData=DataFrame(feature_id=row.names(mashr_sim$Bhat),
                                                  variant_id=sample(seq(1:1e5), nQTL)))
 qtle2
 ```
@@ -169,7 +169,7 @@ dim(qtle.subset)
 
 # 4. Working with assays
 
-The `QTLExperiment` assays can be viewed and manipulated using appropriate getter and setter methods. For common assay types (i.e., betas, error, pval, and lfsr), convenient getter and setters are available. For example, the betas getter and setter is shown here: 
+The `QTLExperiment` assays can be viewed and manipulated using appropriate getter and setter methods. For common assay types (i.e., betas, errors, pvalues, and lfsrs), convenient getter and setters are available. For example, the betas getter and setter is shown here: 
 
 ```{r convenient-getters-setters}
 betas(qtle)[1:5,1:5]
@@ -182,7 +182,7 @@ betas(qtle)[1:5,1:5]
 Users or downstream tools may add and see additional assays to the `QTLe` object using generic getter and setter methods. For example, to store information about what QTL are significant, we could add a new assay called *significant* using the generic setter method and then look at the data in the new assay using the generic getter method: 
 
 ```{r set-significance-assay}
-assay(qtle4, "significant") <- assay(qtle4, "pval") < 0.05
+assay(qtle4, "significant") <- assay(qtle4, "pvalues") < 0.05
 
 assay(qtle4, "significant")[1:5, 1:4]
 ```
