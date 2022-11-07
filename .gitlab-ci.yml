@@ -18,4 +18,4 @@ test:
     - $R_LIBS_USER
     
 after_script:
-  - R -e 'covr::package_coverage(Sys.getenv("CI_PROJECT_DIR"))'    
+  - R -e 'covr::codecov()'    
