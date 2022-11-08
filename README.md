@@ -4,9 +4,10 @@ QTLExperiment is an R container package for storing and manipulating QTL summary
 
 |                |               |
 | -------------- | ------------- |
-| Project Status | [![Project Status: WIP – Initial development is in progress public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip) |
-| Travis CI      | [![Build Status](https://travis-ci.org/drisso/QTLExperiment.svg?branch=master)](https://travis-ci.org/cazodi/QTLExperiment) |
-| Test coverage  | [![Coverage](https://codecov.io/gh/cazodi/QTLExperiment/branch/master/graph/badge.svg)](https://codecov.io/gh/cazodi/QTLExperiment) |
+| Project Status | [![Project Status.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip) |
+| Travis CI      | [![Pipeline Status](https://gitlab.svi.edu.au/biocellgen-public/qtlexperiment/badges/master/pipeline.svg)](https://gitlab.svi.edu.au/biocellgen-public/qtlexperiment/-/commits/master) |
+| Test coverage  | [![Coverage Report](https://gitlab.svi.edu.au/biocellgen-public/qtlexperiment/badges/master/coverage.svg)](https://gitlab.svi.edu.au/biocellgen-public/qtlexperiment/-/commits/master)|
+| Latest release  | [![Latest Release](https://gitlab.svi.edu.au/biocellgen-public/qtlexperiment/-/badges/release.svg)](https://gitlab.svi.edu.au/biocellgen-public/qtlexperiment/-/releases)|
 
 
 ## Installation and Usage
