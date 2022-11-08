@@ -6,7 +6,15 @@ variables:
   R_LIBS_USER: "$CI_PROJECT_DIR/ci/lib"
   CHECK_DIR: "$CI_PROJECT_DIR/ci/logs"
   BUILD_LOGS_DIR: "$CI_PROJECT_DIR/ci/logs/$CI_PROJECT_NAME.Rcheck"
-  
+
+my-job:
+  artifacts:
+    expire_in: 1 day
+    when: on_failure
+    public: false
+    paths:
+      - my-cicd-job.log
+
 test:
   script:
   - mkdir -p $R_LIBS_USER $BUILD_LOGS_DIR
