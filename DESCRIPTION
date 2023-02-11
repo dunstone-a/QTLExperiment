@@ -3,7 +3,7 @@ Type: Package
 Date: 2022-11-08
 Title: S4 classes for QTL summary statistics and metadata
 Version: 0.1.0
-Authors@R: c(person("Christina", "Azodi", role=c("aut", "cre"), email="cazodi@svi.edu.au"), 
+Authors@R: c(person("Christina", "Del Azodi", role=c("aut", "cre"), email="cazodi@svi.edu.au"), 
              person("Davis","McCarthy", role=c("aut", "cph"), email="dmccarthy@svi.edu.au"))
 License: GPL-3
 Encoding: UTF-8

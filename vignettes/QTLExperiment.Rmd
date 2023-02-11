@@ -16,21 +16,29 @@ vignette: >
 ---
 
 ```{r knitr-options, echo = FALSE}
-suppressPackageStartupMessages({
-  devtools::load_all("/mnt/mcfiles/cazodi/Software/QTLExperiment")
-  #library(QTLExperiment)
-  #devtools::load_all(".")
-})
-
+install.packages("devtools")
+devtools::install_git("https://gitlab.svi.edu.au/cazodi/qtlexperiment.git", build_vignettes = TRUE)
+library(QTLExperiment)
 knitr::opts_chunk$set(warning=FALSE, error=FALSE, message=FALSE, 
                       fig.height = 6, fig.width = 8)
 ```
+
 
 # 1. Motivation
 
 The `QTLExperiment` class is a Bioconductor container for storing and manipulating QTL summary statistics (e.g., effect sizes, standard errors, significance metrics) from one or more states (e.g., tissues, cell-types, environmental conditions). It extends the RangedSummarizedExperiment class, where rows represent QTL associations, columns represent states, and assays contain the various summary statistics. Associations are identified by the feature and variant tested in the format `feature_id|variant_id`. For example, a QTL association between the gene ENSG00000103888 and the SNP variant rs112057726 would be stored as ENSG00000103888|rs112057726. This package also provides convenient and robust methods for loading, merging, and subsetting multi-state QTL data.
 
 ![QTLExperiment container structure](QTLExperiment.png)
+
+## Installation
+
+QTLExperiment can be installed from GitLab:
+
+```{r install-qtlexperiment}
+install.packages("devtools", repos = "http://cran.us.r-project.org")
+devtools::install_git("https://gitlab.svi.edu.au/biocellgen-public/qtlexperiment.git", build_vignettes = FALSE)
+library(QTLExperiment)
+```
 
 # 2. Creating QTLExperiment instances
 

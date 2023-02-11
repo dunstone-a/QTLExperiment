@@ -5,9 +5,7 @@ QTLExperiment is an R container package for storing and manipulating QTL summary
 |                |               |
 | -------------- | ------------- |
 | Project Status | [![Project Status.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip) |
-| Travis CI      | [![Pipeline Status](https://gitlab.svi.edu.au/biocellgen-public/qtlexperiment/badges/master/pipeline.svg)](https://gitlab.svi.edu.au/biocellgen-public/qtlexperiment/-/commits/master) |
-| Test coverage  | [![Coverage Report](https://gitlab.svi.edu.au/biocellgen-public/qtlexperiment/badges/master/coverage.svg)](https://gitlab.svi.edu.au/biocellgen-public/qtlexperiment/-/commits/master)|
-| Latest release  | [![Latest Release](https://gitlab.svi.edu.au/biocellgen-public/qtlexperiment/-/badges/release.svg)](https://gitlab.svi.edu.au/biocellgen-public/qtlexperiment/-/releases)|
+| Latest release  | 2022-11-08 |
 
 
 ## Installation and Usage
@@ -16,7 +14,7 @@ This package in stable but undergoing active development and currently only live
 
 ```
 install.packages("devtools")
-devtools::install_git("https://gitlab.svi.edu.au/cazodi/qtlexperiment.git", build_vignettes = TRUE)
+devtools::install_git("https://gitlab.svi.edu.au/biocellgen-public/qtlexperiment.git", build_vignettes = TRUE)
 ```
 
 We plan to submit QTLExperiment and multistateQTL to Bioconductor in the near future. Using the most recent version of R is strongly recommended (R 4.2.1 at the time of writing). 
@@ -25,17 +23,27 @@ There are several other packages from CRAN and Bioconductor that QTLExperiment u
 
 Not all of the following are strictly necessary, but have been included here as they enhance the functionality of QTLExperiment. The commands below should help with package installations.
 
+### CRAN
+
+```{r install-cran}
+install.packages(c("knitr", "dplyr", "collapse", "vroom", "ashr", "tidyr", "testthat"))
+```
+
+### Bioconductor 
+
+```{r load-bioc}
+source("http://bioconductor.org/biocLite.R")
+biocLite(c("SummarizedExperiment", "BiocGenerics", "S4Vectors"))
+```
 
 ## Getting started
 
-Get started with QTLExperiment by checking out the vignette. From inside an R session, load QTLExperiment and then browse the vignettes:
+Get started with QTLExperiment by checking out the vignette that introduces the main features and functionality of QTLExperiment. From inside an R session, load QTLExperiment and then browse the vignettes:
 
 ```
 library(QTLExperiment)
 browseVignettes("QTLExperiment")
-There is a detailed HTML document available that introduces the main features and functionality of QTLExperiment.
 ```
-
 
 
 
