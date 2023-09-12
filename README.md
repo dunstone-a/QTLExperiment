@@ -32,8 +32,9 @@ install.packages(c("knitr", "dplyr", "collapse", "vroom", "ashr", "tidyr", "test
 ### Bioconductor 
 
 ```{r load-bioc}
-source("http://bioconductor.org/biocLite.R")
-biocLite(c("SummarizedExperiment", "BiocGenerics", "S4Vectors"))
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install(c("SummarizedExperiment", "BiocGenerics", "S4Vectors"))
 ```
 
 ## Getting started

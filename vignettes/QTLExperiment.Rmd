@@ -16,9 +16,6 @@ vignette: >
 ---
 
 ```{r knitr-options, echo = FALSE}
-install.packages("devtools")
-devtools::install_git("https://gitlab.svi.edu.au/cazodi/qtlexperiment.git", build_vignettes = TRUE)
-library(QTLExperiment)
 knitr::opts_chunk$set(warning=FALSE, error=FALSE, message=FALSE, 
                       fig.height = 6, fig.width = 8)
 ```
@@ -34,9 +31,12 @@ The `QTLExperiment` class is a Bioconductor container for storing and manipulati
 
 QTLExperiment can be installed from GitLab:
 
-```{r install-qtlexperiment}
+```
 install.packages("devtools", repos = "http://cran.us.r-project.org")
 devtools::install_git("https://gitlab.svi.edu.au/biocellgen-public/qtlexperiment.git", build_vignettes = FALSE)
+```
+
+```{r}
 library(QTLExperiment)
 ```
 
@@ -105,12 +105,26 @@ Optional arguments:
   
 For example, we can load summary statistics from the [EBI eQTL database](https://www.ebi.ac.uk/eqtl/Data_access/). Note that vroom does not handle compressed files well, here it only loads the first 655 rows, which is convenient for this tutorial, but in a real setting provide vroom with uncompressed objects.
 
+In this example we pull the transcript usage data for lung, thyroid, spleen and blood from the EBI eQTL database.
+
+```{r}
+# CSV file containing metadata for all uniformly processed datasets
+# from the EBI eQTL database
+ebi <- read.csv("https://raw.githubusercontent.com/eQTL-Catalogue/eQTL-Catalogue-resources/master/data_tables/dataset_metadata.tsv", sep = "\t")
+
+ftp <- "http://ftp.ebi.ac.uk/pub/databases/spot/eQTL/sumstats"
+
+# Filter to select the tissue and make url's
+ebi <- ebi |>
+  dplyr::filter(study_label == "GTEx") |>
+  dplyr::filter(tissue_label %in% c("lung", "thyroid", "spleen", "blood")) |>
+  dplyr::filter(quant_method == "tx") |> 
+  dplyr::mutate(url = paste(ftp, study_id, dataset_id, dataset_id, sep = "/")) |>
+  dplyr::mutate(url = paste0(url, ".cc.tsv.gz"))
+```
+
 ```{r demo-sumstats2qtle}
-ftp <- "http://ftp.ebi.ac.uk/pub/databases/spot/eQTL/sumstats/GTEx/tx/GTEx_tx_"
-input_web <- list(lung=paste0(ftp, "lung.all.tsv.gz"),
-                  thyroid=paste0(ftp, "thyroid.all.tsv.gz"),
-                  spleen=paste0(ftp, "spleen.all.tsv.gz"),
-                  blood=paste0(ftp, "blood.all.tsv.gz"))
+input_web <- as.list(setNames(ebi$url, ebi$tissue_label))
 
 qtle4 <- sumstats2qtle(input_web, 
                              feature_id="molecular_trait_id",
