@@ -5,7 +5,7 @@ Title: S4 classes for QTL summary statistics and metadata
 Version: 0.1.0
 Authors@R: c(person("Christina", "Del Azodi", role=c("aut", "cre"), email="cazodi@svi.edu.au"), 
              person("Davis","McCarthy", role=c("aut", "cph"), email="dmccarthy@svi.edu.au"))
-License: GPL-3
+License: GPL-3 + file LICENSE
 Encoding: UTF-8
 Depends: 
     SummarizedExperiment
@@ -32,4 +32,4 @@ Suggests:
 Description: QLTExperiment defines an S4 class for storing and manipulating summary statistics from QTL mapping experiments in one or more states.
 biocViews: FunctionalGenomics, ExperimentData, DataImport, Infrastructure
 VignetteBuilder: knitr
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
