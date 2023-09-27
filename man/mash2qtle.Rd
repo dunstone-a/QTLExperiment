@@ -26,6 +26,19 @@ mash2qtle(data, sep = NULL, rowData = NULL, verbose = FALSE)
 \description{
 Function to coerce a mashr object (class list or mashr) into a QTLe object.
 }
+\examples{
+nStates <- 6
+nQTL <- 40
+mashr_sim <- mockMASHR(nStates, nQTL)
+
+qtle2 <- mash2qtle(
+    mashr_sim,
+    rowData=DataFrame(feature_id=row.names(mashr_sim$Bhat),
+                      variant_id=sample(seq_len(nQTL))))
+dim(qtle2)
+
+
+}
 \author{
-Christina B Azodi
+Christina B Azodi, Amelia Dunstone
 }

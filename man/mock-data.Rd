@@ -26,6 +26,26 @@ mockMASHR_FIT(nStates = 10, nQTL = 100)
 \description{
 Functions to create fake input data for QTLExperiments.
 }
+\examples{
+nStates <- 6
+nQTL <- 40
+
+qtle <- mockQTLE(nStates, nQTL)
+dim(qtle)
+
+mock_summary_stats <- mockSummaryStats(nStates=nStates, nQTL=nQTL)
+mock_summary_stats$betas
+mock_summary_stats$errors
+mock_summary_stats$pvalues
+
+# Mock MASHR data
+
+mockr_sim <- mockMASHR(nStates=nStates, nQTL=nQTL)
+mockr_sim$B
+mockr_sim$Bhat
+mockr_sim$Shat
+
+}
 \author{
-Christina B Azodi
+Christina B Azodi, Amelia Dunstone
 }

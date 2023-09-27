@@ -12,7 +12,19 @@
 #' @name QTLe-coerce
 #' @rdname mash2qtle
 #'
-#' @author Christina B Azodi
+#' @examples
+#' nStates <- 6
+#' nQTL <- 40
+#' mashr_sim <- mockMASHR(nStates, nQTL)
+#'
+#' qtle2 <- mash2qtle(
+#'     mashr_sim,
+#'     rowData=DataFrame(feature_id=row.names(mashr_sim$Bhat),
+#'                       variant_id=sample(seq_len(nQTL))))
+#' dim(qtle2)
+#'
+#'
+#' @author Christina B Azodi, Amelia Dunstone
 #'
 #' @importFrom stats rnorm
 #' @importFrom tidyr separate
@@ -21,29 +33,29 @@
 #'
 mash2qtle <- function(data, sep=NULL, rowData=NULL, verbose=FALSE) {
 
-  if(all(is.null(sep), is.null(rowData))){
-    stop("Must specify sep or rowData.")
-  }
+    if(all(is.null(sep), is.null(rowData))){
+        stop("Must specify sep or rowData.")
+    }
 
-  if("Bhat" %in% names(data)){
-    assay_list <- .mashData_2_qtle(data)
-  } else if("result" %in% names(data)){
-    assay_list <- .mashFit_2_qtle(data)
-  }
+    if("Bhat" %in% names(data)){
+        assay_list <- .mashData_2_qtle(data)
+    } else if("result" %in% names(data)){
+        assay_list <- .mashFit_2_qtle(data)
+    }
 
-  if(!is.null(sep)){
-    rowData <- as.data.frame(list(id=as.character(rownames(assay_list[[1]])))) %>%
-      separate(.data$id, into=c("feature_id", "variant_id"), sep=sep)
+    if(!is.null(sep)){
+        rowData <- as.data.frame(list(id=as.character(rownames(assay_list[[1]])))) %>%
+            separate(.data$id, into=c("feature_id", "variant_id"), sep=sep)
 
-    if(verbose){message("# unique features: ",
-                        length(unique(rowData$feature_id)))}
-  }
+        if(verbose){message("# unique features: ",
+                            length(unique(rowData$feature_id)))}
+    }
 
-  object <- QTLExperiment(assay=assay_list,
-                                    feature_id = rowData$feature_id,
-                                    variant_id = rowData$variant_id)
+    object <- QTLExperiment(assay=assay_list,
+                            feature_id = rowData$feature_id,
+                            variant_id = rowData$variant_id)
 
-  return(object)
+    return(object)
 }
 
 
@@ -54,21 +66,21 @@ mash2qtle <- function(data, sep=NULL, rowData=NULL, verbose=FALSE) {
 #'
 .mashData_2_qtle <- function(data) {
 
-  betas <- as.matrix(data$Bhat)
-  errors <- as.matrix(data$Shat)
+    betas <- as.matrix(data$Bhat)
+    errors <- as.matrix(data$Shat)
 
-  assay_list <- list(betas = betas,
-                     errors = errors)
+    assay_list <- list(betas = betas,
+                       errors = errors)
 
-  if("pvalues" %in% names(data)){
-    assay_list[["pvalue"]] <- as.matrix(data$pval)
-  }
+    if("pvalues" %in% names(data)){
+        assay_list[["pvalue"]] <- as.matrix(data$pval)
+    }
 
-  if("lfsrs" %in% names(data)){
-    assay_list[["lfsrs"]] <- as.matrix(data$lfsr)
-  }
+    if("lfsrs" %in% names(data)){
+        assay_list[["lfsrs"]] <- as.matrix(data$lfsr)
+    }
 
-  return(assay_list)
+    return(assay_list)
 }
 
 #' @rdname mash2qtle
