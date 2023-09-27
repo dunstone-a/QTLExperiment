@@ -58,23 +58,23 @@ NULL
 #' @importFrom SummarizedExperiment colData
 #'
 GET_COLDATA_FUN <- function(values, ...) {
-  (values) # To ensure evaluation
-  function(object, ...) {
-    output <- colData(object)[[.state_field]]
-    output
-  }
+    (values) # To ensure evaluation
+    function(object, ...) {
+        output <- colData(object)[[.state_field]]
+        output
+    }
 }
 
 #' @importFrom SummarizedExperiment colData colData<-
 #'
 SET_COLDATA_FUN <- function(values, ...) {
-  (values)
-  function(object, ..., value) {
-    object <- updateObject(object)
-    int_colData(object)[[paste0(".", .state_field)]] <- value
-    object <- recover_qtle_ids(object)
-    object
-  }
+    (values)
+    function(object, ..., value) {
+        object <- updateObject(object)
+        int_colData(object)[[paste0(".", .state_field)]] <- value
+        object <- recover_qtle_ids(object)
+        object
+    }
 }
 
 #' @export

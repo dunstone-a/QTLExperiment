@@ -48,19 +48,19 @@ NULL
 
 #' @export
 setMethod("objectVersion", "QTLExperiment", function(x) {
-  int_metadata(x)$version
+    int_metadata(x)$version
 })
 
 #' @export
 setMethod("mainExpName", "QTLExperiment", function(x) {
-  int_metadata(x)$mainExpName
+    int_metadata(x)$mainExpName
 })
 
 #' @export
 setReplaceMethod("mainExpName", c("QTLExperiment",
                                   "character_OR_NULL"), function(x, value) {
-  int_metadata(x)$mainExpName <- value
-  x
-})
+                                      int_metadata(x)$mainExpName <- value
+                                      x
+                                  })
 
 

@@ -15,15 +15,15 @@
 #'
 recover_qtle_ids <- function(object){
 
-  colData(object)[[.state_field]] <- int_colData(object)[[paste0(".", .state_field)]]
-  rowData(object)[[.var_field]] <- int_rowData(object)[[paste0(".", .var_field)]]
-  rowData(object)[[.feat_field]] <- int_rowData(object)[[paste0(".", .feat_field)]]
+    colData(object)[[.state_field]] <- int_colData(object)[[paste0(".", .state_field)]]
+    rowData(object)[[.var_field]] <- int_rowData(object)[[paste0(".", .var_field)]]
+    rowData(object)[[.feat_field]] <- int_rowData(object)[[paste0(".", .feat_field)]]
 
-  colnames(object) <- state_id(object)
-  row.names(object) <- paste(feature_id(object), variant_id(object), sep="|")
+    colnames(object) <- state_id(object)
+    row.names(object) <- paste(feature_id(object), variant_id(object), sep="|")
 
-  try(validObject(object, complete = TRUE))
+    try(validObject(object, complete = TRUE))
 
-  object
+    object
 }
 

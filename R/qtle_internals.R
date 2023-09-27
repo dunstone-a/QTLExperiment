@@ -112,27 +112,27 @@ setReplaceMethod("int_rowData", "QTLExperiment", function(x, value) {
 #' @importFrom S4Vectors mcols
 #' @importFrom SummarizedExperiment rowData
 setMethod("rowData", "QTLExperiment", function(x, ..., internal=FALSE) {
-  if (internal) {
-    cn <- colnames(mcols(x))
-    conflict <- cn %in% colnames(int_rowData(x))
-    if (any(conflict)) {
-      cn <- cn[conflict]
-      if (length(cn) > 2) {
-        cn <- c(cn[seq(2)], "...")
-      }
-      warning("overlapping names in internal and external rowData (",
-              paste(cn, collapse = ", "), ")")
+    if (internal) {
+        cn <- colnames(mcols(x))
+        conflict <- cn %in% colnames(int_rowData(x))
+        if (any(conflict)) {
+            cn <- cn[conflict]
+            if (length(cn) > 2) {
+                cn <- c(cn[seq(2)], "...")
+            }
+            warning("overlapping names in internal and external rowData (",
+                    paste(cn, collapse = ", "), ")")
+        }
+        cbind(callNextMethod(x, ...), int_rowData(x))
+    } else {
+        callNextMethod(x, ...)
     }
-    cbind(callNextMethod(x, ...), int_rowData(x))
-  } else {
-    callNextMethod(x, ...)
-  }
 })
 
 #' @export
 #' @importFrom S4Vectors parallel_slot_names
 setMethod("parallel_slot_names", "QTLExperiment", function(x) {
-  c("int_rowData", callNextMethod())
+    c("int_rowData", callNextMethod())
 })
 
 
@@ -166,7 +166,7 @@ setMethod("colData", "QTLExperiment", function(x, ..., internal=FALSE) {
         cbind(callNextMethod(x, ...), int_colData(x))
     } else {
         callNextMethod(x, ...)
-  }
+    }
 })
 
 
@@ -179,8 +179,8 @@ setMethod("int_metadata", "QTLExperiment", function(x) x@int_metadata)
 
 #' @export
 setReplaceMethod("int_metadata", "QTLExperiment", function(x, value) {
-  x@int_metadata <- value
-  return(x)
+    x@int_metadata <- value
+    return(x)
 })
 
 
@@ -212,8 +212,8 @@ setReplaceMethod("int_metadata", "QTLExperiment", function(x, value) {
         N <- vapply(value, vdimfun, 0L)
         if (!all(N == xdimfun(x))) {
             stop("invalid 'value' in '", funstr, "(<", class(x), ">) <- value'\n",
-                "each element of 'value' should have number of ", vdimstr,
-                " equal to '", xdimstr, "(x)'")
+                 "each element of 'value' should have number of ", vdimstr,
+                 " equal to '", xdimstr, "(x)'")
         }
 
         names(value) <- .clean_internal_names(names(value), N=length(value),
@@ -301,7 +301,7 @@ setReplaceMethod("int_metadata", "QTLExperiment", function(x, value) {
 }
 
 .set_internal_numeric <- function(x, type, value, getfun, setfun, key,
-    convertfun, xdimfun, vdimfun, funstr, xdimstr, vdimstr, substr)
+                                  convertfun, xdimfun, vdimfun, funstr, xdimstr, vdimstr, substr)
 {
     x <- updateObject(x)
 
@@ -312,8 +312,8 @@ setReplaceMethod("int_metadata", "QTLExperiment", function(x, value) {
         if (!identical(vdimfun(value), xdimfun(x))) {
             stop("invalid 'value' in '", funstr, "(<", class(x),
                  ">, type=\"numeric\") <- value':\n  ",
-                "'value' should have number of ", vdimstr, " equal to '",
-                xdimstr, "(x)'")
+                 "'value' should have number of ", vdimstr, " equal to '",
+                 xdimstr, "(x)'")
         }
     }
 
@@ -328,7 +328,7 @@ setReplaceMethod("int_metadata", "QTLExperiment", function(x, value) {
 }
 
 .set_internal_character <- function(x, type, value, getfun, setfun, key,
-    convertfun, xdimfun, vdimfun, funstr, xdimstr, vdimstr, substr)
+                                    convertfun, xdimfun, vdimfun, funstr, xdimstr, vdimstr, substr)
 {
     x <- updateObject(x)
 
@@ -339,8 +339,8 @@ setReplaceMethod("int_metadata", "QTLExperiment", function(x, value) {
         if (!identical(vdimfun(value), xdimfun(x))) {
             stop("invalid 'value' in '", funstr, "(<", class(x),
                  ">, type=\"character\") <- value':\n  ",
-                "'value' should have number of ", vdimstr, " equal to '",
-                xdimstr, "(x)'")
+                 "'value' should have number of ", vdimstr, " equal to '",
+                 xdimstr, "(x)'")
         }
     }
 

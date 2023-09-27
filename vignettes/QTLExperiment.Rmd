@@ -17,7 +17,7 @@ vignette: >
 
 ```{r knitr-options, echo = FALSE}
 knitr::opts_chunk$set(warning=FALSE, error=FALSE, message=FALSE, 
-                      fig.height = 6, fig.width = 8)
+                      fig.height=6, fig.width=8)
 ```
 
 
@@ -32,8 +32,8 @@ The `QTLExperiment` class is a Bioconductor container for storing and manipulati
 QTLExperiment can be installed from GitLab:
 
 ```
-install.packages("devtools", repos = "http://cran.us.r-project.org")
-devtools::install_git("https://gitlab.svi.edu.au/biocellgen-public/qtlexperiment.git", build_vignettes = FALSE)
+install.packages("devtools", repos="http://cran.us.r-project.org")
+devtools::install_git("https://gitlab.svi.edu.au/biocellgen-public/qtlexperiment.git", build_vignettes=FALSE)
 ```
 
 ```{r}
@@ -74,7 +74,7 @@ qtle <- QTLExperiment(assays = list(betas=mock_summary_stats$betas,
                       feature_id = paste0("gene_", 1:nQTL),
                       variant_id = sample(1:1e6, nQTL),
                       state_id = paste0("state_", LETTERS[1:nStates]),
-                      metadata=list(study="mock-example2"))
+                      metadata = list(study="mock-example2"))
 qtle
 ```
 
@@ -116,23 +116,23 @@ ftp <- "http://ftp.ebi.ac.uk/pub/databases/spot/eQTL/sumstats"
 
 # Filter to select the tissue and make url's
 ebi <- ebi |>
-  dplyr::filter(study_label == "GTEx") |>
-  dplyr::filter(tissue_label %in% c("lung", "thyroid", "spleen", "blood")) |>
-  dplyr::filter(quant_method == "tx") |> 
-  dplyr::mutate(url = paste(ftp, study_id, dataset_id, dataset_id, sep = "/")) |>
-  dplyr::mutate(url = paste0(url, ".cc.tsv.gz"))
+    dplyr::filter(study_label == "GTEx") |>
+    dplyr::filter(tissue_label %in% c("lung", "thyroid", "spleen", "blood")) |>
+    dplyr::filter(quant_method == "tx") |> 
+    dplyr::mutate(path = paste(ftp, study_id, dataset_id, dataset_id, sep = "/")) |>
+    dplyr::mutate(path = paste0(path, ".cc.tsv.gz"))
 ```
 
 ```{r demo-sumstats2qtle}
-input_web <- as.list(setNames(ebi$url, ebi$tissue_label))
+input_web <- as.list(setNames(ebi$path, ebi$tissue_label))
 
 qtle4 <- sumstats2qtle(input_web, 
-                             feature_id="molecular_trait_id",
-                             variant_id="rsid", 
-                             betas = "beta", 
-                             errors = "se",
-                             pvalues = "pvalue", 
-                             verbose = TRUE)
+                       feature_id="molecular_trait_id",
+                       variant_id="rsid", 
+                       betas="beta", 
+                       errors="se",
+                       pvalues="pvalue", 
+                       verbose=TRUE)
 qtle4
 head(betas(qtle4))
 ```
@@ -142,10 +142,12 @@ head(betas(qtle4))
 A convenience function is also available to convert `mash` objects (generated here using the simple_sims function from mashr) into `QTLe` objects.
 
 ```{r mashr-to-qtle}
-mashr_sim <-mockMASHR(nStates=nStates, nQTL=nQTL)
+mashr_sim <- mockMASHR(nStates=nStates, nQTL=nQTL)
 
-qtle2 <- mash2qtle(mashr_sim, rowData=DataFrame(feature_id=row.names(mashr_sim$Bhat),
-                                                 variant_id=sample(seq(1:1e5), nQTL)))
+qtle2 <- mash2qtle(
+    mashr_sim,
+    rowData=DataFrame(feature_id=row.names(mashr_sim$Bhat),
+                      variant_id=sample(seq(1:1e5), nQTL)))
 qtle2
 ```
 
@@ -247,6 +249,7 @@ Or here we accidentally shuffled the variant_ids in the rowData, but can retriev
 rowData(qtle4)$variant_id <- sample(rowData(qtle4)$variant_id, nrow(qtle4))
 
 head(rowData(qtle4))
+
 
 qtle4 <- recover_qtle_ids(qtle4)
 head(rowData(qtle4))

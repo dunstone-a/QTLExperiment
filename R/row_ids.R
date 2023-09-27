@@ -73,23 +73,23 @@ NULL
 #' @importFrom SummarizedExperiment rowData
 #'
 GET_ROWDATA_FUN <- function(values, ...) {
-  (values) # To ensure evaluation
-  function(object, ...) {
-    output <- rowData(object)[[values]]
-    output
-  }
+    (values) # To ensure evaluation
+    function(object, ...) {
+        output <- rowData(object)[[values]]
+        output
+    }
 }
 
 #' @importFrom SummarizedExperiment rowData rowData<-
 #'
 SET_ROWDATA_FUN <- function(values, ...) {
-  (values)
-  function(object, ..., value) {
-    object <- updateObject(object)
-    int_rowData(object)[[paste0(".", values)]] <- value
-    object <- recover_qtle_ids(object)
-    object
-  }
+    (values)
+    function(object, ..., value) {
+        object <- updateObject(object)
+        int_rowData(object)[[paste0(".", values)]] <- value
+        object <- recover_qtle_ids(object)
+        object
+    }
 }
 
 

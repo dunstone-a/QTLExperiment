@@ -9,17 +9,17 @@ simRowData <- DataFrame(list(feature_id = paste0("F", 1:nTests),
                              variant_id = sample(1:1e10, nTests)))
 
 test_that("Test that mash SET data can be coerced to qtle", {
-  qtle <- mash2qtle(simdata, sep="\\|")
-  qtle2 <- mash2qtle(simdata, rowData=simRowData)
+    qtle <- mash2qtle(simdata, sep="\\|")
+    qtle2 <- mash2qtle(simdata, rowData=simRowData)
 
-  expect_equivalent(betas(qtle), betas(qtle2))
-  expect_error(mash2qtle(simdata), "Must specify sep or rowData.")
+    expect_equivalent(betas(qtle), betas(qtle2))
+    expect_error(mash2qtle(simdata), "Must specify sep or rowData.")
 })
 
 test_that("Test that mash FIT data can be coerced to qtle", {
-  qtle <- mash2qtle(m.c, sep="\\|")
-  qtle2 <- mash2qtle(m.c, rowData=simRowData)
+    qtle <- mash2qtle(m.c, sep="\\|")
+    qtle2 <- mash2qtle(m.c, rowData=simRowData)
 
-  expect_equivalent(betas(qtle), betas(qtle2))
-  expect_error(mash2qtle(simdata), "Must specify sep or rowData.")
+    expect_equivalent(betas(qtle), betas(qtle2))
+    expect_error(mash2qtle(simdata), "Must specify sep or rowData.")
 })

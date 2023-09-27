@@ -68,20 +68,20 @@ NULL
 #' @importFrom SummarizedExperiment assay
 #'
 GET_FUN <- function(values, ...) {
-  (values) # To ensure evaluation
-  function(object, ...) {
-    assay(object, i=values, ...)
-  }
+    (values) # To ensure evaluation
+    function(object, ...) {
+        assay(object, i=values, ...)
+    }
 }
 
 #' @importFrom SummarizedExperiment assay<-
 #'
 SET_FUN <- function(values, ...) {
-  (values)
-  function(object, ..., value) {
-    assay(object, i=values, ...) <- value
-    object
-  }
+    (values)
+    function(object, ..., value) {
+        assay(object, i=values, ...) <- value
+        object
+    }
 }
 
 #' @export
