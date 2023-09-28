@@ -2,6 +2,7 @@
 title: "An introduction to the QTLExperiment class"
 author:
   - "Christina B Azodi"
+  - "Amelia Dunstone"
   - "Davis McCarthy"
 package: QTLExperiment
 date: "`r Sys.Date()`"
@@ -29,11 +30,11 @@ The `QTLExperiment` class is a Bioconductor container for storing and manipulati
 
 ## Installation
 
-QTLExperiment can be installed from GitLab:
+QTLExperiment can be installed from GitHub:
 
 ```
-install.packages("devtools", repos="http://cran.us.r-project.org")
-devtools::install_git("https://gitlab.svi.edu.au/biocellgen-public/qtlexperiment.git", build_vignettes=FALSE)
+install.packages("devtools")
+devtools::install_git("https://github.com/dunstone-a/QTLExperiment")
 ```
 
 ```{r}

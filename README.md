@@ -14,7 +14,7 @@ This package in stable but undergoing active development and currently only live
 
 ```
 install.packages("devtools")
-devtools::install_git("https://gitlab.svi.edu.au/biocellgen-public/qtlexperiment.git", build_vignettes = TRUE)
+devtools::install_git("https://github.com/dunstone-a/QTLExperiment")
 ```
 
 We plan to submit QTLExperiment and multistateQTL to Bioconductor in the near future. Using the most recent version of R is strongly recommended (R 4.3.1 at the time of writing). 
