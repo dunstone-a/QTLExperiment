@@ -2,12 +2,12 @@ Package: QTLExperiment
 Type: Package
 Date: 2022-11-08
 Title: S4 classes for QTL summary statistics and metadata
-Version: 0.1.0
+Version: 0.99.0
 Authors@R: c(
     person("Christina", "Del Azodi", role=c("aut"), email="cazodi@svi.edu.au"), 
     person("Davis","McCarthy", role=c("ctb"), email="dmccarthy@svi.edu.au"),
     person("Amelia","Dunstone", role=c("cre", "ctb"), email="amelia.dunstone@svi.edu.au", comment=c(ORCID="0009-0009-6426-1529")))
-License: GPL (>= 3) + file LICENSE
+License: GPL-3
 Encoding: UTF-8
 Depends: 
     SummarizedExperiment
