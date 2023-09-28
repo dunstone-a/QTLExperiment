@@ -1,4 +1,4 @@
 library(testthat)
-#library(multistatQTL)
+library(QTLExperiment)
 
-#test_check("multistatQTL")
+test_check("QTLExperiment")

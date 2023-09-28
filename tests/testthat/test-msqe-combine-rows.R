@@ -34,8 +34,7 @@ test_that("rbind respects the colData and gives proper error messages", {
 
     colData(qtle3)$X <- runif(ncol(qtle3))
     expect_error(rbind(qtle2, qtle3),
-                 "column(s) 'X' in ‘colData’ are duplicated and the data do not match",
-                 fixed = TRUE)
+                 "column\\(s\\) 'X' in .colData. are duplicated and the data do not match")
 })
 
 
