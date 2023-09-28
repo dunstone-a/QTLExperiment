@@ -27,6 +27,8 @@
 #' }
 #' }
 #'
+#' @returns A \linkS4class{QTLExperiment} object.
+#'
 #' @author
 #' Christina B Azodi
 #'

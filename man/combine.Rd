@@ -6,6 +6,9 @@
 \alias{cbind,QTLExperiment-method}
 \alias{rbind,QTLExperiment-method}
 \title{Combining QTLExperiment objects}
+\value{
+A \linkS4class{QTLExperiment} object.
+}
 \description{
 An overview of methods to combine multiple
 \linkS4class{QTLExperiment} objects by row or column.

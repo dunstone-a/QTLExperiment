@@ -47,7 +47,7 @@
 
 .checkSEcolOrder <- function(se){
 
-    for(i in 1:length(assays(se))){
+    for(i in seq_along(assays(se))){
         assay <- names(assays(se))[i]
         if(i == 1){
             col_order <- colnames(assay(se, assay))
@@ -67,7 +67,7 @@
 
 .checkSErowOrder <- function(se){
 
-    for(i in 1:length(assays(se))){
+    for(i in seq_along(assays(se))){
         assay <- names(assays(se))[i]
         if(i == 1){
             row_order <- rownames(assay(se, assay))

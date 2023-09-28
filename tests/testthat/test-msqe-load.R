@@ -20,7 +20,7 @@ input_df <- ebi |>
 
 
 # List version
-input_list <- as.list(setNames(ebi$path, ebi$tissue_label))
+input_list <- as.list(setNames(ebi$path, ebi$state))
 
 test_that("Test that mash SET data (as list) can be coerced to qtle", {
     web <- sumstats2qtle(input_list, feature_id="molecular_trait_id",
