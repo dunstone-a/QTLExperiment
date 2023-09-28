@@ -26,7 +26,7 @@ knitr::opts_chunk$set(warning=FALSE, error=FALSE, message=FALSE,
 
 The `QTLExperiment` class is a Bioconductor container for storing and manipulating QTL summary statistics (e.g., effect sizes, standard errors, significance metrics) from one or more states (e.g., tissues, cell-types, environmental conditions). It extends the RangedSummarizedExperiment class, where rows represent QTL associations, columns represent states, and assays contain the various summary statistics. Associations are identified by the feature and variant tested in the format `feature_id|variant_id`. For example, a QTL association between the gene ENSG00000103888 and the SNP variant rs112057726 would be stored as ENSG00000103888|rs112057726. This package also provides convenient and robust methods for loading, merging, and subsetting multi-state QTL data.
 
-![QTLExperiment container structure](QTLExperiment.png)
+![QTLExperiment container structure](QTLE_structure.png)
 
 ## Installation
 
