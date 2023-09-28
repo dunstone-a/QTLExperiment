@@ -8,6 +8,9 @@
 \alias{[,QTLExperiment,ANY,ANY,ANY-method}
 \alias{[<-,QTLExperiment,ANY,ANY,QTLExperiment-method}
 \title{Subsetting and replacing data in QTLExperiment objects}
+\value{
+A \linkS4class{QTLExperiment} object.
+}
 \description{
 Includes methods to subset a \linkS4class{QTLExperiment} object by
 row and/or column and methods to replace all data for the specified rows

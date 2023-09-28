@@ -4,7 +4,7 @@
 #' the class structure. This is usually called by internal methods rather than
 #' by users or downstream packages.
 #'
-#' @param object A old \linkS4class{QTLExperiment} object.
+#' @param object An old \linkS4class{QTLExperiment} object.
 #' @param ... Additional arguments that are ignored.
 #' @param verbose Logical scalar indicating whether a message should be emitted
 #'        as the object is updated.
@@ -18,6 +18,12 @@
 #'
 #' @return
 #' An updated version of \code{object}.
+#'
+#' @examples
+#' qtle <- mockQTLE()
+#' objectVersion(qtle)
+#'
+#' qtle_new <- QTLExperiment::updateObject(qtle)
 #'
 #' @author Christina B Azodi
 #'

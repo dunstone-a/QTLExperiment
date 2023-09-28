@@ -23,6 +23,9 @@ mash2qtle(data, sep = NULL, rowData = NULL, verbose = FALSE)
 
 \item{verbose}{Logical.}
 }
+\value{
+A \linkS4class{QTLExperiment} object.
+}
 \description{
 Function to coerce a mashr object (class list or mashr) into a QTLe object.
 }

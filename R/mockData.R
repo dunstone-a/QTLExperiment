@@ -14,8 +14,12 @@
 #' nStates <- 6
 #' nQTL <- 40
 #'
+#' # Mock QTLExperiment data
+#'
 #' qtle <- mockQTLE(nStates, nQTL)
 #' dim(qtle)
+#'
+#' @returns an object containing simulated data.
 #'
 #' @author Christina B Azodi, Amelia Dunstone
 #' @export

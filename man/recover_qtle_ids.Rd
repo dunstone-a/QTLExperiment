@@ -11,7 +11,43 @@ recover_qtle_ids(object)
 \arguments{
 \item{object}{QTLExperiment object}
 }
+\value{
+A \linkS4class{QTLExperiment} object with recovered rowData or colData.
+}
 \description{
 Function to recover protected rowData (feature_id, variant_id)
 and colData (state_id) from internal structure.
+}
+\examples{
+
+# Recover a column in colData
+
+qtle <- mockQTLE()
+
+head(colData(qtle))
+
+new_colData <- DataFrame(list(some_info1 = LETTERS[1:ncol(qtle)],
+                              some_info2 = c(1:ncol(qtle))))
+
+# colData is overwritten
+colData(qtle) <- new_colData
+head(colData(qtle))
+
+# colData is recovered
+qtle <- recover_qtle_ids(qtle)
+head(colData(qtle))
+
+# Recover information from rowData
+
+head(rowData(qtle))
+
+# variant_id are shuffled accidentally
+rowData(qtle)$variant_id <- sample(rowData(qtle)$variant_id, nrow(qtle))
+head(rowData(qtle))
+
+# Recover rowData
+qtle <- recover_qtle_ids(qtle)
+head(rowData(qtle))
+
+
 }

@@ -23,12 +23,17 @@ mockMASHR_FIT(nStates = 10, nQTL = 100)
 
 \item{names}{Logical to include column and row names}
 }
+\value{
+an object containing simulated data.
+}
 \description{
 Functions to create fake input data for QTLExperiments.
 }
 \examples{
 nStates <- 6
 nQTL <- 40
+
+# Mock QTLExperiment data
 
 qtle <- mockQTLE(nStates, nQTL)
 dim(qtle)

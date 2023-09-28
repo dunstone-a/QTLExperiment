@@ -37,6 +37,9 @@ for testing purposes.}
 
 \item{verbose}{logical. Whether to print progress messages.}
 }
+\value{
+A \linkS4class{QTLExperiment} object.
+}
 \description{
 A suite of methods to extract QTL mapping summary statistics from common
 QTL workflow output files.

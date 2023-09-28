@@ -8,7 +8,7 @@
 \S4method{updateObject}{QTLExperiment}(object, ..., verbose = FALSE)
 }
 \arguments{
-\item{object}{A old \linkS4class{QTLExperiment} object.}
+\item{object}{An old \linkS4class{QTLExperiment} object.}
 
 \item{...}{Additional arguments that are ignored.}
 
@@ -29,6 +29,13 @@ internal class representation. Changes are as follows:
 \itemize{
 \item No updates yet.
 }
+}
+\examples{
+qtle <- mockQTLE()
+objectVersion(qtle)
+
+qtle_new <- QTLExperiment::updateObject(qtle)
+
 }
 \seealso{
 \code{\link{objectVersion}}, which is used to determine if the object is up-to-date.

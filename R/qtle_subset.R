@@ -33,6 +33,8 @@
 #' passed to the corresponding \linkS4class{SummarizedExperiment} method.}
 #' }
 #'
+#' @returns A \linkS4class{QTLExperiment} object.
+#'
 #' @author
 #' Christina B Azodi
 #'

@@ -20,6 +20,8 @@
 #'
 #' @example man/examples/qtle_load_example.R
 #'
+#' @returns A \linkS4class{QTLExperiment} object.
+#'
 #' @author
 #' Christina B Azodi, Amelia Dunstone
 #'
@@ -62,7 +64,7 @@ sumstats2qtle <- function(input, feature_id = "gene_id",
     } else{
         data <- vroom(input$path, id="path", show_col_types = FALSE,
                       n_max = n_max,
-                      col_select=list(path, feature_id = all_of(feature_id),
+                      col_select=list(all_of(path), feature_id = all_of(feature_id),
                                       variant_id = all_of(variant_id),
                                       betas = all_of(betas),
                                       errors = all_of(errors),

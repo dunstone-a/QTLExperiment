@@ -12,6 +12,8 @@
 #' @name QTLe-coerce
 #' @rdname mash2qtle
 #'
+#' @returns A \linkS4class{QTLExperiment} object.
+#'
 #' @examples
 #' nStates <- 6
 #' nQTL <- 40
