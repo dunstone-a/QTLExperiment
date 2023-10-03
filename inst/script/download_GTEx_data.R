@@ -10,9 +10,12 @@
 
 # Obtain URLs ------------------------------------------------------------------
 
+file_path <- "inst/extdata/"
+
 # File containing metadata for all uniformly processed datasets
 # from the EBI eQTL database (second hyperlink on this page: https://www.ebi.ac.uk/eqtl/Data_access/)
-ebi <- read.csv("https://raw.githubusercontent.com/eQTL-Catalogue/eQTL-Catalogue-resources/master/data_tables/dataset_metadata.tsv", sep = "\t")
+# GitHub url: https://raw.githubusercontent.com/eQTL-Catalogue/eQTL-Catalogue-resources/master/data_tables/dataset_metadata.tsv
+ebi <- read.csv(paste0(file_path, "/EBI_dataset_metadata.tsv"), sep = "\t")
 
 # URL for head of the data files
 ftp <- "http://ftp.ebi.ac.uk/pub/databases/spot/eQTL/sumstats"
@@ -32,8 +35,6 @@ input <- ebi |>
 
 library(vroom)
 # vroom will not load all rows in a compressed file.
-
-file_path <- "inst/extdata/"
 
 for (i in seq_along(input$state)) {
 
