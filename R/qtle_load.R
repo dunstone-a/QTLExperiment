@@ -88,6 +88,10 @@ sumstats2qtle <- function(input, feature_id = "gene_id",
                             feature_id = gsub("\\|.*", "", row.names(betas)),
                             variant_id = gsub(".*\\|", "", row.names(betas)))
 
+    colData(object) <- cbind(
+        colData(object),
+        dplyr::select(input, -dplyr::all_of(c("state", "path"))))
+
     if(!is.null(pvalues)){
         pvalues <- data %>% pivot_wider(names_from = state, values_from = pvalues,
                                         id_cols = id) %>%
