@@ -2,47 +2,39 @@
 # library(testthat)
 # source("setup.R"); source("test-mash-2-qtle.R")
 
-ebi <- read.csv("https://raw.githubusercontent.com/eQTL-Catalogue/eQTL-Catalogue-resources/master/data_tables/dataset_metadata.tsv", sep = "\t")
-ftp <- "http://ftp.ebi.ac.uk/pub/databases/spot/eQTL/sumstats"
-
-# Filter to select the tissue and make url's
-ebi <- ebi |>
-    dplyr::filter(study_label == "GTEx") |>
-    dplyr::filter(tissue_label %in% c("lung", "thyroid", "spleen")) |>
-    dplyr::filter(quant_method == "tx") |>
-    dplyr::mutate(path = paste(ftp, study_id, dataset_id, dataset_id, sep = "/")) |>
-    dplyr::mutate(path = paste0(path, ".cc.tsv.gz")) %>%
-    dplyr::rename(state = tissue_label)
+input_path <- system.file("extdata", package =  "QTLExperiment")
+state <- c("lung", "thyroid", "spleen", "blood")
 
 # Data frame version
-input_df <- ebi |>
-    dplyr::select(state, path)
-
+input_df <- data.frame(state = state,
+                       path = paste0(input_path, "/GTEx_tx_", state, ".tsv"),
+                       source = "GTEx")
 
 # List version
-input_list <- as.list(setNames(ebi$path, ebi$state))
+input_list <- as.list(setNames(input_df$path, input_df$state))
+
 
 test_that("Test that mash SET data (as list) can be coerced to qtle", {
-    web <- sumstats2qtle(input_list, feature_id="molecular_trait_id",
+    data <- sumstats2qtle(input_list, feature_id="molecular_trait_id",
                          variant_id="variant", betas = "beta",
                          errors="se", pvalues="pvalue", n_max=100)
 
-    expect_equivalent(class(web), "QTLExperiment")
+    expect_equivalent(class(data), "QTLExperiment")
 })
 
 test_that("Test that mash SET data (as data.frame) can be coerced to qtle", {
-    web <- sumstats2qtle(input_df, feature_id="molecular_trait_id",
+    data <- sumstats2qtle(input_df, feature_id="molecular_trait_id",
                          variant_id="variant", betas = "beta",
                          errors="se", pvalues="pvalue", n_max=100)
 
-    expect_equivalent(class(web), "QTLExperiment")
+    expect_equivalent(class(data), "QTLExperiment")
 })
 
-test_that("Test that mash SET data frames with additional colData can be coerced to qtle", {
-    web <- sumstats2qtle(ebi, feature_id="molecular_trait_id",
+test_that("Test that additional columns in data.frame append to colData", {
+    data <- sumstats2qtle(input_df, feature_id="molecular_trait_id",
                          variant_id="variant", betas = "beta",
                          errors="se", pvalues="pvalue", n_max=100)
 
-    expect_equivalent(class(web), "QTLExperiment")
+    expect_equivalent(colnames(colData(data)), c("state_id", "source"))
 })
 

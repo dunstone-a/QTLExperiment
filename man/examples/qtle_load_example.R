@@ -1,14 +1,16 @@
-ftp <- "http://ftp.ebi.ac.uk/pub/databases/spot/eQTL/sumstats"
+
+input_path <- system.file("extdata", package =  "QTLExperiment")
+state <- c("lung", "thyroid", "spleen", "blood")
 
 # Input as a named array
-input_list <- list(lung = paste0(ftp, "/QTS000015/QTD000273/QTD000273.cc.tsv.gz"),
-                   spleen = paste0(ftp, "/QTS000015/QTD000328/QTD000328.cc.tsv.gz"))
+input_list <- list(lung = paste0(input_path, "/GTEx_tx_lung.tsv"),
+                   spleen = paste0(input_path, "/GTEx_tx_spleen.tsv"))
 
 # Input as a data.frame.
 # Must include columns 'state' and 'path'.
 input_df <- data.frame(state = c("lung", "spleen"),
-                       path = c(paste0(ftp, "/QTS000015/QTD000273/QTD000273.cc.tsv.gz"),
-                                paste0(ftp, "/QTS000015/QTD000328/QTD000328.cc.tsv.gz")))
+                       path = c(paste0(input_path, "/GTEx_tx_lung.tsv"),
+                                paste0(input_path, "/GTEx_tx_spleen.tsv")))
 
 # List version
 qtle1 <- sumstats2qtle(input_list,

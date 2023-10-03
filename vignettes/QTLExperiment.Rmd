@@ -103,31 +103,21 @@ Optional arguments:
   - pval: The index or name of the column in the summary statistic files containing test statistics.
   - n_max: The number of rows to read from each file
   
+Note that vroom does not handle compressed files well, and will not load all rows for large files.
+It is best to provide vroom with uncompressed objects for this reason.
   
-For example, we can load summary statistics from the [EBI eQTL database](https://www.ebi.ac.uk/eqtl/Data_access/). Note that vroom does not handle compressed files well, here it only loads the first 655 rows, which is convenient for this tutorial, but in a real setting provide vroom with uncompressed objects.
-
-In this example we pull the transcript usage data for lung, thyroid, spleen and blood from the EBI eQTL database.
-
-```{r}
-# CSV file containing metadata for all uniformly processed datasets
-# from the EBI eQTL database
-ebi <- read.csv("https://raw.githubusercontent.com/eQTL-Catalogue/eQTL-Catalogue-resources/master/data_tables/dataset_metadata.tsv", sep = "\t")
-
-ftp <- "http://ftp.ebi.ac.uk/pub/databases/spot/eQTL/sumstats"
-
-# Filter to select the tissue and make url's
-ebi <- ebi |>
-    dplyr::filter(study_label == "GTEx") |>
-    dplyr::filter(tissue_label %in% c("lung", "thyroid", "spleen", "blood")) |>
-    dplyr::filter(quant_method == "tx") |> 
-    dplyr::mutate(path = paste(ftp, study_id, dataset_id, dataset_id, sep = "/")) |>
-    dplyr::mutate(path = paste0(path, ".cc.tsv.gz"))
-```
+As an example, we can load summary statistics from the [EBI eQTL database](https://www.ebi.ac.uk/eqtl/Data_access/).
+Transcript usage data for lung, thryoid, spleen and blood are available in the `inst/extdata` folder. 
+This data is licensed under the Creative Commons Attribution 4.0 International License. See `inst/script/data_processing.R` for details about how these data files were obtained from the database.
 
 ```{r demo-sumstats2qtle}
-input_web <- as.list(setNames(ebi$path, ebi$tissue_label))
+input_path <- system.file("extdata", package = "QTLExperiment")
+state <- c("lung", "thyroid", "spleen", "blood")
 
-qtle4 <- sumstats2qtle(input_web, 
+input <- data.frame(state = state, 
+                    path = paste0(input_path, "/GTEx_tx_", state, ".tsv"))
+
+qtle4 <- sumstats2qtle(input, 
                        feature_id="molecular_trait_id",
                        variant_id="rsid", 
                        betas="beta", 
