@@ -31,7 +31,7 @@ mockQTLE <- function(nStates = 10, nQTL = 100, names=TRUE){
     sumstats <- mockSummaryStats(nStates=nStates, nQTL=nQTL,
                                  names=names)
 
-    object <- QTLExperiment(assay = list(betas=sumstats$betas,
+    object <- QTLExperiment(assays = list(betas=sumstats$betas,
                                          errors=sumstats$errors,
                                          pvalues=sumstats$pvalues))
 

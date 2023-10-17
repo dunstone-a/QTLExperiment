@@ -8,7 +8,7 @@ context("QTLExperiment class")
 
 test_that("construction of the QTLe works correctly - manual", {
     # With metadata explicitly provided
-    qtle <- QTLExperiment(assay=list(betas=sumstats_noNames$betas,
+    qtle <- QTLExperiment(assays=list(betas=sumstats_noNames$betas,
                                      errors=sumstats_noNames$errors,
                                      pvalues=sumstats_noNames$pvalues,
                                      lfsrs=sumstats_noNames$pvalues),
@@ -25,8 +25,8 @@ test_that("construction of the QTLe works correctly - manual", {
     expect_equivalent(variant_id(qtle), variant_ids)
 
     # With metadata extracted from input data
-    qtle <- QTLExperiment(assay=list(betas=sumstats$betas,
-                                     errors=sumstats$error,
+    qtle <- QTLExperiment(assays=list(betas=sumstats$betas,
+                                     errors=sumstats$errors,
                                      pvalues=sumstats$pvalues,
                                      lfsrs=sumstats$pvalues))
     expect_equivalent(class(qtle), "QTLExperiment")
@@ -48,7 +48,7 @@ test_that("construction of the QTLe works correctly - from se", {
 
 test_that("QTLe valid check works correctly", {
 
-    expect_error(QTLExperiment(assay=list(errors=sumstats$errors,
+    expect_error(QTLExperiment(assays=list(errors=sumstats$errors,
                                           pvalues=sumstats$pvalues,
                                           lfsrs=sumstats$pvalues),
                                state_id = state_ids,
@@ -56,7 +56,7 @@ test_that("QTLe valid check works correctly", {
                                variant_id=variant_ids),
                  "betas: assay needed")
 
-    expect_error(QTLExperiment(assay=list(betas=sumstats$betas,
+    expect_error(QTLExperiment(assays=list(betas=sumstats$betas,
                                           pvalues=sumstats$pvalues,
                                           lfsrs=sumstats$pvalues),
                                state_id = state_ids,
@@ -68,7 +68,7 @@ test_that("QTLe valid check works correctly", {
 
 test_that("QTLe feature IDs are provided or pulled from rownames of betas", {
 
-    qtle2 <- QTLExperiment(assay=list(betas=sumstats$betas,
+    qtle2 <- QTLExperiment(assays=list(betas=sumstats$betas,
                                       errors=sumstats$errors,
                                       pvalues=sumstats$pvalues,
                                       lfsrs=sumstats$pvalues),
@@ -88,14 +88,14 @@ test_that("QTLe feature IDs are provided or pulled from rownames of betas", {
 })
 
 test_that("QTLE metadata ID checks are working", {
-    expect_error(QTLExperiment(assay=list(betas=sumstats_noNames$betas,
+    expect_error(QTLExperiment(assays=list(betas=sumstats_noNames$betas,
                                           errors=sumstats_noNames$errors),
                                state_id = state_ids, variant_id=variant_ids),
                  "Feature/variant IDs should be provided as pipe separated string
              in rownames or using feature_id={...} and variant_id={...}.",
                  fixed=TRUE)
 
-    expect_error(QTLExperiment(assay=list(betas=sumstats_noNames$betas,
+    expect_error(QTLExperiment(assays=list(betas=sumstats_noNames$betas,
                                           errors=sumstats_noNames$errors),
                                state_id = state_ids,
                                feature_id=feature_ids),
@@ -104,7 +104,7 @@ test_that("QTLE metadata ID checks are working", {
                  fixed=TRUE)
 
 
-    expect_error(QTLExperiment(assay=list(betas=sumstats_noNames$betas,
+    expect_error(QTLExperiment(assays=list(betas=sumstats_noNames$betas,
                                           errors=sumstats_noNames$errors),
                                feature_id=feature_ids,
                                variant_id=variant_ids),

@@ -73,7 +73,7 @@ qtle
 ## coercion from SummarizedExperiment
 mock_sumstats <- mockSummaryStats(nStates=10, nQTL=100)
 se <- SummarizedExperiment(assays=list(betas=mock_sumstats$betas,
-                                       errors=mock_sumstats$error))
+                                       errors=mock_sumstats$errors))
 as(se, "QTLExperiment")
 
 }

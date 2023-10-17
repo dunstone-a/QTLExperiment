@@ -53,7 +53,7 @@ mash2qtle <- function(data, sep=NULL, rowData=NULL, verbose=FALSE) {
                             length(unique(rowData$feature_id)))}
     }
 
-    object <- QTLExperiment(assay=assay_list,
+    object <- QTLExperiment(assays=assay_list,
                             feature_id = rowData$feature_id,
                             variant_id = rowData$variant_id)
 
