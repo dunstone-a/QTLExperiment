@@ -33,8 +33,10 @@ The `QTLExperiment` class is a Bioconductor container for storing and manipulati
 QTLExperiment can be installed from GitHub:
 
 ```
-install.packages("devtools")
-devtools::install_git("https://github.com/dunstone-a/QTLExperiment")
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("QTLExperiment")
 ```
 
 ```{r}

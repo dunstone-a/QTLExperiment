@@ -15,8 +15,10 @@ QTLExperiment is an R container package for storing and manipulating QTL summary
 This package in stable but undergoing active development and currently only lives on GitHub. To install from GitHub, use devtools:
 
 ```
-install.packages("devtools")
-devtools::install_git("https://github.com/dunstone-a/QTLExperiment")
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("QTLExperiment")
 ```
 
 We plan to submit QTLExperiment and multistateQTL to Bioconductor in the near future. Using the most recent version of R is strongly recommended (R 4.3.1 at the time of writing). 
@@ -34,8 +36,6 @@ install.packages(c("knitr", "dplyr", "collapse", "vroom", "ashr", "tidyr", "test
 ### Bioconductor 
 
 ```{r load-bioc}
-if (!require("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
 BiocManager::install(c("SummarizedExperiment", "BiocGenerics", "S4Vectors"))
 ```
 
