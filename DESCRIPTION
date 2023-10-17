@@ -8,6 +8,8 @@ Authors@R: c(
     person("Davis","McCarthy", role=c("ctb"), email="dmccarthy@svi.edu.au"),
     person("Amelia","Dunstone", role=c("cre", "ctb"), email="amelia.dunstone@svi.edu.au", comment=c(ORCID="0009-0009-6426-1529")))
 License: GPL-3
+URL: https://github.com/dunstone-a/QTLExperiment
+BugReports: https://github.com/dunstone-a/QTLExperiment/issues
 Encoding: UTF-8
 Depends: 
     SummarizedExperiment
