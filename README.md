@@ -1,5 +1,7 @@
 # QTLExperiment Package
 
+NOTE: A newer version of this package is available on GitHub, see https://github.com/dunstone-a/QTLExperiment/tree/master 
+
 QTLExperiment is an R container package for storing and manipulating QTL summary statistics. 
 
 |                |               |
