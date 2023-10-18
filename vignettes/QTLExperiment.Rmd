@@ -24,7 +24,7 @@ knitr::opts_chunk$set(warning=FALSE, error=FALSE, message=FALSE,
 
 # 1. Motivation
 
-The `QTLExperiment` class is a Bioconductor container for storing and manipulating QTL summary statistics (e.g., effect sizes, standard errors, significance metrics) from one or more states (e.g., tissues, cell-types, environmental conditions). It extends the RangedSummarizedExperiment class, where rows represent QTL associations, columns represent states, and assays contain the various summary statistics. Associations are identified by the feature and variant tested in the format `feature_id|variant_id`. For example, a QTL association between the gene ENSG00000103888 and the SNP variant rs112057726 would be stored as ENSG00000103888|rs112057726. This package also provides convenient and robust methods for loading, merging, and subsetting multi-state QTL data.
+The `QTLExperiment` class is a Bioconductor container for storing and manipulating QTL summary statistics (e.g., effect sizes, standard errors, significance metrics) from one or more states (e.g., tissues, cell-types, environmental conditions). It extends the `RangedSummarizedExperiment` class (from the `r BiocStyle::Biocpkg("SummarizedExperiment")` package), where rows represent QTL associations, columns represent states, and assays contain the various summary statistics. Associations are identified by the feature and variant tested in the format `feature_id|variant_id`. For example, a QTL association between the gene ENSG00000103888 and the SNP variant rs112057726 would be stored as ENSG00000103888|rs112057726. This package also provides convenient and robust methods for loading, merging, and subsetting multi-state QTL data.
 
 ![QTLExperiment container structure](QTLE_structure.png)
 
@@ -33,7 +33,7 @@ The `QTLExperiment` class is a Bioconductor container for storing and manipulati
 QTLExperiment can be installed from GitHub:
 
 ```
-if (!require("BiocManager", quietly = TRUE))
+if (!require("BiocManager", quietly=TRUE))
     install.packages("BiocManager")
 
 BiocManager::install("QTLExperiment")
@@ -61,8 +61,8 @@ mock_summary_stats$betas[1:5,1:5]
 With input data in this format, the `qtle` object can be generated as shown below.
 
 ```{r create-mock-QTLe-manual}
-qtle <- QTLExperiment(assays = list(betas=mock_summary_stats$betas, 
-                                    errors=mock_summary_stats$errors),
+qtle <- QTLExperiment(assays=list(betas=mock_summary_stats$betas,
+                                  errors=mock_summary_stats$errors),
                       metadata=list(study="mock-example"))
 qtle
 ```
@@ -72,12 +72,12 @@ Alternatively, the state IDs, feature IDs, and variant IDs can be provided manua
 ```{r mock-qtle-provide-ids}
 mock_summary_stats <- mockSummaryStats(nStates=nStates, nQTL=nQTL, names=FALSE)
 mock_summary_stats$betas[1:5,1:5]
-qtle <- QTLExperiment(assays = list(betas=mock_summary_stats$betas, 
-                                    errors=mock_summary_stats$errors),
-                      feature_id = paste0("gene_", 1:nQTL),
-                      variant_id = sample(1:1e6, nQTL),
-                      state_id = paste0("state_", LETTERS[1:nStates]),
-                      metadata = list(study="mock-example2"))
+qtle <- QTLExperiment(assays=list(betas=mock_summary_stats$betas,
+                                  errors=mock_summary_stats$errors),
+                      feature_id=paste0("gene_", 1:nQTL),
+                      variant_id=sample(1:1e6, nQTL),
+                      state_id=paste0("state_", LETTERS[1:nStates]),
+                      metadata=list(study="mock-example2"))
 qtle
 ```
 
@@ -90,7 +90,7 @@ qtle
 
 ## From QTL summary statistics for each state 
 
-The `sumstats2qtle()` function is a generic function to load QTL summary statistics from multiple files, where each file represents a state, and convert them into a `QTLExperiment` object. Because different QTL mapping software produce summary statistics in different formats, this function is flexible, allowing users to specify the column name or index where required data is stored. This function can also utilize parallel processing (cores available are automatically detected, see [vroom documentation](https://vroom.r-lib.org/index.html) for details. 
+The `sumstats2qtle()` function is a generic function to load QTL summary statistics from multiple files, where each file represents a state, and convert them into a `QTLExperiment` object. Because different QTL mapping software produce summary statistics in different formats, this function is flexible, allowing users to specify the column name or index where required data is stored. This function can also utilize parallel processing (cores available are automatically detected, see the `r BiocStyle::CRANpkg("vroom")` documentation for details. 
 
 Required arguments:
 
@@ -113,11 +113,11 @@ Transcript usage data for lung, thryoid, spleen and blood are available in the `
 This data is licensed under the Creative Commons Attribution 4.0 International License. See `inst/script/data_processing.R` for details about how these data files were obtained from the database.
 
 ```{r demo-sumstats2qtle}
-input_path <- system.file("extdata", package = "QTLExperiment")
+input_path <- system.file("extdata", package="QTLExperiment")
 state <- c("lung", "thyroid", "spleen", "blood")
 
-input <- data.frame(state = state, 
-                    path = paste0(input_path, "/GTEx_tx_", state, ".tsv"))
+input <- data.frame(state=state, 
+                    path=paste0(input_path, "/GTEx_tx_", state, ".tsv"))
 
 qtle4 <- sumstats2qtle(input, 
                        feature_id="molecular_trait_id",
@@ -227,8 +227,8 @@ head(betas(qtle4))
 Finally, if the feature, variant, and state IDs are accidentally overwritten or removed in any way (i.e. not using one of the special setters), they can be retrieved using the `recover_qtle_ids`. For example, here we accidentally removed the state_id information from our colData by providing new colData. 
 
 ```{r example-cannot-overwrite-state-ids}
-new_colData <- DataFrame(list(some_info1 = LETTERS[1:ncol(qtle4)],
-                              some_info2 = c(1:ncol(qtle4))))
+new_colData <- DataFrame(list(some_info1=LETTERS[1:ncol(qtle4)],
+                              some_info2=c(1:ncol(qtle4))))
 colData(qtle4) <- new_colData
 head(colData(qtle4))
 
