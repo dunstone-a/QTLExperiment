@@ -26,8 +26,9 @@ qtle <- mockQTLE()
 
 head(colData(qtle))
 
-new_colData <- DataFrame(list(some_info1 = LETTERS[1:ncol(qtle)],
-                              some_info2 = c(1:ncol(qtle))))
+new_colData <- DataFrame(
+    list(some_info1=LETTERS[1:ncol(qtle)],
+        some_info2=c(1:ncol(qtle))))
 
 # colData is overwritten
 colData(qtle) <- new_colData

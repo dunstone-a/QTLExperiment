@@ -13,7 +13,7 @@ QTLExperiment is an R container package for storing and manipulating QTL summary
 This package can be installed from Bioconductor using the following code:
 
 ```
-if (!require("BiocManager", quietly = TRUE))
+if (!require("BiocManager", quietly=TRUE))
     install.packages("BiocManager")
 
 BiocManager::install("QTLExperiment")

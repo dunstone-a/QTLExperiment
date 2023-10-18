@@ -16,7 +16,7 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-```{r knitr-options, echo = FALSE}
+```{r knitr-options, echo=FALSE}
 knitr::opts_chunk$set(warning=FALSE, error=FALSE, message=FALSE, 
                       fig.height=6, fig.width=8)
 ```
@@ -116,16 +116,18 @@ This data is licensed under the Creative Commons Attribution 4.0 International L
 input_path <- system.file("extdata", package="QTLExperiment")
 state <- c("lung", "thyroid", "spleen", "blood")
 
-input <- data.frame(state=state, 
-                    path=paste0(input_path, "/GTEx_tx_", state, ".tsv"))
+input <- data.frame(
+    state=state, 
+    path=paste0(input_path, "/GTEx_tx_", state, ".tsv"))
 
-qtle4 <- sumstats2qtle(input, 
-                       feature_id="molecular_trait_id",
-                       variant_id="rsid", 
-                       betas="beta", 
-                       errors="se",
-                       pvalues="pvalue", 
-                       verbose=TRUE)
+qtle4 <- sumstats2qtle(
+    input, 
+    feature_id="molecular_trait_id",
+    variant_id="rsid", 
+    betas="beta", 
+    errors="se",
+    pvalues="pvalue", 
+    verbose=TRUE)
 qtle4
 head(betas(qtle4))
 ```
