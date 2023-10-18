@@ -15,8 +15,9 @@
 #'
 #' head(colData(qtle))
 #'
-#' new_colData <- DataFrame(list(some_info1 = LETTERS[1:ncol(qtle)],
-#'                               some_info2 = c(1:ncol(qtle))))
+#' new_colData <- DataFrame(
+#'     list(some_info1=LETTERS[1:ncol(qtle)],
+#'         some_info2=c(1:ncol(qtle))))
 #'
 #' # colData is overwritten
 #' colData(qtle) <- new_colData
@@ -56,7 +57,7 @@ recover_qtle_ids <- function(object){
     colnames(object) <- state_id(object)
     row.names(object) <- paste(feature_id(object), variant_id(object), sep="|")
 
-    try(validObject(object, complete = TRUE))
+    try(validObject(object, complete=TRUE))
 
     object
 }

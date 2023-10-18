@@ -50,12 +50,12 @@ mash2qtle <- function(data, sep=NULL, rowData=NULL, verbose=FALSE) {
             separate(.data$id, into=c("feature_id", "variant_id"), sep=sep)
 
         if(verbose){message("# unique features: ",
-                            length(unique(rowData$feature_id)))}
+            length(unique(rowData$feature_id)))}
     }
 
     object <- QTLExperiment(assays=assay_list,
-                            feature_id = rowData$feature_id,
-                            variant_id = rowData$variant_id)
+        feature_id=rowData$feature_id,
+        variant_id=rowData$variant_id)
 
     return(object)
 }
@@ -71,8 +71,7 @@ mash2qtle <- function(data, sep=NULL, rowData=NULL, verbose=FALSE) {
     betas <- as.matrix(data$Bhat)
     errors <- as.matrix(data$Shat)
 
-    assay_list <- list(betas = betas,
-                       errors = errors)
+    assay_list <- list(betas=betas, errors=errors)
 
     if("pvalues" %in% names(data)){
         assay_list[["pvalue"]] <- as.matrix(data$pval)
@@ -94,7 +93,7 @@ mash2qtle <- function(data, sep=NULL, rowData=NULL, verbose=FALSE) {
     errors <- as.matrix(get_psd(data))
     lfsrs <- as.matrix(get_lfsr(data))
 
-    assay_list <- list(betas = betas, errors = errors, lfsrs = lfsrs)
+    assay_list <- list(betas=betas, errors=errors, lfsrs=lfsrs)
 
     return(assay_list)
 }

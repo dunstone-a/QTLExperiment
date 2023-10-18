@@ -88,41 +88,40 @@ setMethod("[", c("QTLExperiment", "ANY", "ANY"), function(x, i, j, ...,
 #' @importFrom SummarizedExperiment rowData colData
 setMethod("[<-", c("QTLExperiment", "ANY", "ANY",
                    "QTLExperiment"), function(x, i, j, ..., value) {
-
-                       x <- updateObject(x)
-                       value <- updateObject(value)
-                       if (missing(i) && missing(j)) {
-                           return(value)
-                       }
-
-                       if (!missing(i)) {
-                           left <- int_rowData(x)
-                           right <- int_rowData(value)
-                           ii <- .convert_subset_index(i, rownames(x))
-
-                           tryCatch({ left[ii,] <- right
-                           }, error=function(err) {
-                               stop(
-                                   "failed to replace 'int_rowData' in '<", class(x),
-                                   ">[i,] <- value'\n", conditionMessage(err))
-                           })
-                           int_rowData(x) <- left
-                       }
-
-                       if (!missing(j)) {
-                           left <- int_colData(x)
-                           right <- int_colData(value)
-                           jj <- .convert_subset_index(j, colnames(x))
-
-                           tryCatch({ left[jj,] <- right
-                           }, error=function(err) {
-                               stop("failed to replace 'int_colData' in '<", class(x),
-                                    ">[,j] <- value'\n", conditionMessage(err))
-                           })
-                           int_colData(x) <- left
-                       }
-                       x <- recover_qtle_ids(x)
-                       int_metadata(x) <- int_metadata(value)
-                       validObject(x)
-                       callNextMethod()
-                   })
+    x <- updateObject(x)
+    value <- updateObject(value)
+    if (missing(i) && missing(j)) {
+        return(value)
+    }
+    
+    if (!missing(i)) {
+        left <- int_rowData(x)
+        right <- int_rowData(value)
+        ii <- .convert_subset_index(i, rownames(x))
+    
+        tryCatch({ left[ii,] <- right
+        }, error=function(err) {
+            stop(
+                "failed to replace 'int_rowData' in '<", class(x),
+                ">[i,] <- value'\n", conditionMessage(err))
+        })
+        int_rowData(x) <- left
+    }
+    
+    if (!missing(j)) {
+        left <- int_colData(x)
+        right <- int_colData(value)
+        jj <- .convert_subset_index(j, colnames(x))
+        
+        tryCatch({ left[jj,] <- right
+        }, error=function(err) {
+            stop("failed to replace 'int_colData' in '<", class(x),
+                ">[,j] <- value'\n", conditionMessage(err)) 
+        })
+        int_colData(x) <- left
+    }
+    x <- recover_qtle_ids(x)
+    int_metadata(x) <- int_metadata(value)
+    validObject(x)
+    callNextMethod()
+})

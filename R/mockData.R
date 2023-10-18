@@ -26,14 +26,14 @@
 #'
 #' @importFrom stats prcomp
 
-mockQTLE <- function(nStates = 10, nQTL = 100, names=TRUE){
+mockQTLE <- function(nStates=10, nQTL=100, names=TRUE){
 
-    sumstats <- mockSummaryStats(nStates=nStates, nQTL=nQTL,
-                                 names=names)
+    sumstats <- mockSummaryStats(nStates=nStates, nQTL=nQTL, names=names)
 
-    object <- QTLExperiment(assays = list(betas=sumstats$betas,
-                                         errors=sumstats$errors,
-                                         pvalues=sumstats$pvalues))
+    object <- QTLExperiment(
+        assays=list(betas=sumstats$betas,
+            errors=sumstats$errors,
+            pvalues=sumstats$pvalues))
 
     colData(object)$sample_size <- sample(seq(60,120), ncol(object))
     mainExpName(object) <- "mock-example"
@@ -56,7 +56,7 @@ mockQTLE <- function(nStates = 10, nQTL = 100, names=TRUE){
 #'
 #' @export
 
-mockSummaryStats <- function(nStates = 10, nQTL = 100, names=TRUE){
+mockSummaryStats <- function(nStates=10, nQTL=100, names=TRUE){
 
     betas <- matrix(rnorm(nStates * nQTL), ncol=nStates)
     errors <- matrix(abs(rnorm(nStates * nQTL)), ncol=nStates)
@@ -66,8 +66,10 @@ mockSummaryStats <- function(nStates = 10, nQTL = 100, names=TRUE){
     pvalues <- matrix(pvalues, ncol=nStates)
 
     if(names){
-        test_ids <- paste(sample(c("geneA", "geneB", "geneC"), nQTL, replace=TRUE),
-                          paste0("snp", sample(seq(1e3:1e5), nQTL)), sep="|")
+        test_ids <- paste(
+            sample(c("geneA", "geneB", "geneC"), nQTL, replace=TRUE),
+            paste0("snp", sample(seq(1e3:1e5), nQTL)),
+            sep="|")
         state_ids <- paste0("state", seq(1, nStates))
         row.names(betas) <- test_ids
         colnames(betas) <- state_ids
@@ -99,11 +101,11 @@ mockSummaryStats <- function(nStates = 10, nQTL = 100, names=TRUE){
 #' @export
 #'
 
-mockMASHR <- function(nStates = 10, nQTL = 100){
+mockMASHR <- function(nStates=10, nQTL=100){
 
-    sumstats <- mockSummaryStats(nStates = nStates, nQTL = nQTL)
+    sumstats <- mockSummaryStats(nStates=nStates, nQTL=nQTL)
 
-    list(B = sumstats$betas, Bhat = sumstats$betas, Shat=sumstats$errors)
+    list(B=sumstats$betas, Bhat=sumstats$betas, Shat=sumstats$errors)
 }
 
 #' Mock mashr data after fitting
@@ -115,11 +117,11 @@ mockMASHR <- function(nStates = 10, nQTL = 100){
 #' @export
 #'
 
-mockMASHR_FIT <- function(nStates = 10, nQTL = 100){
+mockMASHR_FIT <- function(nStates=10, nQTL=100){
 
-    sumstats <- mockSummaryStats(nStates = nStates, nQTL = nQTL)
-    result <- list(PosteriorMean = sumstats$betas,
-                   PosteriorSD = sumstats$betas,
-                   lfsr = sumstats$pvalues)
-    list(result = result)
+    sumstats <- mockSummaryStats(nStates=nStates, nQTL=nQTL)
+    result <- list(PosteriorMean=sumstats$betas,
+        PosteriorSD=sumstats$betas,
+        lfsr=sumstats$pvalues)
+    list(result=result)
 }

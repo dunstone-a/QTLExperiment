@@ -1,8 +1,8 @@
 .convert_subset_index <- function(subset, names) {
     if (is.character(subset)) {
         fmt <- "index out of bounds: %s"
-        subset <- SummarizedExperiment:::.SummarizedExperiment.charbound(subset,
-                                                                         names, fmt)
+        subset <- SummarizedExperiment:::.SummarizedExperiment.charbound(
+            subset, names, fmt)
     }
     return(as.vector(subset))
 }
@@ -10,7 +10,8 @@
 .unnamed <- "unnamed"
 
 .absent_action <- function(object, val, fun,
-                           onAbsence=c("none", "warn", "error")) {
+    onAbsence=c("none", "warn", "error")) {
+    
     if (is.null(val)) {
         onAbsence <- match.arg(onAbsence)
         if (onAbsence!="none") {
@@ -80,7 +81,7 @@
             }
             assay(se, assay) <- assay(se, assay)[row_order, ]
         }
-    }
+    }   
 
     return(se)
 }

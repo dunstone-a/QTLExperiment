@@ -47,9 +47,9 @@
 #' error <- matrix(abs(rnorm(nStates * nQTL)), ncol=nStates)
 #'
 #' qtle <- QTLExperiment(assays=list(betas=betas, errors=error),
-#'                       feature_id = sample(1:10, nQTL, replace=TRUE),
-#'                       variant_id = sample(seq(1e3:1e5), nQTL),
-#'                       state_id = LETTERS[1:nStates])
+#'                       feature_id=sample(1:10, nQTL, replace=TRUE),
+#'                       variant_id=sample(seq(1e3:1e5), nQTL),
+#'                       state_id=LETTERS[1:nStates])
 #' qtle
 #'
 #' ## coercion from SummarizedExperiment
@@ -110,14 +110,16 @@ setValidity("QTLExperiment", function(object) {
     x.rownames <- rownames(object)
     x.colnames <- colnames(object)
 
-    checks <- c(betas = ifelse("betas" %in% assay_names,
-                               TRUE, "assay needed"),
-                errors = ifelse("errors" %in% assay_names,
-                                TRUE, "assay needed"),
-                test_ids = ifelse(any(duplicated(x.rownames)),
-                                  "duplicate feature|variant rows", TRUE),
-                colnames = ifelse(any(duplicated(x.colnames)),
-                                  "duplicate state_id columns", TRUE))
+    checks <- c(betas=ifelse("betas" %in% assay_names, TRUE, "assay needed"),
+        errors=ifelse("errors" %in% assay_names, TRUE, "assay needed"),
+        test_ids=ifelse(
+            any(duplicated(x.rownames)), 
+            "duplicate feature|variant rows",
+            TRUE),
+        colnames=ifelse(
+            any(duplicated(x.colnames)),
+            "duplicate state_id columns",
+            TRUE))
 
 
     if (all(checks == TRUE)) {
@@ -126,12 +128,12 @@ setValidity("QTLExperiment", function(object) {
             valid <- TRUE
         } else {
             valid <- checks[checks != TRUE]
-            valid <- paste(names(valid), valid, sep = ": ")
+            valid <- paste(names(valid), valid, sep=": ")
         }
 
     } else{
         valid <- checks[checks != TRUE]
-        valid <- paste(names(valid), valid, sep = ": ")
+        valid <- paste(names(valid), valid, sep=": ")
     }
 
     return(valid)
@@ -158,9 +160,7 @@ setValidity("QTLExperiment", function(object) {
     rowData <- DataFrame(feature_id, variant_id)
     names(rowData) <- paste0(".", c(.feat_field, .var_field))
 
-    out <- new("QTLExperiment", rse,
-               int_colData = colData,
-               int_rowData = rowData)
+    out <- new("QTLExperiment", rse, int_colData=colData, int_rowData=rowData)
     out <- recover_qtle_ids(out)
     out
 
@@ -178,8 +178,8 @@ setAs("RangedSummarizedExperiment", "QTLExperiment", function(from) {
     feature_id <- gsub("\\|.*", "", rownames(from))
     variant_id <- gsub(".*\\|", "", rownames(from))
 
-    .rse_to_qtle(from, state_id = state_id, feature_id = feature_id,
-                 variant_id = variant_id)
+    .rse_to_qtle(from, state_id=state_id, feature_id=feature_id,
+        variant_id=variant_id)
 })
 
 #' @exportMethod coerce
@@ -195,8 +195,8 @@ setAs("SummarizedExperiment", "QTLExperiment", function(from) {
     variant_id <- gsub(".*\\|", "", rownames(from))
 
     .rse_to_qtle(as(from, "RangedSummarizedExperiment"),
-                 state_id = state_id, feature_id = feature_id,
-                 variant_id = variant_id)
+        state_id=state_id, feature_id=feature_id,
+        variant_id=variant_id)
 })
 
 

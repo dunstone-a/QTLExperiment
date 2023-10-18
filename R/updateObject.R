@@ -37,26 +37,26 @@
 #' @importFrom S4Vectors DataFrame
 #' @importFrom utils packageVersion
 setMethod("updateObject", "QTLExperiment",
-          function(object, ..., verbose=FALSE) {
-              old.ver <- objectVersion(object)
-
-              triggered <- FALSE
-              class(old.ver) <- "QTLExperiment"
-              old <- S4Vectors:::disableValidity()
-              if (!isTRUE(old)) {
-                  S4Vectors:::disableValidity(TRUE)
-                  on.exit(S4Vectors:::disableValidity(old))
-              }
-
-              # Update possibly outdated DataFrame object.
-              object@int_colData <- updateObject(object@int_colData, ..., verbose=verbose)
-
-              if (verbose && triggered) {
-                  message("[updateObject] ", class(object)[1], " object uses ",
-                          "internal representation\n", "[updateObject] from QTLExperiment ",
-                          old.ver, ". ", "Updating it ...\n", appendLF = FALSE)
-              }
-
-              int_metadata(object)$version <- packageVersion("QTLExperiment")
-              callNextMethod()
-          })
+    function(object, ..., verbose=FALSE) {
+        old.ver <- objectVersion(object)
+        
+        triggered <- FALSE
+        class(old.ver) <- "QTLExperiment"
+        old <- S4Vectors:::disableValidity()
+        if (!isTRUE(old)) {
+            S4Vectors:::disableValidity(TRUE)
+            on.exit(S4Vectors:::disableValidity(old))
+        }
+        
+        # Update possibly outdated DataFrame object.
+        object@int_colData <- updateObject(object@int_colData, ..., verbose=verbose)
+        
+        if (verbose && triggered) {
+            message("[updateObject] ", class(object)[1], " object uses ",
+                "internal representation\n", "[updateObject] from QTLExperiment ",
+                old.ver, ". ", "Updating it ...\n", appendLF = FALSE)
+        }
+        
+        int_metadata(object)$version <- packageVersion("QTLExperiment")
+        callNextMethod()
+    })

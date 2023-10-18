@@ -34,10 +34,9 @@
 #' @importFrom SummarizedExperiment assay
 #' @importFrom rlang .data
 #'
-sumstats2qtle <- function(input, feature_id = "gene_id",
-                          variant_id = "variant_pos", betas = "slope",
-                          errors = "slope_se", pvalues = NULL,
-                          n_max=Inf, verbose = TRUE){
+sumstats2qtle <- function(
+        input, feature_id="gene_id", variant_id="variant_pos", betas="slope",
+        errors="slope_se", pvalues=NULL, n_max=Inf, verbose=TRUE){
 
     path <- state <- id <- NULL
 
@@ -54,48 +53,49 @@ sumstats2qtle <- function(input, feature_id = "gene_id",
     }
 
     if(is.null(pvalues)){
-        data <- vroom(input$path, id="path", show_col_types = FALSE,
-                      n_max = n_max,
-                      col_select=list(path, feature_id = all_of(feature_id),
-                                      variant_id = all_of(variant_id),
-                                      betas = all_of(betas),
-                                      errors = all_of(pvalues)),
-                      progress = verbose)
+        data <- vroom(input$path, id="path", show_col_types=FALSE,
+            n_max=n_max,
+            col_select=list(path, feature_id=all_of(feature_id),
+                variant_id=all_of(variant_id),
+                betas=all_of(betas),
+                errors=all_of(pvalues)),
+            progress=verbose)
     } else{
-        data <- vroom(input$path, id="path", show_col_types = FALSE,
-                      n_max = n_max,
-                      col_select=list(all_of(path), feature_id = all_of(feature_id),
-                                      variant_id = all_of(variant_id),
-                                      betas = all_of(betas),
-                                      errors = all_of(errors),
-                                      pvalues = all_of(pvalues)),
-                      progress = verbose)
+        data <- vroom(input$path, id="path", show_col_types=FALSE,
+            n_max=n_max,
+            col_select=list(all_of(path), feature_id=all_of(feature_id),
+                variant_id=all_of(variant_id),
+                betas=all_of(betas),
+                errors=all_of(errors),
+                pvalues=all_of(pvalues)),
+            progress=verbose)
     }
 
     data <- data %>% left_join(input, "path") %>%
         fselect(-path) %>%
-        fmutate(id = paste0(feature_id, "|", variant_id))
+        fmutate(id=paste0(feature_id, "|", variant_id))
 
-    betas <- data %>% pivot_wider(names_from = state, values_from = betas,
-                                  id_cols = id) %>%
-        tibble::column_to_rownames(var = "id") %>% qDF()
+    betas <- data %>% 
+        pivot_wider(names_from=state, values_from=betas, id_cols=id) %>%
+        tibble::column_to_rownames(var="id") %>% qDF()
 
-    errors <- data %>% pivot_wider(names_from = state, values_from = errors,
-                                   id_cols = id) %>%
-        tibble::column_to_rownames(var = "id") %>% qDF()
+    errors <- data %>% 
+        pivot_wider(names_from=state, values_from=errors, id_cols=id) %>%
+        tibble::column_to_rownames(var="id") %>% qDF()
 
-    object <- QTLExperiment(list(betas = betas, errors = errors),
-                            feature_id = gsub("\\|.*", "", row.names(betas)),
-                            variant_id = gsub(".*\\|", "", row.names(betas)))
+    object <- QTLExperiment(
+        list(betas=betas, errors=errors),
+            feature_id=gsub("\\|.*", "", row.names(betas)),
+            variant_id=gsub(".*\\|", "", row.names(betas)))
 
     colData(object) <- cbind(
         colData(object),
         dplyr::select(input, -dplyr::all_of(c("state", "path"))))
 
     if(!is.null(pvalues)){
-        pvalues <- data %>% pivot_wider(names_from = state, values_from = pvalues,
-                                        id_cols = id) %>%
-            tibble::column_to_rownames(var = "id") %>% qDF()
+        pvalues <- data %>% 
+            pivot_wider(names_from=state, values_from=pvalues, id_cols=id) %>%
+            tibble::column_to_rownames(var="id") %>% qDF()
 
         assay(object, "pvalues") <- pvalues
     }

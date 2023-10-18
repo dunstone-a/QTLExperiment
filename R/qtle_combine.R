@@ -72,7 +72,9 @@ setMethod("cbind", "QTLExperiment", function(..., deparse.level=1) {
         int_colD <- do.call(rbind, lapply(args, int_colData))
     }, error=function(err) {
         stop(
-            "failed to combine 'int_colData' in 'cbind(<", class(args[[1]]), ">)':\n",
+            "failed to combine 'int_colData' in 'cbind(<",
+            class(args[[1]]),
+            ">)':\n",
             conditionMessage(err))
     })
 
@@ -88,8 +90,8 @@ setMethod("cbind", "QTLExperiment", function(..., deparse.level=1) {
     int_eleMetaD <- rowData(combined)
 
     out <- BiocGenerics:::replaceSlots(out, int_colData=int_colD,
-                                       int_rowData=int_eleMetaD,
-                                       int_metadata=int_meta, check=FALSE)
+        int_rowData=int_eleMetaD,
+        int_metadata=int_meta, check=FALSE)
 
     recover_qtle_ids(out)
 })
@@ -128,8 +130,8 @@ setMethod("rbind", "QTLExperiment", function(..., deparse.level=1) {
 
 
     out <- BiocGenerics:::replaceSlots(out, int_colData=int_colD,
-                                       int_rowData=int_eleMetaD,
-                                       int_metadata=int_meta, check=FALSE)
+        int_rowData=int_eleMetaD,
+        int_metadata=int_meta, check=FALSE)
     recover_qtle_ids(out)
 })
 

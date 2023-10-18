@@ -121,7 +121,7 @@ setMethod("rowData", "QTLExperiment", function(x, ..., internal=FALSE) {
                 cn <- c(cn[seq(2)], "...")
             }
             warning("overlapping names in internal and external rowData (",
-                    paste(cn, collapse = ", "), ")")
+                    paste(cn, collapse=", "), ")")
         }
         cbind(callNextMethod(x, ...), int_rowData(x))
     } else {
@@ -161,7 +161,7 @@ setMethod("colData", "QTLExperiment", function(x, ..., internal=FALSE) {
                 cn <- c(cn[seq(2)], "...")
             }
             warning("overlapping names in internal and external colData (",
-                    paste(cn, collapse = ", "), ")")
+                    paste(cn, collapse=", "), ")")
         }
         cbind(callNextMethod(x, ...), int_colData(x))
     } else {
