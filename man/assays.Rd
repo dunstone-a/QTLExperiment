@@ -20,6 +20,13 @@
 \alias{lfsrs,QTLExperiment-method}
 \alias{lfsrs<-,QTLExperiment-method}
 \title{Named assay getters and setters}
+\value{
+For \code{assays}, returns the value stored in the requested 
+\code{\link{assay}}.
+
+For \code{assays<-value}, the relevant slot of the \linkS4class{QTLExperiment} 
+is updated.
+}
 \description{
 These are methods for getting or setting \code{assay(qtle, i=X, ...)}
 where \code{qtle} is a \linkS4class{QTLExperiment} object and
@@ -62,5 +69,5 @@ dim(betas(qtle))
 \code{\link{assay}} and \code{\link{assay<-}}, for the wrapped methods.
 }
 \author{
-Christina B Azodi
+Christina B Azodi, Amelia Dunstone
 }

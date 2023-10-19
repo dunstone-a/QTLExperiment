@@ -27,9 +27,15 @@
 #' Get or set a matrix of local false sign rates.
 #' }
 #' }
+#' 
+#' @returns For \code{assays}, returns the value stored in the requested 
+#' \code{\link{assay}}.
+#' 
+#' For \code{assays<-value}, the relevant slot of the \linkS4class{QTLExperiment} 
+#' is updated.
 #'
 #' @author
-#' Christina B Azodi
+#' Christina B Azodi, Amelia Dunstone
 #'
 #' @seealso
 #' \code{\link{assay}} and \code{\link{assay<-}}, for the wrapped methods.

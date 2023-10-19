@@ -19,6 +19,10 @@
 #' \item{\code{mainExpName(x) <- NULL:}}{Remove the name associated to \code{x}.}
 #' }
 #'
+#' @returns For \code{mainExpName(x)}, returns the name associated to \code{x}.
+#' 
+#' For \code{mainExpName(x) <- value}, the name of the object \code{x} is updated.
+#' 
 #' @author Christina B. Azodi
 #' @seealso
 #' \linkS4class{QTLExperiment}, for the underlying class definition.

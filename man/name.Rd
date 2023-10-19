@@ -14,6 +14,11 @@
 \item{value}{Any character-like object or \code{NULL} to
 remove existing labels.}
 }
+\value{
+For \code{mainExpName(x)}, returns the name associated to \code{x}.
+
+For \code{mainExpName(x) <- value}, the name of the object \code{x} is updated.
+}
 \description{
 Returns the name of an object of class \linkS4class{QTLExperiment}.
 }

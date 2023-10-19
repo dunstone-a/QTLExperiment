@@ -19,6 +19,13 @@
 \alias{rowData,QTLExperiment-method}
 \alias{parallel_slot_names,QTLExperiment-method}
 \title{Internal QTLExperiment functions}
+\value{
+For \code{assays}, returns the value stored in the requested field 
+of the internal rowData, colData or metaData.
+
+ For \code{assays<-value}, the relevant internal field of the \linkS4class{QTLExperiment} 
+ is updated.
+}
 \description{
 Methods to get or set internal fields from the QTLExperiment class.
 These functions are intended for package developers who want to make changes

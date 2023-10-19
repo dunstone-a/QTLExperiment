@@ -66,6 +66,12 @@
 #' \code{\link{colData}}, \code{\link{rowData}} and \code{\link{metadata}} for
 #' the user-visible equivalents.
 #'
+#' @returns For \code{assays}, returns the value stored in the requested field 
+#' of the internal rowData, colData or metaData.
+#' 
+#'  For \code{assays<-value}, the relevant internal field of the \linkS4class{QTLExperiment} 
+#'  is updated.
+#'  
 #' @author Christina B Azodi
 #'
 #' @name QTLe-internals
