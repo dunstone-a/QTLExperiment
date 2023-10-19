@@ -16,7 +16,7 @@ This package can be installed from Bioconductor using the following code:
 if (!require("BiocManager", quietly=TRUE))
     install.packages("BiocManager")
 
-BiocManager::install("QTLExperiment")
+BiocManager::install("QTLExperiment", version = "devel")
 ```
 
 Using the most recent version of R is strongly recommended (R 4.3.1 at the time of writing). 

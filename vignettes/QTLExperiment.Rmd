@@ -36,7 +36,7 @@ QTLExperiment can be installed from GitHub:
 if (!require("BiocManager", quietly=TRUE))
     install.packages("BiocManager")
 
-BiocManager::install("QTLExperiment")
+BiocManager::install("QTLExperiment", version = "devel")
 ```
 
 ```{r}
