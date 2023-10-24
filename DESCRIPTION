@@ -2,7 +2,7 @@ Package: QTLExperiment
 Type: Package
 Date: 2023-09-28
 Title: S4 classes for QTL summary statistics and metadata
-Version: 1.0.0
+Version: 1.1.0
 Authors@R: c(
     person("Christina", "Del Azodi", role=c("aut"), email="cazodi@svi.edu.au"), 
     person("Davis","McCarthy", role=c("ctb"), email="dmccarthy@svi.edu.au"),
