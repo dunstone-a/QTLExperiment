@@ -1,2 +1,25 @@
-Changes in version 0.99.0
+Changes in version 0.99.0 (2023-09-28)
 + Submitted to Bioconductor
+
+Changes in version 0.99.1 (2023-09-28)
++ Small tweaks e.g. using seq_along()
+
+Changes in version 0.99.2 (2023-10-03)
++ Added testing during R CMD check
++ Added more examples and updated documentation
++ Added support for additional colData in sumstats2QTL()
+
+Changes in version 0.99.3 (2023-10-10)
++ Removed all external downloads by bundling data into package
+
+Changes in version 0.99.4 (2023-10-18)
++ Updated description and readme
++ Improved indentation consistency
++ Split the miscellaneous documentation file into two
+
+Changes in version 0.99.5 (2023-10-19) 
++ Added a few tests for internal functions
+
+Changes in version 0.99.6 (2023-10-19) 
++ Added return statements for all documentation files
+  o This removes the warning from BiocCheck()
