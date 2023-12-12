@@ -98,8 +98,12 @@ test_that("subset replacement checks for duplicate feature|variant pairs", {
     to <- 1:10
     from <- 11:20
     qtlex <- qtle
-    expect_error(qtlex[to, ] <- qtle[from, ],
-                 "invalid class .QTLExperiment. object: test_ids: duplicate feature|variant rows")
+    expect_error(
+        qtlex[to, ] <- qtle[from, ],
+        paste0(
+            "invalid class ",
+            dQuote("QTLExperiment"),
+            " object: test_ids: duplicate feature|variant rows"))
 })
 
 test_that("subset replacement by column works correctly for basic cases", {

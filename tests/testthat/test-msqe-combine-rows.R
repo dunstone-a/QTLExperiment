@@ -19,8 +19,9 @@ test_that("rbind gives correct error messages in the basic case", {
     qtle.alt <- qtle
     qtle.alt <- qtle[, 1:8]
     feature_id(qtle.alt) <- paste0(feature_id(qtle.alt), "_alt")
-    expect_error(rbind(qtle, qtle.alt),
-                 "'...' objects must have the same colnames")
+    expect_error(
+        rbind(qtle, qtle.alt),
+        "'...' objects must have the same colnames")
 })
 
 
@@ -33,8 +34,12 @@ test_that("rbind respects the colData and gives proper error messages", {
 
 
     colData(qtle3)$X <- runif(ncol(qtle3))
-    expect_error(rbind(qtle2, qtle3),
-                 "column\\(s\\) 'X' in .colData. are duplicated and the data do not match")
+    expect_error(
+        rbind(qtle2, qtle3),
+        paste0(
+            "column\\(s\\) 'X' in ",
+            sQuote("colData"),
+            " are duplicated and the data do not match"))
 })
 
 
