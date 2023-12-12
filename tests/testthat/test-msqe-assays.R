@@ -13,10 +13,11 @@ variant_ids <- paste0("var", sample(seq(1e3:1e5), nQTL))
 state_ids <- paste0("state_", 1:nStates)
 
 test_that("Test that assay GETS work correctly", {
-    qtle <- QTLExperiment(assays=list(betas=b, errors=se, pvalues=p, lfsrs=p),
-                          state_id=state_ids,
-                          feature_id=feature_ids,
-                          variant_id=variant_ids)
+    qtle <- QTLExperiment(
+        assays=list(betas=b, errors=se, pvalues=p, lfsrs=p),
+        state_id=state_ids,
+        feature_id=feature_ids,
+        variant_id=variant_ids)
 
     expect_equivalent(betas(qtle), b)
     expect_equivalent(errors(qtle), se)

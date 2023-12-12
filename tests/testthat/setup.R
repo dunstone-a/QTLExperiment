@@ -5,11 +5,11 @@ nQTL <- 100
 nStates <- 10
 
 sumstats <- mockSummaryStats(nStates=nStates, nQTL=nQTL, names=TRUE)
-qtle <- QTLExperiment(assays=list(betas=sumstats$betas,
-                                 errors=sumstats$errors,
-                                 pvalues=sumstats$pvalues,
-                                 lfsrs=sumstats$pvalues))
-
+qtle <- QTLExperiment(assays=list(
+    betas=sumstats$betas,
+    errors=sumstats$errors,
+    pvalues=sumstats$pvalues,
+    lfsrs=sumstats$pvalues))
 
 sumstats_noNames <- mockSummaryStats(nStates=nStates, nQTL=nQTL, names=FALSE)
 state_ids <- colnames(sumstats$betas)

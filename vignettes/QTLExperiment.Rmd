@@ -86,6 +86,8 @@ A mock `QTLExperiment` object can also be generated automatically using the `moc
 ```{r create-mock-QTLe-wrapper}
 qtle <- mockQTLE(nStates=nStates, nQTL=nQTL)
 qtle
+
+
 ```
 
 ## From QTL summary statistics for each state 
@@ -109,7 +111,7 @@ Note that vroom does not handle compressed files well, and will not load all row
 It is best to provide vroom with uncompressed objects for this reason.
   
 As an example, we can load summary statistics from the [EBI eQTL database](https://www.ebi.ac.uk/eqtl/Data_access/).
-Transcript usage data for lung, thryoid, spleen and blood are available in the `inst/extdata` folder. 
+Transcript usage data for lung, thyroid, spleen and blood are available in the `inst/extdata` folder. 
 This data is licensed under the Creative Commons Attribution 4.0 International License. See `inst/script/data_processing.R` for details about how these data files were obtained from the database.
 
 ```{r demo-sumstats2qtle}
