@@ -38,4 +38,4 @@ Description: QLTExperiment defines an S4 class for storing and manipulating summ
     'QTLExperiment' also stores experiment metadata and has checks in place to ensure that transformations apply correctly.
 biocViews: FunctionalGenomics, DataImport, DataRepresentation, Infrastructure, Sequencing, SNP, Software
 VignetteBuilder: knitr
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
