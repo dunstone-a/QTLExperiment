@@ -105,12 +105,13 @@ QTLExperiment <- function(..., state_id=NULL, feature_id=NULL, variant_id=NULL){
 #'
 setValidity("QTLExperiment", function(object) {
 
-    row_data_names <- names(int_rowData(object))
-    assay_names <- names(assays(object))
-    x.rownames <- rownames(object)
-    x.colnames <- colnames(object)
+    row_data_names <- names(int_rowData(object)) # .feature_id, .variant_id
+    assay_names <- names(assays(object)) # betas, errors, pvalues
+    x.rownames <- rownames(object) # feature_id|variant_id
+    x.colnames <- colnames(object) # state_ids
 
-    checks <- c(betas=ifelse("betas" %in% assay_names, TRUE, "assay needed"),
+    checks <- c(
+        betas=ifelse("betas" %in% assay_names, TRUE, "assay needed"),
         errors=ifelse("errors" %in% assay_names, TRUE, "assay needed"),
         test_ids=ifelse(
             any(duplicated(x.rownames)), 
@@ -123,15 +124,8 @@ setValidity("QTLExperiment", function(object) {
 
 
     if (all(checks == TRUE)) {
-
-        if (all(checks == TRUE)) {
-            valid <- TRUE
-        } else {
-            valid <- checks[checks != TRUE]
-            valid <- paste(names(valid), valid, sep=": ")
-        }
-
-    } else{
+        valid <- TRUE
+    } else {
         valid <- checks[checks != TRUE]
         valid <- paste(names(valid), valid, sep=": ")
     }

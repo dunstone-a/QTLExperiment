@@ -61,9 +61,11 @@ mock_summary_stats$betas[1:5,1:5]
 With input data in this format, the `qtle` object can be generated as shown below.
 
 ```{r create-mock-QTLe-manual}
-qtle <- QTLExperiment(assays=list(betas=mock_summary_stats$betas,
-                                  errors=mock_summary_stats$errors),
-                      metadata=list(study="mock-example"))
+qtle <- QTLExperiment(
+    assays=list(
+        betas=mock_summary_stats$betas,
+        errors=mock_summary_stats$errors),
+    metadata=list(study="mock-example"))
 qtle
 ```
 
