@@ -36,8 +36,9 @@ mashr_sim <- mockMASHR(nStates, nQTL)
 
 qtle2 <- mash2qtle(
     mashr_sim,
-    rowData=DataFrame(feature_id=row.names(mashr_sim$Bhat),
-                      variant_id=sample(seq_len(nQTL))))
+    rowData=DataFrame(
+        feature_id=row.names(mashr_sim$Bhat),
+        variant_id=sample(seq_len(nQTL))))
 dim(qtle2)
 
 

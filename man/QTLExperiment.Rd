@@ -64,16 +64,19 @@ nQTL <- 100
 betas <- matrix(rnorm(nStates * nQTL), ncol=nStates)
 error <- matrix(abs(rnorm(nStates * nQTL)), ncol=nStates)
 
-qtle <- QTLExperiment(assays=list(betas=betas, errors=error),
-                      feature_id=sample(1:10, nQTL, replace=TRUE),
-                      variant_id=sample(seq(1e3:1e5), nQTL),
-                      state_id=LETTERS[1:nStates])
+qtle <- QTLExperiment(
+    assays=list(betas=betas, errors=error),
+    feature_id=sample(1:10, nQTL, replace=TRUE),
+    variant_id=sample(seq(1e3:1e5), nQTL),
+    state_id=LETTERS[1:nStates])
 qtle
 
 ## coercion from SummarizedExperiment
 mock_sumstats <- mockSummaryStats(nStates=10, nQTL=100)
-se <- SummarizedExperiment(assays=list(betas=mock_sumstats$betas,
-                                       errors=mock_sumstats$errors))
+se <- SummarizedExperiment(
+    assays=list(
+        betas=mock_sumstats$betas,
+        errors=mock_sumstats$errors))
 as(se, "QTLExperiment")
 
 }

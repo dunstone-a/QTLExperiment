@@ -1,4 +1,4 @@
-# Setting up the options for a mock MultiStateQTLExperiment.
+# Setting up the options for a mock QTLExperiment
 
 set.seed(42)
 nQTL <- 100

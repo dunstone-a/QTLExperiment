@@ -38,7 +38,7 @@ In the following, \code{x} is a \linkS4class{QTLExperiment} object.
 
 \describe{
 \item{\code{x[i, j, ...] <- value}:}{Replaces all data for rows \code{i} and
-columns {j} with the corresponding fields in a QTLExperiment
+columns \code{j} with the corresponding fields in a QTLExperiment
 \code{value}, where \code{i} and \code{j} can be a logical, integer, or
 character vector of subscripts, indicating the rows and columns,
 respectively, to retain. If either \code{i} or \code{j} is missing, than

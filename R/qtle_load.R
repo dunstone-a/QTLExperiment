@@ -76,11 +76,11 @@ sumstats2qtle <- function(
         fmutate(id=paste0(feature_id, "|", variant_id))
 
     betas <- data %>% 
-        pivot_wider(names_from=state, values_from=betas, id_cols=id) %>%
+        pivot_wider(names_from=state, values_from=betas, values_fn=mean, id_cols=id) %>%
         tibble::column_to_rownames(var="id") %>% qDF()
 
     errors <- data %>% 
-        pivot_wider(names_from=state, values_from=errors, id_cols=id) %>%
+        pivot_wider(names_from=state, values_from=errors, values_fn=mean, id_cols=id) %>%
         tibble::column_to_rownames(var="id") %>% qDF()
 
     object <- QTLExperiment(
@@ -94,7 +94,7 @@ sumstats2qtle <- function(
 
     if(!is.null(pvalues)){
         pvalues <- data %>% 
-            pivot_wider(names_from=state, values_from=pvalues, id_cols=id) %>%
+            pivot_wider(names_from=state, values_from=pvalues, values_fn=mean, id_cols=id) %>%
             tibble::column_to_rownames(var="id") %>% qDF()
 
         assay(object, "pvalues") <- pvalues
