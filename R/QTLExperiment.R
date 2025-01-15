@@ -29,7 +29,6 @@
 #' represent the main extensions implemented in the QTLExperiment
 #' class. This enables a consistent, formalized representation of key aspects
 #' of multi-state QTL data that are universal to the data structure.
-#' that are commonly encountered during single-cell data analysis.
 #' Readers are referred to the specific documentation pages for more details.
 #'
 #' A QTLe can also be coerced from a \linkS4class{SummarizedExperiment} or
