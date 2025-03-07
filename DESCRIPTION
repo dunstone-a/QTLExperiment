@@ -1,6 +1,6 @@
 Package: QTLExperiment
 Type: Package
-Date: 2023-09-28
+Date: 2025-03-07
 Title: S4 classes for QTL summary statistics and metadata
 Version: 1.5.1
 Authors@R: c(
