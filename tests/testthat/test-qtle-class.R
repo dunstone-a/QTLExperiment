@@ -34,6 +34,35 @@ test_that("construction of the QTLe works correctly - manual", {
     expect_equivalent(state_id(qtle), colnames(sumstats$betas))
 })
 
+test_that("arguments can be passed to SummarizedExperiment", {
+    qtle 
+    
+    rowData(qtle)$chr <- "chr1"
+    
+    qtle2 <- QTLExperiment(
+        assay = list(
+            betas = betas(qtle),
+            errors = errors(qtle)),
+        rowData = rowData(qtle))
+    
+    qtle$batch <- "batch1"
+    
+    qtle3 <- QTLExperiment(
+        assay = list(
+            betas = betas(qtle),
+            errors = errors(qtle)),
+        colData = colData(qtle))
+    
+    expect_equivalent(ncol(rowData(qtle2)), 3)
+    expect_equivalent(ncol(colData(qtle3)), 2)
+    
+})
+
+test_that("row names and col names are everywhere", {
+    expect_equivalent(row.names(mock), row.names(rowData(mock)))
+    expect_equivalent(colnames(mock), row.names(colData(mock)))
+})
+
 
 test_that("construction of the QTLe works correctly - from se", {
     se <- SummarizedExperiment(assays=list(betas=sumstats$betas,

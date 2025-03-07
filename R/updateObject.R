@@ -19,12 +19,6 @@
 #' @return
 #' An updated version of \code{object}.
 #'
-#' @examples
-#' qtle <- mockQTLE()
-#' objectVersion(qtle)
-#'
-#' qtle_new <- QTLExperiment::updateObject(qtle)
-#'
 #' @author Christina B Azodi
 #'
 #' @seealso
@@ -49,7 +43,7 @@ setMethod("updateObject", "QTLExperiment",
         }
         
         # Update possibly outdated DataFrame object.
-        object@int_colData <- updateObject(object@int_colData, ..., verbose=verbose)
+        object@colData <- updateObject(object@colData, ..., verbose=verbose)
         
         if (verbose && triggered) {
             message("[updateObject] ", class(object)[1], " object uses ",
@@ -57,6 +51,6 @@ setMethod("updateObject", "QTLExperiment",
                 old.ver, ". ", "Updating it ...\n", appendLF = FALSE)
         }
         
-        int_metadata(object)$version <- packageVersion("QTLExperiment")
+        metadata(object)$version <- packageVersion("QTLExperiment")
         callNextMethod()
     })

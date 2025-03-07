@@ -12,8 +12,10 @@ output:
         toc_float: true
 vignette: >
   %\VignetteIndexEntry{An introduction to the QTLExperiment class}
-  %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r knitr-options, echo=FALSE}
@@ -88,8 +90,6 @@ A mock `QTLExperiment` object can also be generated automatically using the `moc
 ```{r create-mock-QTLe-wrapper}
 qtle <- mockQTLE(nStates=nStates, nQTL=nQTL)
 qtle
-
-
 ```
 
 ## From QTL summary statistics for each state 
@@ -178,6 +178,7 @@ feature_id(qtle4b) <- paste0(feature_id(qtle4), "_b")
 dim(rbind(qtle4, qtle4b))
 ```
 
+
 ```{r show-subset-functions}
 qtle.subset <- qtle[rowData(qtle)$feature_id == "geneA", ]
 dim(qtle.subset)
@@ -226,32 +227,6 @@ These functions can also be used as setters. For example, when `state_id()` is u
 state_id(qtle4) <- c("LUNG", "THYROID", "SPLEEN", "BLOOD")
 head(colData(qtle4))
 head(betas(qtle4))
-```
-
-### Manually syncing metadata
-
-Finally, if the feature, variant, and state IDs are accidentally overwritten or removed in any way (i.e. not using one of the special setters), they can be retrieved using the `recover_qtle_ids`. For example, here we accidentally removed the state_id information from our colData by providing new colData. 
-
-```{r example-cannot-overwrite-state-ids}
-new_colData <- DataFrame(list(some_info1=LETTERS[1:ncol(qtle4)],
-                              some_info2=c(1:ncol(qtle4))))
-colData(qtle4) <- new_colData
-head(colData(qtle4))
-
-qtle4 <- recover_qtle_ids(qtle4)
-head(colData(qtle4))
-```
-
-Or here we accidentally shuffled the variant_ids in the rowData, but can retrieve the old labels. 
-
-```{r example-overwrite-variant-ids}
-rowData(qtle4)$variant_id <- sample(rowData(qtle4)$variant_id, nrow(qtle4))
-
-head(rowData(qtle4))
-
-
-qtle4 <- recover_qtle_ids(qtle4)
-head(rowData(qtle4))
 ```
 
 

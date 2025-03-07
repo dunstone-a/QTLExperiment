@@ -10,9 +10,9 @@
 #'
 #' @param ... Arguments passed to the \code{\link{SummarizedExperiment}}
 #' constructor to fill the slots of the base class.
-#' @param state_id An array of state IDs the length of ncol(QTLe).
-#' @param feature_id An array of feature IDs the length of nrow(QTLe).
-#' @param variant_id An array of variant IDs the length of nrow(QTLe).
+#' @param state_id An array of state IDs the length of ncol(qtle).
+#' @param feature_id An array of feature IDs the length of nrow(qtle).
+#' @param variant_id An array of variant IDs the length of nrow(qtle).
 #'
 #' @details
 #' In this class, rows should represent associations (feature_id:variant_id
@@ -48,7 +48,7 @@
 #' qtle <- QTLExperiment(
 #'     assays=list(betas=betas, errors=error),
 #'     feature_id=sample(1:10, nQTL, replace=TRUE),
-#'     variant_id=sample(seq(1e3:1e5), nQTL),
+#'     variant_id=sample(seq(1e3,1e5), nQTL),
 #'     state_id=LETTERS[1:nStates])
 #' qtle
 #'
@@ -82,6 +82,8 @@ NULL
 QTLExperiment <- function(..., state_id=NULL, feature_id=NULL, variant_id=NULL){
 
     rse <- SummarizedExperiment(...)
+    
+    # print(colnames(rowData(rse)))
 
     if(!is(rse, "RangedSummarizedExperiment")) {
         rse <- as(rse, "RangedSummarizedExperiment")
@@ -107,7 +109,7 @@ QTLExperiment <- function(..., state_id=NULL, feature_id=NULL, variant_id=NULL){
 #'
 setValidity("QTLExperiment", function(object) {
 
-    row_data_names <- names(int_rowData(object)) # .feature_id, .variant_id
+    row_data_names <- names(rowData(object)) # feature_id, variant_id
     assay_names <- names(assays(object)) # betas, errors, pvalues
     x.rownames <- rownames(object) # feature_id|variant_id
     x.colnames <- colnames(object) # state_ids
@@ -149,17 +151,32 @@ setValidity("QTLExperiment", function(object) {
         S4Vectors:::disableValidity(TRUE)
         on.exit(S4Vectors:::disableValidity(old))
     }
+    
+    col_data <- colData(rse)
+    row_data <- rowData(rse)
+    
+    if (!.state_field %in% names(col_data)) {
+        col_data[[.state_field]] <- state_id
+    }
+    
+    if (!.feat_field %in% names(row_data)) {
+        row_data[[.feat_field]] <- feature_id
+    }
+    
+    if (!.var_field %in% names(row_data)) {
+        row_data[[.var_field]] <- variant_id
+    }
+    
+    # Update row.names of colData, rowData, and rse
+    row.names(col_data) <- col_data$state_id
+    row.names(row_data) <- paste(row_data[[.feat_field]], row_data[[.var_field]], sep="|")
+    # colnames(rse) <- row.names(col_data)
+    # row.names(rse) <- row.names(row_data)
 
-    colData <- DataFrame(state_id)
-    names(colData) <- paste0(".", .state_field)
-
-    rowData <- DataFrame(feature_id, variant_id)
-    names(rowData) <- paste0(".", c(.feat_field, .var_field))
-
-    out <- new("QTLExperiment", rse, int_colData=colData, int_rowData=rowData)
-    out <- recover_qtle_ids(out)
+    out <- new("QTLExperiment", rse, colData=col_data, elementMetadata=row_data)
+    
+    try(validObject(out, complete=TRUE))
     out
-
 }
 
 #' @exportMethod coerce

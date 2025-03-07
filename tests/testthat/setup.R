@@ -17,3 +17,4 @@ feature_ids <- gsub("\\|.*", "", row.names(sumstats$betas))
 variant_ids <- gsub(".*\\|", "", row.names(sumstats$betas))
 
 mock <- mockQTLE(nStates = nStates, nQTL = nQTL)
+

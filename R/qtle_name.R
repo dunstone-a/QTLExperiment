@@ -4,24 +4,24 @@
 #' @description
 #' Returns the name of an object of class \linkS4class{QTLExperiment}.
 #'
-#' @param x A \linkS4class{QTLExperiment} object.
+#' @param object A \linkS4class{QTLExperiment} object.
 #' @param value Any character-like object or \code{NULL} to
 #'              remove existing labels.
 
 #' @section Available methods:
-#' In the following code snippets, \code{x} is a
+#' In the following code snippets, \code{object} is a
 #' \linkS4class{QTLExperiment} objects.
 #'
 #' \describe{
-#' \item{\code{mainExpName(x)}:}{Return the name assigned to \code{x}.}
-#' \item{\code{mainExpName(x) <- value:}}{Change the name assigned to \code{x} 
+#' \item{\code{mainExpName(object)}:}{Return the name assigned to \code{object}.}
+#' \item{\code{mainExpName(object) <- value:}}{Change the name assigned to \code{object} 
 #' to \code{value}.}
-#' \item{\code{mainExpName(x) <- NULL:}}{Remove the name associated to \code{x}.}
+#' \item{\code{mainExpName(object) <- NULL:}}{Remove the name associated to \code{object}.}
 #' }
 #'
-#' @returns For \code{mainExpName(x)}, returns the name associated to \code{x}.
+#' @returns For \code{mainExpName(object)}, returns the name associated to \code{object}.
 #' 
-#' For \code{mainExpName(x) <- value}, the name of the object \code{x} is updated.
+#' For \code{mainExpName(object) <- value}, the name of the object \code{object} is updated.
 #' 
 #' @author Christina B. Azodi
 #' @seealso
@@ -46,15 +46,15 @@
 NULL
 
 #' @export
-setMethod("mainExpName", "QTLExperiment", function(x) {
-    int_metadata(x)$mainExpName
+setMethod("mainExpName", "QTLExperiment", function(object) {
+    int_metadata(object)$mainExpName
 })
 
 #' @export
 setReplaceMethod(
-    "mainExpName", c("QTLExperiment", "character_OR_NULL"), function(x, value) {
-        int_metadata(x)$mainExpName <- value
-        x
+    "mainExpName", c("QTLExperiment", "character_OR_NULL"), function(object, value) {
+        int_metadata(object)$mainExpName <- value
+        object
 })
 
 

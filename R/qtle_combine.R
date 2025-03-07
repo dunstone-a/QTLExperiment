@@ -54,46 +54,51 @@ NULL
 
 #' @export
 #' @importFrom BiocGenerics rbind cbind
-#'
 setMethod("cbind", "QTLExperiment", function(..., deparse.level=1) {
     old <- S4Vectors:::disableValidity()
     if (!isTRUE(old)) {
         S4Vectors:::disableValidity(TRUE)
         on.exit(S4Vectors:::disableValidity(old))
     }
+    
     out <- callNextMethod()
 
     args <- list(...)
     args <- lapply(args, updateObject)
 
     int_meta <- do.call(c, lapply(args, int_metadata))
-
+    
     tryCatch({
-        int_colD <- do.call(rbind, lapply(args, int_colData))
+        colD <- do.call(rbind, lapply(args, colData))
     }, error=function(err) {
         stop(
-            "failed to combine 'int_colData' in 'cbind(<",
+            "failed to combine 'colData' in 'cbind(<",
             class(args[[1]]),
             ">)':\n",
             conditionMessage(err))
     })
-
+    
     # Creating a shell to avoid having to pull out .cbind.DataFrame
     # to fuse metadata along the dimension not being combined.
     row_shells <- lapply(args, .create_shell_rowdata)
     tryCatch({
         combined <- do.call(SummarizedExperiment::cbind, row_shells)
     }, error=function(err) {
-        stop( "failed to combine 'int_rowData' in 'cbind(<",
+        stop( "failed to combine 'rowData' in 'cbind(<",
               class(args[[1]]), ">)':\n  ", conditionMessage(err))
     })
-    int_eleMetaD <- rowData(combined)
-
-    out <- BiocGenerics:::replaceSlots(out, int_colData=int_colD,
-        int_rowData=int_eleMetaD,
+    rowD <- rowData(combined)
+    
+    # Update row.names of colData and rowData
+    row.names(colD) <- colD$state_id
+    row.names(rowD) <- paste(rowD[[.feat_field]], rowD[[.var_field]], sep="|")
+    
+    out <- BiocGenerics:::replaceSlots(out, colData=colD,
+        elementMetadata=rowD,
         int_metadata=int_meta, check=FALSE)
-
-    recover_qtle_ids(out)
+    
+    try(validObject(out, complete=TRUE))
+    out
 })
 
 #' @export
@@ -104,6 +109,12 @@ setMethod("rbind", "QTLExperiment", function(..., deparse.level=1) {
         S4Vectors:::disableValidity(TRUE)
         on.exit(S4Vectors:::disableValidity(old))
     }
+    
+    # old.validity <- S4Vectors:::disableValidity()
+    # S4Vectors:::disableValidity(TRUE)
+    # on.exit(S4Vectors:::disableValidity(old.validity))
+    
+    
     out <- callNextMethod()
 
     args <- list(...)
@@ -111,9 +122,9 @@ setMethod("rbind", "QTLExperiment", function(..., deparse.level=1) {
     int_meta <- do.call(c, unname(lapply(args, int_metadata)))
 
     tryCatch({
-        int_eleMetaD <- do.call(rbind, lapply(args, int_rowData))
+        rowD <- do.call(rbind, lapply(args, rowData))
     }, error=function(err) {
-        stop("failed to combine 'int_rowData' in 'rbind(<",
+        stop("failed to combine 'rowData' in 'rbind(<",
              class(args[[1]]), ">)':\n  ", conditionMessage(err))
     })
 
@@ -123,25 +134,30 @@ setMethod("rbind", "QTLExperiment", function(..., deparse.level=1) {
     tryCatch({
         combined <- do.call(SummarizedExperiment::rbind, col_shells)
     }, error=function(err) {
-        stop("failed to combine 'int_colData' in 'rbind(<", class(args[[1]]),
+        stop("failed to combine 'colData' in 'rbind(<", class(args[[1]]),
              ">)'\n", conditionMessage(err))
     })
-    int_colD <- colData(combined)
+    colD <- colData(combined)
+    
+    # Update row.names of colData and rowData
+    row.names(colD) <- colD$state_id
+    row.names(rowD) <- paste(rowD[[.feat_field]], rowD[[.var_field]], sep="|")
 
-
-    out <- BiocGenerics:::replaceSlots(out, int_colData=int_colD,
-        int_rowData=int_eleMetaD,
+    out <- BiocGenerics:::replaceSlots(out, colData=colD,
+        elementMetadata=rowD,
         int_metadata=int_meta, check=FALSE)
-    recover_qtle_ids(out)
+    
+    try(validObject(out, complete=TRUE))
+    out
 })
 
 #' @importFrom SummarizedExperiment SummarizedExperiment
 .create_shell_coldata <- function(x) {
-    SummarizedExperiment(colData=int_colData(x))
+    SummarizedExperiment(colData=colData(x))
 }
 
 #' @importFrom SummarizedExperiment SummarizedExperiment
 .create_shell_rowdata <- function(x) {
-    SummarizedExperiment(rowData=int_rowData(x))
+    SummarizedExperiment(rowData=rowData(x))
 }
 

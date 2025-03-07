@@ -1,8 +1,8 @@
 #' An S4 class to represent QTL summary statistics.
 #'
-#' @slot int_rowData A DataFrame containing at minimum feature_id and variant_id information
-#' @slot int_colData A DataFrame containing at minimum state_id information
-#' @slot int_metadata A list of additional metadata items to store
+#' @slot elementMetadata A DataFrame containing at minimum feature_id and variant_id information. This is accessed using rowData. 
+#' @slot colData A DataFrame containing at minimum state_id information.
+#' @slot int_metadata A list of additional metadata items to store.
 #'
 #' @export
 #' @rdname QTLExperiment
@@ -13,8 +13,9 @@
 #' @importClassesFrom S4Vectors DataFrame SimpleList
 #'
 setClass("QTLExperiment",
-    slots=c(int_rowData="DataFrame",
-        int_colData="DataFrame",
+    slots=c(
+        elementMetadata="DataFrame",
+        colData="DataFrame",
         int_metadata="list"),
     contains="RangedSummarizedExperiment",
     prototype=prototype(

@@ -28,6 +28,20 @@ an object containing simulated data.
 }
 \description{
 Functions to create fake input data for QTLExperiments.
+Note that this data is generated simply, and does not have consistency between 
+betas, errors and p-values. 
+It is helpful to populate the slots of a QTLExperiment object and has expected 
+properties of the betas, errors and p-values assays.
+Namely, betas are symmetric (specifically normally distributed), errors are 
+non-negative, and p-values consist of a null and significant distribution. 
+The significant effects make up 10% of the p-values and are randomly distributed 
+across states and tests. 
+
+Feature IDs are simulated by randomly selecting a feature from the list 
+c("geneA", "geneB", "geneC") with replacement. Variant IDs are created by 
+concatenating the string "snp" with a random number in the range 1000:100000.
+Row names combine the feature and variant IDs using a vertical line as the 
+separator.
 }
 \examples{
 nStates <- 6

@@ -22,3 +22,4 @@ test_that("mainExpName GETS correctly", {
     mainExpName(qtle) <- NULL
     expect_null(mainExpName(qtle))
 })
+

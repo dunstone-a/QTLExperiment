@@ -9,29 +9,29 @@
 \alias{mainExpName<-,QTLExperiment,character_OR_NULL-method}
 \title{Return the name of a \linkS4class{QTLExperiment} object.}
 \arguments{
-\item{x}{A \linkS4class{QTLExperiment} object.}
+\item{object}{A \linkS4class{QTLExperiment} object.}
 
 \item{value}{Any character-like object or \code{NULL} to
 remove existing labels.}
 }
 \value{
-For \code{mainExpName(x)}, returns the name associated to \code{x}.
+For \code{mainExpName(object)}, returns the name associated to \code{object}.
 
-For \code{mainExpName(x) <- value}, the name of the object \code{x} is updated.
+For \code{mainExpName(object) <- value}, the name of the object \code{object} is updated.
 }
 \description{
 Returns the name of an object of class \linkS4class{QTLExperiment}.
 }
 \section{Available methods}{
 
-In the following code snippets, \code{x} is a
+In the following code snippets, \code{object} is a
 \linkS4class{QTLExperiment} objects.
 
 \describe{
-\item{\code{mainExpName(x)}:}{Return the name assigned to \code{x}.}
-\item{\code{mainExpName(x) <- value:}}{Change the name assigned to \code{x} 
+\item{\code{mainExpName(object)}:}{Return the name assigned to \code{object}.}
+\item{\code{mainExpName(object) <- value:}}{Change the name assigned to \code{object} 
 to \code{value}.}
-\item{\code{mainExpName(x) <- NULL:}}{Remove the name associated to \code{x}.}
+\item{\code{mainExpName(object) <- NULL:}}{Remove the name associated to \code{object}.}
 }
 }
 

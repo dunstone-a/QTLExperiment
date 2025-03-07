@@ -30,13 +30,6 @@ internal class representation. Changes are as follows:
 \item No updates yet.
 }
 }
-\examples{
-qtle <- mockQTLE()
-objectVersion(qtle)
-
-qtle_new <- QTLExperiment::updateObject(qtle)
-
-}
 \seealso{
 \code{\link{objectVersion}}, which is used to determine if the object is up-to-date.
 }

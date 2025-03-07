@@ -7,7 +7,7 @@
 \alias{objectVersion,QTLExperiment-method}
 \title{Return the version of a \linkS4class{QTLExperiment} object}
 \arguments{
-\item{x}{A \linkS4class{QTLExperiment} object.}
+\item{object}{A \linkS4class{QTLExperiment} object.}
 }
 \value{
 A package version, of class \link{package_version}.
@@ -18,12 +18,12 @@ Specifies the version of the \link{QTLExperiment} package that an object of clas
 }
 \section{Available methods}{
 
-In the following code snippets, \code{x} is a
+In the following code snippets, \code{object} is a
 \linkS4class{QTLExperiment} objects.
 
 \describe{
-\item{\code{objectVersion(x)}:}{Return the version of the package with which
-                                \code{x} was constructed.}
+\item{\code{objectVersion(object)}:}{Return the version of the package with which
+                                \code{object} was constructed.}
  }
 }
 

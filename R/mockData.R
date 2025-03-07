@@ -2,10 +2,24 @@
 #'
 #' @description
 #' Functions to create fake input data for QTLExperiments.
+#' Note that this data is generated simply, and does not have consistency between 
+#' betas, errors and p-values. 
+#' It is helpful to populate the slots of a QTLExperiment object and has expected 
+#' properties of the betas, errors and p-values assays.
+#' Namely, betas are symmetric (specifically normally distributed), errors are 
+#' non-negative, and p-values consist of a null and significant distribution. 
+#' The significant effects make up 10% of the p-values and are randomly distributed 
+#' across states and tests. 
+#' 
+#' Feature IDs are simulated by randomly selecting a feature from the list 
+#' c("geneA", "geneB", "geneC") with replacement. Variant IDs are created by 
+#' concatenating the string "snp" with a random number in the range 1000:100000.
+#' Row names combine the feature and variant IDs using a vertical line as the 
+#' separator. 
 #'
 #' @param nStates Number of states
 #' @param nQTL Number of QTL associations
-#' @param names Logical to include column and row names
+#' @param names Logical to include column and row names. 
 #'
 #' @docType methods
 #' @rdname mock-data
@@ -60,15 +74,15 @@ mockSummaryStats <- function(nStates=10, nQTL=100, names=TRUE){
 
     betas <- matrix(rnorm(nStates * nQTL), ncol=nStates)
     errors <- matrix(abs(rnorm(nStates * nQTL)), ncol=nStates)
-    pvalues <- runif(n=(nStates-1) * nQTL, min=1e-12, max=1)
-    pvalues <- c(pvalues, runif(n=nQTL, min=1e-12, max=0.1))
-    pvalues <- sample(pvalues)
-    pvalues <- matrix(pvalues, ncol=nStates)
+    pvalues <- runif(n=(nStates-1) * nQTL, min=1e-12, max=1) # Null distribution
+    pvalues <- c(pvalues, runif(n=nQTL, min=1e-12, max=0.1)) # Significant effects
+    pvalues <- sample(pvalues) # Shuffle significant effects throughout data 
+    pvalues <- matrix(pvalues, ncol=nStates) # Format p-values as a matrix
 
     if(names){
         test_ids <- paste(
             sample(c("geneA", "geneB", "geneC"), nQTL, replace=TRUE),
-            paste0("snp", sample(seq(1e3:1e5), nQTL)),
+            paste0("snp", sample(seq(1e3,1e5), nQTL)),
             sep="|")
         state_ids <- paste0("state", seq(1, nStates))
         row.names(betas) <- test_ids

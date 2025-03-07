@@ -17,3 +17,4 @@ test_that("subset replacement checks for duplicate feature|variant pairs", {
             dQuote("QTLExperiment"),
             " object: test_ids: duplicate feature|variant rows"))
 })
+

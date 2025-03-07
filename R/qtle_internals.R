@@ -1,193 +1,26 @@
-#' @title
-#' Internal QTLExperiment functions
-#'
-#' @description
-#' Methods to get or set internal fields from the QTLExperiment class.
-#' These functions are intended for package developers who want to make changes
-#' or improvements to the object without breaking user code or to add protected
-#' fields to a QTLExperiment. They should \emph{not} be used by general users.
-#'
-#' @section Getters:
-#' Here \code{x} is a \linkS4class{QTLExperiment}.
-#' \describe{
-#' \item{\code{int_rowData(x)}:}{Returns a \linkS4class{DataFrame} of
-#' internal row metadata, with number of rows equal to \code{nrow(x)} (analogous
-#' to the user-visible \code{\link{rowData}}).}
-#' \item{\code{int_colData(x)}:}{Returns a \linkS4class{DataFrame} of internal
-#' column metadata, with number of rows equal to \code{ncol(x)} (analogous to
-#' the user-visible \code{\link{colData}}).}
-#' \item{\code{int_metadata(x)}:}{Returns a list of internal metadata (analogous
-#'  to the user-visible \code{\link{metadata}}).}
-#' }
-#'
-#' The following methods can return visible and internal data in a single
-#' DataFrame.
-#' \describe{
-#' \item{\code{rowData(x, ..., internal=TRUE)}:}{Returns a
-#' \linkS4class{DataFrame} of the user-visible row metadata with the internal
-#' row metadata added column-wise. A warning is emitted if the user-visible
-#' metadata column names overlap with the internal fields. Any arguments in
-#' \code{...} are passed to \code{\link{rowData,SummarizedExperiment-method}}.}
-#'
-#' \item{\code{colData(x, ..., internal=TRUE)}:}{Returns a
-#' \linkS4class{DataFrame} of the user-visible column metadata with the internal
-#' column metadata added column-wise. A warning is emitted if the user-visible
-#' metadata column names overlap with the internal fields. Any arguments in
-#' \code{...} are passed to \code{\link{colData,SummarizedExperiment-method}}.}
-#' }
-#'
-#' @section Setters:
-#' Here \code{x} is a \linkS4class{QTLExperiment}.
-#' \describe{
-#' \item{\code{int_rowData(x) <- value}:}{Replaces the internal row
-#' metadata with \code{value}, a \linkS4class{DataFrame} with number of rows
-#' equal to \code{nrow(x)} (analogous to the user-visible
-#' \code{\link{rowData<-}}).}
-#' \item{\code{int_colData(x) <- value}:}{Replaces the internal column metadata
-#'  with \code{value}, a \linkS4class{DataFrame} with number of rows equal to
-#'  \code{ncol(x)} (analogous to the user-visible \code{\link{colData<-}}).}
-#' \item{\code{int_metadata(x) <- value}:}{Replaces the internal metadata with
-#' \code{value} (analogous to the user-visible \code{\link{metadata<-}}).}
-#' }
-#'
-#' @section Comments:
-#' The internal metadata fields store additional elements that are parallel to
-#' the rows or columns of a \linkS4class{QTLExperiment} class. This
-#' avoids the need to specify new slots and adjust the subsetting/combining code
-#' for a new data element.
-#'
-#' These elements being internal is important as it ensures that the
-#' implementation details are abstracted away. User interaction with these
-#' internal fields should be done via the designated getter and setter methods
-#' (e.g., \code{\link{feature_id}}), providing developers with freedom to change
-#' the internal representation without breaking user code.
-#'
-#' @seealso
-#' \code{\link{colData}}, \code{\link{rowData}} and \code{\link{metadata}} for
-#' the user-visible equivalents.
-#'
-#' @returns For \code{assays}, returns the value stored in the requested field 
+#' # Internal QTLExperiment functions
+#' @returns For \code{int_metadata}, returns the value stored in the requested field 
 #' of the internal rowData, colData or metaData.
 #' 
-#'  For \code{assays<-value}, the relevant internal field of the \linkS4class{QTLExperiment} 
+#'  For \code{int_metadata<-value}, the relevant internal field of the \linkS4class{QTLExperiment} 
 #'  is updated.
 #'  
+#' @noRd
 #' @author Christina B Azodi
-#'
-#' @name QTLe-internals
-#' @rdname internals
-#' @docType methods
-#' @aliases
-#' int_colData
-#' int_rowData
-#' int_metadata
-#' int_colData,QTLExperiment-method
-#' int_rowData,QTLExperiment-method
-#' int_metadata,QTLExperiment-method
-#' int_colData<-
-#' int_rowData<-
-#' int_metadata<-
-#' int_colData<-,QTLExperiment-method
-#' int_rowData<-,QTLExperiment-method
-#' int_metadata<-,QTLExperiment-method
-#' colData,QTLExperiment-method
-#' rowData,QTLExperiment-method
-#' parallel_slot_names,QTLExperiment-method
-#'
-#' @examples
-#' qtle <- mockQTLE()
-#' int_metadata(qtle)$whee <- 1
 NULL
-
-
-########################################
-### Defining methods for int_rowData ###
-########################################
-
-
-#' @export
-setMethod("int_rowData", "QTLExperiment", function(x) x@int_rowData)
-
-#' @export
-setReplaceMethod("int_rowData", "QTLExperiment", function(x, value) {
-    x@int_rowData <- value
-    return(x)
-})
-
-#' @export
-#' @importFrom S4Vectors mcols
-#' @importFrom SummarizedExperiment rowData
-setMethod("rowData", "QTLExperiment", function(x, ..., internal=FALSE) {
-    if (internal) {
-        cn <- colnames(mcols(x))
-        conflict <- cn %in% colnames(int_rowData(x))
-        if (any(conflict)) {
-            cn <- cn[conflict]
-            if (length(cn) > 2) {
-                cn <- c(cn[seq(2)], "...")
-            }
-            warning("overlapping names in internal and external rowData (",
-                    paste(cn, collapse=", "), ")")
-        }
-        cbind(callNextMethod(x, ...), int_rowData(x))
-    } else {
-        callNextMethod(x, ...)
-    }
-})
-
-#' @export
-#' @importFrom S4Vectors parallel_slot_names
-setMethod("parallel_slot_names", "QTLExperiment", function(x) {
-    c("int_rowData", callNextMethod())
-})
-
-
-########################################
-### Defining methods for int_colData ###
-########################################
-
-#' @export
-setMethod("int_colData", "QTLExperiment", function(x) x@int_colData)
-
-#' @export
-setReplaceMethod("int_colData", "QTLExperiment", function(x, value) {
-    x@int_colData <- value
-    return(x)
-})
-
-#' @export
-#' @importFrom SummarizedExperiment colData
-setMethod("colData", "QTLExperiment", function(x, ..., internal=FALSE) {
-    if(internal) {
-        cn <- colnames(x@colData) # explicit slot ref to avoid recursive colData() calling.
-        conflict <- cn %in% colnames(int_colData(x))
-        if (any(conflict)) {
-            cn <- cn[conflict]
-            if (length(cn) > 2) {
-                cn <- c(cn[seq(2)], "...")
-            }
-            warning("overlapping names in internal and external colData (",
-                    paste(cn, collapse=", "), ")")
-        }
-        cbind(callNextMethod(x, ...), int_colData(x))
-    } else {
-        callNextMethod(x, ...)
-    }
-})
-
 
 #########################################
 ### Defining methods for int_metadata ###
 #########################################
 
-#' @export
-setMethod("int_metadata", "QTLExperiment", function(x) x@int_metadata)
 
-#' @export
-setReplaceMethod("int_metadata", "QTLExperiment", function(x, value) {
-    x@int_metadata <- value
-    return(x)
+setMethod("int_metadata", "QTLExperiment", function(object) object@int_metadata)
+
+setReplaceMethod("int_metadata", "QTLExperiment", function(object, value) {
+    object@int_metadata <- value
+    return(object)
 })
+
 
 
 ##################################################

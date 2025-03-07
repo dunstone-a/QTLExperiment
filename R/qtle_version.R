@@ -5,15 +5,15 @@
 #' Specifies the version of the \link{QTLExperiment} package that an object of class
 #' \linkS4class{QTLExperiment} was created with.
 #'
-#' @param x A \linkS4class{QTLExperiment} object.
+#' @param object A \linkS4class{QTLExperiment} object.
 #'
 #' @section Available methods:
-#' In the following code snippets, \code{x} is a
+#' In the following code snippets, \code{object} is a
 #' \linkS4class{QTLExperiment} objects.
 #'
 #' \describe{
-#' \item{\code{objectVersion(x)}:}{Return the version of the package with which
-#'                                 \code{x} was constructed.}
+#' \item{\code{objectVersion(object)}:}{Return the version of the package with which
+#'                                 \code{object} was constructed.}
 #'  }
 #'
 #' @author Christina B. Azodi, Amelia Dunstone
@@ -38,8 +38,8 @@
 NULL
 
 #' @export
-setMethod("objectVersion", "QTLExperiment", function(x) {
-    int_metadata(x)$version
+setMethod("objectVersion", "QTLExperiment", function(object) {
+    int_metadata(object)$version
 })
 
 

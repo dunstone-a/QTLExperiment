@@ -11,11 +11,11 @@
 \item{...}{Arguments passed to the \code{\link{SummarizedExperiment}}
 constructor to fill the slots of the base class.}
 
-\item{state_id}{An array of state IDs the length of ncol(QTLe).}
+\item{state_id}{An array of state IDs the length of ncol(qtle).}
 
-\item{feature_id}{An array of feature IDs the length of nrow(QTLe).}
+\item{feature_id}{An array of feature IDs the length of nrow(qtle).}
 
-\item{variant_id}{An array of variant IDs the length of nrow(QTLe).}
+\item{variant_id}{An array of variant IDs the length of nrow(qtle).}
 }
 \value{
 A QTLExperiment object.
@@ -42,7 +42,6 @@ The extra arguments in the constructor (\code{\link{feature_id}},
 represent the main extensions implemented in the QTLExperiment
 class. This enables a consistent, formalized representation of key aspects
 of multi-state QTL data that are universal to the data structure.
-that are commonly encountered during single-cell data analysis.
 Readers are referred to the specific documentation pages for more details.
 
 A QTLe can also be coerced from a \linkS4class{SummarizedExperiment} or
@@ -51,11 +50,11 @@ A QTLe can also be coerced from a \linkS4class{SummarizedExperiment} or
 \section{Slots}{
 
 \describe{
-\item{\code{int_rowData}}{A DataFrame containing at minimum feature_id and variant_id information}
+\item{\code{elementMetadata}}{A DataFrame containing at minimum feature_id and variant_id information. This is accessed using rowData.}
 
-\item{\code{int_colData}}{A DataFrame containing at minimum state_id information}
+\item{\code{colData}}{A DataFrame containing at minimum state_id information.}
 
-\item{\code{int_metadata}}{A list of additional metadata items to store}
+\item{\code{int_metadata}}{A list of additional metadata items to store.}
 }}
 
 \examples{
@@ -67,7 +66,7 @@ error <- matrix(abs(rnorm(nStates * nQTL)), ncol=nStates)
 qtle <- QTLExperiment(
     assays=list(betas=betas, errors=error),
     feature_id=sample(1:10, nQTL, replace=TRUE),
-    variant_id=sample(seq(1e3:1e5), nQTL),
+    variant_id=sample(seq(1e3,1e5), nQTL),
     state_id=LETTERS[1:nStates])
 qtle
 

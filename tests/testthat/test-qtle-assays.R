@@ -9,7 +9,7 @@ b <- matrix(rnorm(1000), ncol=nStates)
 se <- matrix(abs(rnorm(1000)), ncol=nStates)
 p <- matrix(runif(1000), ncol=nStates)
 feature_ids <- sample(LETTERS[seq(from = 1, to = 10)], nQTL, replace=TRUE)
-variant_ids <- paste0("var", sample(seq(1e3:1e5), nQTL))
+variant_ids <- paste0("var", sample(seq(from = 1e3, to = 1e5), nQTL))
 state_ids <- paste0("state_", 1:nStates)
 
 test_that("Test that assay GETS work correctly", {
