@@ -160,3 +160,11 @@ test_that("S4Vectors subsetting works correctly", {
     expect_identical(out[["8"]], qtle[f==8,])
 })
 
+test_that("S4Vectors subset function works correctly", {
+    qtle1 <- subset(qtle, feature_id == "geneA")
+    qtle2 <- subset(qtle, variant_id == "snp76556")
+
+    expect_identical(dim(qtle1), dim(qtle[feature_id(qtle) == "geneA", ]))
+    expect_identical(dim(qtle2), dim(qtle[variant_id(qtle) == "snp76556", ]))
+})
+

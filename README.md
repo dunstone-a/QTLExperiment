@@ -13,7 +13,7 @@ if (!require("BiocManager", quietly=TRUE))
 BiocManager::install("QTLExperiment", version = "devel")
 ```
 
-Using the most recent version of R is strongly recommended (R 4.3.1 at the time of writing). 
+Using the most recent version of R is strongly recommended (R 4.4.2 at the time of writing). 
 
 There are several other packages from CRAN and Bioconductor that QTLExperiment uses, so you will need to have these packages installed as well. The CRAN packages should install automatically when QTLExperiment is installed, but you will need to install the Bioconductor packages manually.
 

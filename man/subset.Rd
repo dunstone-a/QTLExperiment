@@ -7,7 +7,11 @@
 \alias{[,QTLExperiment,ANY,ANY-method}
 \alias{[,QTLExperiment,ANY,ANY,ANY-method}
 \alias{[<-,QTLExperiment,ANY,ANY,QTLExperiment-method}
+\alias{subset,QTLExperiment-method}
 \title{Subsetting and replacing data in QTLExperiment objects}
+\usage{
+\S4method{subset}{QTLExperiment}(x, subset, ...)
+}
 \value{
 A \linkS4class{QTLExperiment} object.
 }

@@ -161,3 +161,9 @@ setMethod("parallel_slot_names", "QTLExperiment", function(x) {
     c("rowRanges", "assays", "NAMES", "elementMetadata")
 })
 
+#' @rdname subset
+setMethod("subset", "QTLExperiment", function(x, subset, ...) {
+    i <- S4Vectors:::evalqForSubset(subset, rowData(x), ...)
+    x[i, ]
+})
+
