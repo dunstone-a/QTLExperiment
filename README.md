@@ -2,12 +2,6 @@
 
 QTLExperiment is an R container package for storing and manipulating QTL summary statistics. 
 
-|                |               |
-| -------------- | ------------- |
-| Project Status | [![Project Status.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip) |
-| Latest release  | 2022-11-08 |
-
-
 ## Installation and Usage
 
 This package can be installed from Bioconductor using the following code:
