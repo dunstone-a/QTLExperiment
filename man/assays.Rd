@@ -22,7 +22,7 @@
 \title{Named assay getters and setters}
 \value{
 For \code{assays}, returns the value stored in the requested 
-\code{\link{assay}}.
+\code{\link[SummarizedExperiment]{assay}}.
 
 For \code{assays<-value}, the relevant slot of the \linkS4class{QTLExperiment} 
 is updated.
@@ -37,8 +37,8 @@ set \code{X="betas"}.
 
 Here \code{x} is a \linkS4class{QTLExperiment} object,
 \code{value} is a matrix-like object with the same dimensions as \code{x},
-and \code{...} are further arguments passed to \code{\link{assay}}
-(for the getter) or \code{\link{assay<-}} (for the setter).
+and \code{...} are further arguments passed to \code{\link[SummarizedExperiment]{assay}}
+(for the getter) or \code{\link[SummarizedExperiment]{assay<-}} (for the setter).
 
 \describe{
 \item{\code{betas(x, ...)}, \code{betas(x, ...) <- value}:}{
@@ -66,7 +66,7 @@ dim(betas(qtle))
 
 }
 \seealso{
-\code{\link{assay}} and \code{\link{assay<-}}, for the wrapped methods.
+\code{\link[SummarizedExperiment]{assay}} and \code{\link[SummarizedExperiment]{assay<-}}, for the wrapped methods.
 }
 \author{
 Christina B Azodi, Amelia Dunstone

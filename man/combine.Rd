@@ -23,7 +23,7 @@ In the following examples, \code{...} contains one or more
 \item{\code{rbind(..., deparse.level=1)}:}{Returns a
 \linkS4class{QTLExperiment} object where all objects are combined
 row-wise. Metadata is combined as in
-\code{?"\link{rbind,SummarizedExperiment-method}"}. The \code{deparse.level}
+\code{?"\link[SummarizedExperiment]{rbind,SummarizedExperiment-method}"}. The \code{deparse.level}
 specifies how row.names are generated as described in
 \code{?\link[base]{rbind}}.
 }
@@ -31,7 +31,7 @@ specifies how row.names are generated as described in
 \item{\code{cbind(..., deparse.level=1)}:}{Returns a
 \linkS4class{QTLExperiment} object where all objects are combined
 column-wise. Metadata is combined
-as in \code{?"\link{cbind,SummarizedExperiment-method}"}. The
+as in \code{?"\link[SummarizedExperiment]{cbind,SummarizedExperiment-method}"}. The
 \code{deparse.level} specifies how colnames are generated as described in
 \code{?\link[base]{cbind}}.
 }

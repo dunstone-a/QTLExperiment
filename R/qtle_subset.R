@@ -5,7 +5,13 @@
 #' row and/or column and methods to replace all data for the specified rows
 #' and/or columns with another value. These methods ensure that all data fields
 #' remain synchronized when states or associations are removed.
-#'
+#' The \linkS4class{QTLExperiment} object is compatible with subsetting using 
+#' square brackets or with the \code{subset} function. 
+#' 
+#' @param x is a \linkS4class{QTLExperiment} object
+#' @param i is a vector of subscripts indicating the rows to retain.
+#' @param ... Further arguments to the \code{subset} function are passed to \code{S4Vectors:::evalqForSubset}.
+#' 
 #' @section Subsetting:
 #' In the following, \code{x} is a \linkS4class{QTLExperiment} object.
 #'
@@ -16,7 +22,7 @@
 #'  indicating the rows and columns, respectively, to retain. If either \code{i}
 #'  or \code{j} is missing, than subsetting is only performed in the specified
 #'  dimension. Arguments in \code{...} and \code{drop} are passed to
-#'  \code{\link{[,SummarizedExperiment-method}}.}
+#'  \code{\link[SummarizedExperiment]{[,SummarizedExperiment-method}}.}
 #'}
 #'
 #' @section Replacing:
@@ -162,8 +168,8 @@ setMethod("parallel_slot_names", "QTLExperiment", function(x) {
 })
 
 #' @rdname subset
-setMethod("subset", "QTLExperiment", function(x, subset, ...) {
-    i <- S4Vectors:::evalqForSubset(subset, rowData(x), ...)
+setMethod("subset", "QTLExperiment", function(x, i, ...) {
+    i <- S4Vectors:::evalqForSubset(i, rowData(x), ...)
     x[i, ]
 })
 

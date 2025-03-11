@@ -8,7 +8,7 @@
 #' beta and betaSE results (e.g., mash) and
 #' storage of summary results (e.g., pairwise sharing).
 #'
-#' @param ... Arguments passed to the \code{\link{SummarizedExperiment}}
+#' @param ... Arguments passed to the \code{\link[SummarizedExperiment]{SummarizedExperiment}}
 #' constructor to fill the slots of the base class.
 #' @param state_id An array of state IDs the length of ncol(qtle).
 #' @param feature_id An array of feature IDs the length of nrow(qtle).
@@ -20,7 +20,7 @@
 #' and error associated with the betas (e.g. standard errors).
 #' As with any \linkS4class{SummarizedExperiment} derivative,
 #' different information (e.g., test-statistics, significance calls) can be
-#' stored in user defined \code{\link{assay}} slots, and additional row and
+#' stored in user defined \code{\link[SummarizedExperiment]{assay}} slots, and additional row and
 #' column metadata can be attached using \code{\link{rowData}} and
 #' \code{\link{colData}}, respectively.
 #'

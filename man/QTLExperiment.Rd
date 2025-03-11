@@ -8,7 +8,7 @@
 \alias{coerce,RangedSummarizedExperiment,QTLExperiment-method}
 \title{An S4 class to represent QTL summary statistics.}
 \arguments{
-\item{...}{Arguments passed to the \code{\link{SummarizedExperiment}}
+\item{...}{Arguments passed to the \code{\link[SummarizedExperiment]{SummarizedExperiment}}
 constructor to fill the slots of the base class.}
 
 \item{state_id}{An array of state IDs the length of ncol(qtle).}
@@ -33,7 +33,7 @@ pairs) while columns represent states (e.g. tissues). Assays include betas
 and error associated with the betas (e.g. standard errors).
 As with any \linkS4class{SummarizedExperiment} derivative,
 different information (e.g., test-statistics, significance calls) can be
-stored in user defined \code{\link{assay}} slots, and additional row and
+stored in user defined \code{\link[SummarizedExperiment]{assay}} slots, and additional row and
 column metadata can be attached using \code{\link{rowData}} and
 \code{\link{colData}}, respectively.
 
