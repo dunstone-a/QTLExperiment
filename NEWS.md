@@ -5,7 +5,7 @@
     o  Almost all functions have been updated and testing is working but there may still be some edge cases that I have missed. 
     o  Better consistency with other child classes of SingleCellExperiment.
 
-# Changes in version 1.5.0 (2024-10-30)
+## Changes in version 1.5.0 (2024-10-30)
 *  Added a test for object validity error messages
 
 ## Changes in version 1.3.0 (2024-05-01)
