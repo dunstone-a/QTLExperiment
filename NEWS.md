@@ -1,4 +1,4 @@
-## Changes in version 1.5.99 (2024-03-05)
+## Changes in version 1.99.1 (2024-03-05)
 *  Major update to the underlying representation of the slots. 
     o  Slots now use elementMetadata and colData. 
     o  No longer use internal col and row Data. 
