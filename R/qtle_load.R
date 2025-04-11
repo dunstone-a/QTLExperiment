@@ -76,16 +76,16 @@ sumstats2qtle <- function(
         fmutate(id=paste0(feature_id, "|", variant_id))
 
     if (any(duplicated(paste0(data$state, data$id)))) {
-        warning("Multiple tests present for some combinations of feature ID and variant ID. Keeping only first occurences...")
+        warning("Multiple tests present for some combinations of state, feature ID and variant ID. Keeping only first occurences...")
+        data <- data %>%
+            distinct(state, id, .keep_all = TRUE)
     }
     
     betas <- data %>% 
-        dplyr::distinct(id, .keep_all = TRUE) %>%
         pivot_wider(names_from=state, values_from=betas, id_cols=id) %>%
         tibble::column_to_rownames(var="id") %>% qDF()
 
     errors <- data %>% 
-        dplyr::distinct(id, .keep_all = TRUE) %>%
         pivot_wider(names_from=state, values_from=errors, id_cols=id) %>%
         tibble::column_to_rownames(var="id") %>% qDF()
 
@@ -100,7 +100,6 @@ sumstats2qtle <- function(
 
     if(!is.null(pvalues)){
         pvalues <- data %>% 
-            dplyr::distinct(id, .keep_all = TRUE) %>%
             pivot_wider(names_from=state, values_from=pvalues, id_cols=id) %>%
             tibble::column_to_rownames(var="id") %>% qDF()
 
