@@ -1,3 +1,6 @@
+## Changes in version 1.99.2 (2024-04-11)
+*  Updated the function sumstats2qtle
+
 ## Changes in version 1.99.1 (2024-03-05)
 *  Major update to the underlying representation of the slots. 
     o  Slots now use elementMetadata and colData. 
