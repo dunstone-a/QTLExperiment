@@ -75,7 +75,7 @@ sumstats2qtle <- function(
         fselect(-path) %>%
         fmutate(id=paste0(feature_id, "|", variant_id))
 
-    if (any(duplicated(data$id))) {
+    if (any(duplicated(paste0(data$state, data$id)))) {
         warning("Multiple tests present for some combinations of feature ID and variant ID. Keeping only first occurences...")
     }
     
