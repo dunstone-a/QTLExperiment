@@ -1,7 +1,10 @@
-## Changes in version 1.99.2 (2024-04-11)
-*  Updated the function sumstats2qtle
+## Changes in version 1.99.3 (2025-05-26)
+* Fixed sumstats2qtle function so that the betas, errors and pvalues are matrices and not data.frames.
 
-## Changes in version 1.99.1 (2024-03-05)
+## Changes in version 1.99.2 (2025-04-11)
+*  Updated the function sumstats2qtle to print a warning when there are duplicate row names. 
+
+## Changes in version 1.99.1 (2025-03-05)
 *  Major update to the underlying representation of the slots. 
     o  Slots now use elementMetadata and colData. 
     o  No longer use internal col and row Data. 

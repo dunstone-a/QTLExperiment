@@ -27,7 +27,7 @@
 #'
 #' @export
 #' @importFrom vroom vroom
-#' @importFrom collapse ftransform fselect fsubset na_omit fmutate qDF
+#' @importFrom collapse ftransform fselect fsubset na_omit fmutate qM
 #' @importFrom tidyr pivot_wider all_of
 #' @importFrom dplyr left_join %>%
 #' @importFrom tibble column_to_rownames
@@ -83,11 +83,11 @@ sumstats2qtle <- function(
     
     betas <- data %>% 
         pivot_wider(names_from=state, values_from=betas, id_cols=id) %>%
-        tibble::column_to_rownames(var="id") %>% qDF()
+        tibble::column_to_rownames(var="id") %>% qM()
 
     errors <- data %>% 
         pivot_wider(names_from=state, values_from=errors, id_cols=id) %>%
-        tibble::column_to_rownames(var="id") %>% qDF()
+        tibble::column_to_rownames(var="id") %>% qM()
 
     object <- QTLExperiment(
         list(betas=betas, errors=errors),
@@ -101,7 +101,7 @@ sumstats2qtle <- function(
     if(!is.null(pvalues)){
         pvalues <- data %>% 
             pivot_wider(names_from=state, values_from=pvalues, id_cols=id) %>%
-            tibble::column_to_rownames(var="id") %>% qDF()
+            tibble::column_to_rownames(var="id") %>% qM()
 
         assay(object, "pvalues") <- pvalues
     }
