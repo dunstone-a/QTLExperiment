@@ -14,7 +14,7 @@ test-job:
   stage: test
   script:
     # Install packages
-    - R -e 'install.packages(c("devtools", "BiocManager")'
+    - R -e 'install.packages(c("devtools", "BiocManager"))'
     - R -e 'BiocManager::install("BiocCheck")'
     # Run R command check
     - R -e 'devtools::check()'
