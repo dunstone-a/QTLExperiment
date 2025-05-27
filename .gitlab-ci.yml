@@ -1,0 +1,26 @@
+# .gitlab-ci.yml
+
+# use the tidyverse rocker image, as it contains devtools preinstalled
+image: rocker/tidyverse
+
+# define stages of runner. at the moment,
+# just test (no build or deploy).
+stages:
+  - test
+  - build
+
+# define test job
+test-job:
+  stage: test
+  script:
+    # run the R CMD check on the package (this path)
+    - R CMD check ./ --no-manual
+    # run the devtools test
+    - R -e 'devtools::test()'
+    
+build-job:
+  stage: build
+  script:
+    # install
+    - R -e 'devtools::install()'
+    
