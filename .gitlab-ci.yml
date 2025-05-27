@@ -9,6 +9,9 @@ stages:
   - test
   - build
 
+variables:
+  R_LIBS_USER: "$CI_PROJECT_DIR/ci/lib"
+
 # define test job
 test-job:
   stage: test
@@ -20,10 +23,16 @@ test-job:
     - R -e 'devtools::check()'
     # BiocCheck
     - R -e 'BiocCheck::BiocCheck()'
-    
+  cache:
+    paths:
+    - $R_LIBS_USER
+
 build-job:
   stage: build
   script:
     # install
     - R -e 'devtools::install()'
+  cache:
+    paths:
+    - $R_LIBS_USER
     
