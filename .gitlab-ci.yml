@@ -13,10 +13,10 @@ stages:
 test-job:
   stage: test
   script:
-    # run the R CMD check on the package (this path)
-    - R CMD check ./ --no-manual
-    # run the devtools test
-    - R -e 'devtools::test()'
+    # Run R command check
+    - R -e 'devtools::check()'
+    # BiocCheck
+    - R -e 'BiocCheck::BiocCheck()'
     
 build-job:
   stage: build
