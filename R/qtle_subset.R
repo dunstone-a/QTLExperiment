@@ -10,6 +10,9 @@
 #' 
 #' @param x is a \linkS4class{QTLExperiment} object
 #' @param i is a vector of subscripts indicating the rows to retain.
+#' @param j is a vector of subscripts indicating the columns to retain.
+#' @param value is the contents to be used for replacement. 
+#' @param drop is passed to \code{SummarizedExperiment:::SummarizedExperiment-class} but is not used by those methods.
 #' @param ... Further arguments to the \code{subset} function are passed to \code{S4Vectors:::evalqForSubset}.
 #' 
 #' @section Subsetting:
@@ -65,15 +68,14 @@
 #' [,QTLExperiment,ANY,ANY,ANY-method
 #' [<-,QTLExperiment,ANY,ANY,QTLExperiment-method
 #'
-#' @name QTLe-subset
-#' @rdname subset
+#' @name subset
 NULL
 
-
 #' @export
+#' @rdname subset
 setMethod("[", c("QTLExperiment", "ANY", "ANY"), function(x, i, j, ...,
                                                           drop=TRUE) {
-
+    
     out_row <- rowData(x)
     out_col <- colData(x)
     
@@ -81,7 +83,7 @@ setMethod("[", c("QTLExperiment", "ANY", "ANY"), function(x, i, j, ...,
         ii <- .convert_subset_index(i, rownames(x))
         out_row <- rowData(x)[ii,,drop=FALSE]
     }
-
+    
     if (!missing(j)) {
         jj <- .convert_subset_index(j, colnames(x))
         out_col <- colData(x)[jj,,drop=FALSE]
@@ -106,67 +108,69 @@ setMethod("[", c("QTLExperiment", "ANY", "ANY"), function(x, i, j, ...,
 #' @export
 #' @importClassesFrom SummarizedExperiment SummarizedExperiment
 #' @importFrom SummarizedExperiment rowData colData
+#' @rdname subset
 setMethod("[<-", c("QTLExperiment", "ANY", "ANY",
                    "QTLExperiment"), function(x, i, j, ..., value) {
                        
-    out_row <- rowData(x)
-    out_col <- colData(x)
+                       out_row <- rowData(x)
+                       out_col <- colData(x)
                        
-    if (missing(i) && missing(j)) {
-        return(value)
-    }
-    
-    if (!missing(i)) {
-        left <- rowData(x)
-        right <- rowData(value)
-        ii <- .convert_subset_index(i, rownames(x))
-    
-        tryCatch({ left[ii,] <- right
-        }, error=function(err) {
-            stop(
-                "failed to replace 'rowData' in '<", class(x),
-                ">[i,] <- value'\n", conditionMessage(err))
-        })
-        out_row <- left
-    }
-    
-    if (!missing(j)) {
-        left <- colData(x)
-        right <-colData(value)
-        jj <- .convert_subset_index(j, colnames(x))
-        
-        tryCatch({ left[jj,] <- right
-        }, error=function(err) {
-            stop("failed to replace 'colData' in '<", class(x),
-                ">[,j] <- value'\n", conditionMessage(err)) 
-        })
-        out_col <- left
-    }
-    
-    out_metadata <- int_metadata(value)
-    
-    # out is invalid until all slots have been updated
-    old <- S4Vectors:::disableValidity()
-    if (!isTRUE(old)) {
-        S4Vectors:::disableValidity(TRUE)
-        on.exit(S4Vectors:::disableValidity(old))
-    }
-    
-    out <- callNextMethod()
-    
-    BiocGenerics:::replaceSlots(out, colData=out_col, elementMetadata=out_row,
-        int_metadata=out_metadata, check=FALSE)
-    
-    validObject(out)
-    
-    out
-})
+                       if (missing(i) && missing(j)) {
+                           return(value)
+                       }
+                       
+                       if (!missing(i)) {
+                           left <- rowData(x)
+                           right <- rowData(value)
+                           ii <- .convert_subset_index(i, rownames(x))
+                           
+                           tryCatch({ left[ii,] <- right
+                           }, error=function(err) {
+                               stop(
+                                   "failed to replace 'rowData' in '<", class(x),
+                                   ">[i,] <- value'\n", conditionMessage(err))
+                           })
+                           out_row <- left
+                       }
+                       
+                       if (!missing(j)) {
+                           left <- colData(x)
+                           right <-colData(value)
+                           jj <- .convert_subset_index(j, colnames(x))
+                           
+                           tryCatch({ left[jj,] <- right
+                           }, error=function(err) {
+                               stop("failed to replace 'colData' in '<", class(x),
+                                    ">[,j] <- value'\n", conditionMessage(err)) 
+                           })
+                           out_col <- left
+                       }
+                       
+                       out_metadata <- int_metadata(value)
+                       
+                       # out is invalid until all slots have been updated
+                       old <- S4Vectors:::disableValidity()
+                       if (!isTRUE(old)) {
+                           S4Vectors:::disableValidity(TRUE)
+                           on.exit(S4Vectors:::disableValidity(old))
+                       }
+                       
+                       out <- callNextMethod()
+                       
+                       BiocGenerics:::replaceSlots(out, colData=out_col, elementMetadata=out_row,
+                                                   int_metadata=out_metadata, check=FALSE)
+                       
+                       validObject(out)
+                       
+                       out
+                   })
 
 #' @importFrom S4Vectors parallel_slot_names
 setMethod("parallel_slot_names", "QTLExperiment", function(x) {
     c("rowRanges", "assays", "NAMES", "elementMetadata")
 })
 
+#' @export
 #' @rdname subset
 setMethod("subset", "QTLExperiment", function(x, i, ...) {
     i <- S4Vectors:::evalqForSubset(i, rowData(x), ...)

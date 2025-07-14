@@ -69,3 +69,10 @@ setGeneric("lfsrs", function(object, ...) standardGeneric("lfsrs"))
 setGeneric("lfsrs<-", function(object, ..., value) standardGeneric("lfsrs<-"))
 
 
+
+########################################
+# Subsetting.
+
+#' @export
+setGeneric("subset", function(x, i, ...) standardGeneric("subset"))
+

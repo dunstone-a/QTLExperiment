@@ -78,7 +78,7 @@ sumstats2qtle <- function(
     if (any(duplicated(paste0(data$state, data$id)))) {
         warning("Multiple tests present for some combinations of state, feature ID and variant ID. Keeping only first occurences...")
         data <- data %>%
-            distinct(state, id, .keep_all = TRUE)
+            dplyr::distinct(state, id, .keep_all = TRUE)
     }
     
     betas <- data %>% 

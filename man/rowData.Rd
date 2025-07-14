@@ -20,7 +20,7 @@
 \arguments{
 \item{x}{is a \linkS4class{QTLExperiment} object}
 
-\item{use.names}{is a logical specifying whether or not to propogate 
+\item{use.names}{is a logical specifying whether or not to propagate 
 the rownames of \code{x} to the returned DFrame object.}
 
 \item{value}{is a matrix-like object with number of rows equal 

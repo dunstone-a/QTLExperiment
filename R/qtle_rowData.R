@@ -12,7 +12,7 @@
 #' @param x is a \linkS4class{QTLExperiment} object
 #' @param value is a matrix-like object with number of rows equal 
 #' to the number of rows in \code{x}.
-#' @param use.names is a logical specifying whether or not to propogate 
+#' @param use.names is a logical specifying whether or not to propagate 
 #' the rownames of \code{x} to the returned DFrame object. 
 
 #' @return
