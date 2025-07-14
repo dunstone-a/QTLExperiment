@@ -1,3 +1,6 @@
+## Changes in version 2.1.1 (2025-07-14)
+* subset function is now a generic.
+
 ## Changes in version 1.99.3 (2025-05-26)
 * Fixed sumstats2qtle function so that the betas, errors and pvalues are matrices and not data.frames.
 
