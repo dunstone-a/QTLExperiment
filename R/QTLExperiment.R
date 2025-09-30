@@ -90,7 +90,7 @@ QTLExperiment <- function(..., state_id=NULL, feature_id=NULL, variant_id=NULL){
     }
 
     if(is.null(state_id)){
-        rse <- .checkSEcolOrder(rse)
+        if (ncol(rse) > 1) {rse <- .checkSEcolOrder(rse)}
         state_id <- colnames(rse)
     }
 

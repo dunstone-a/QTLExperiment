@@ -38,3 +38,20 @@ test_that("Test that additional columns in data.frame append to colData", {
     expect_equivalent(colnames(colData(data)), c("state_id", "source"))
 })
 
+test_that("Test that sumstats works with one state in a data.frame", {
+    data <- sumstats2qtle(input_df[1,], feature_id="molecular_trait_id",
+                          variant_id="variant", betas = "beta",
+                          errors="se", pvalues="pvalue", n_max=100)
+    
+    expect_equivalent(class(data), "QTLExperiment")
+})
+
+test_that("Test that sumstats works with one state in a list", {
+    data <- sumstats2qtle(input_list[1], feature_id="molecular_trait_id",
+                          variant_id="variant", betas = "beta",
+                          errors="se", pvalues="pvalue", n_max=100)
+    
+    expect_equivalent(class(data), "QTLExperiment")
+})
+
+

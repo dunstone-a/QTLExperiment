@@ -79,7 +79,7 @@
             if(!all(rownames(assay(se, assay)) %in% row_order)){
                 stop("The assays provided have different state_ids")
             }
-            assay(se, assay) <- assay(se, assay)[row_order, ]
+            assay(se, assay) <- assay(se, assay)[row_order, , drop = FALSE]
         }
     }   
 
