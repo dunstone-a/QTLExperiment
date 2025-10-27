@@ -12,11 +12,19 @@
 #' @param variant_id The name/index of the column with the variant_id info.
 #' @param betas The name/index of the column with the effect size/beta value.
 #' @param errors The name/index of the column with the effect size/beta standard
-#'           error value.
+#'               error value.
 #' @param pvalues The name/index of the column with the significance score.
+#' @param delayed Logical scalar indicating whether matrices should be wrapped in \linkS4class{DelayedArray}.
 #' @param n_max Max number of rows to read per file. This is primarily used
 #'              for testing purposes.
 #' @param verbose logical. Whether to print progress messages.
+#' @param check_dupes logical. Whether to check for duplicate tests for some 
+#'        combinations of state, feature ID and variant ID. This is necessary for 
+#'        some data (e.g., xQTLatlas) where multiple genetic variants were tested 
+#'        for each feature and state. To avoid col_lists in the output object, 
+#'        this argument subsets to the first test for each combination. Note that 
+#'        checking that tests are unique can slow down run-times so should be avoided
+#'        if not necessary. 
 #'
 #' @example man/examples/qtle_load_example.R
 #'
@@ -29,14 +37,14 @@
 #' @importFrom vroom vroom
 #' @importFrom collapse ftransform fselect fsubset na_omit fmutate qM
 #' @importFrom tidyr pivot_wider all_of
-#' @importFrom dplyr left_join %>%
 #' @importFrom tibble column_to_rownames
 #' @importFrom SummarizedExperiment assay
 #' @importFrom rlang .data
 #'
 sumstats2qtle <- function(
         input, feature_id="gene_id", variant_id="variant_pos", betas="slope",
-        errors="slope_se", pvalues=NULL, n_max=Inf, verbose=TRUE){
+        errors="slope_se", pvalues=NULL, delayed = FALSE, n_max=Inf, verbose=TRUE,
+        check_dupes=FALSE){
 
     path <- state <- id <- NULL
 
@@ -55,7 +63,7 @@ sumstats2qtle <- function(
     if(is.null(pvalues)){
         data <- vroom(input$path, id="path", show_col_types=FALSE,
             n_max=n_max,
-            col_select=list(path, feature_id=all_of(feature_id),
+            col_select=list(feature_id=all_of(feature_id),
                 variant_id=all_of(variant_id),
                 betas=all_of(betas),
                 errors=all_of(pvalues)),
@@ -63,31 +71,33 @@ sumstats2qtle <- function(
     } else{
         data <- vroom(input$path, id="path", show_col_types=FALSE,
             n_max=n_max,
-            col_select=list(all_of(path), feature_id=all_of(feature_id),
+            col_select=list(feature_id=all_of(feature_id),
                 variant_id=all_of(variant_id),
                 betas=all_of(betas),
                 errors=all_of(errors),
                 pvalues=all_of(pvalues)),
             progress=verbose)
     }
+    
+    data$state <- input$state[match(data$path, input$path)]
+    data$path <- NULL
+    data$id <- paste0(data$feature_id, "|", data$variant_id)
 
-    data <- data %>% left_join(input, "path") %>%
-        fselect(-path) %>%
-        fmutate(id=paste0(feature_id, "|", variant_id))
-
-    if (any(duplicated(paste0(data$state, data$id)))) {
-        warning("Multiple tests present for some combinations of state, feature ID and variant ID. Keeping only first occurences...")
-        data <- data %>%
-            dplyr::distinct(state, id, .keep_all = TRUE)
+    if (check_dupes) {
+        if (any(duplicated(paste0(data$state, data$id)))) {
+            warning("Multiple tests present for some combinations of state, feature ID and variant ID. Keeping only first occurences...")
+            data <- data |>
+                dplyr::distinct(state, id, .keep_all = TRUE)
+        }
     }
     
-    betas <- data %>% 
-        pivot_wider(names_from=state, values_from=betas, id_cols=id) %>%
-        tibble::column_to_rownames(var="id") %>% qM()
+    betas <- data |> 
+        pivot_wider(names_from=state, values_from=betas, id_cols=id) |>
+        tibble::column_to_rownames(var="id") |> qM()
 
-    errors <- data %>% 
-        pivot_wider(names_from=state, values_from=errors, id_cols=id) %>%
-        tibble::column_to_rownames(var="id") %>% qM()
+    errors <- data |> 
+        pivot_wider(names_from=state, values_from=errors, id_cols=id) |>
+        tibble::column_to_rownames(var="id") |> qM()
 
     object <- QTLExperiment(
         list(betas=betas, errors=errors),
@@ -99,9 +109,9 @@ sumstats2qtle <- function(
         dplyr::select(input, -dplyr::all_of(c("state", "path"))))
 
     if(!is.null(pvalues)){
-        pvalues <- data %>% 
-            pivot_wider(names_from=state, values_from=pvalues, id_cols=id) %>%
-            tibble::column_to_rownames(var="id") %>% qM()
+        pvalues <- data |> 
+            pivot_wider(names_from=state, values_from=pvalues, id_cols=id) |>
+            tibble::column_to_rownames(var="id") |> qM()
 
         assay(object, "pvalues") <- pvalues
     }
