@@ -38,6 +38,7 @@
 #' @importFrom collapse ftransform fselect fsubset na_omit fmutate qM
 #' @importFrom tidyr pivot_wider all_of
 #' @importFrom tibble column_to_rownames
+#' @importFrom dplyr %>%
 #' @importFrom SummarizedExperiment assay
 #' @importFrom rlang .data
 #'
@@ -86,18 +87,18 @@ sumstats2qtle <- function(
     if (check_dupes) {
         if (any(duplicated(paste0(data$state, data$id)))) {
             warning("Multiple tests present for some combinations of state, feature ID and variant ID. Keeping only first occurences...")
-            data <- data |>
+            data <- data %>%
                 dplyr::distinct(state, id, .keep_all = TRUE)
         }
     }
     
-    betas <- data |> 
-        pivot_wider(names_from=state, values_from=betas, id_cols=id) |>
-        tibble::column_to_rownames(var="id") |> qM()
+    betas <- data %>% 
+        pivot_wider(names_from=state, values_from=betas, id_cols=id) %>%
+        tibble::column_to_rownames(var="id") %>% qM()
 
-    errors <- data |> 
-        pivot_wider(names_from=state, values_from=errors, id_cols=id) |>
-        tibble::column_to_rownames(var="id") |> qM()
+    errors <- data %>% 
+        pivot_wider(names_from=state, values_from=errors, id_cols=id) %>%
+        tibble::column_to_rownames(var="id") %>% qM()
 
     object <- QTLExperiment(
         list(betas=betas, errors=errors),
@@ -109,9 +110,9 @@ sumstats2qtle <- function(
         dplyr::select(input, -dplyr::all_of(c("state", "path"))))
 
     if(!is.null(pvalues)){
-        pvalues <- data |> 
-            pivot_wider(names_from=state, values_from=pvalues, id_cols=id) |>
-            tibble::column_to_rownames(var="id") |> qM()
+        pvalues <- data %>% 
+            pivot_wider(names_from=state, values_from=pvalues, id_cols=id) %>%
+            tibble::column_to_rownames(var="id") %>% qM()
 
         assay(object, "pvalues") <- pvalues
     }
