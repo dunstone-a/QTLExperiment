@@ -1,6 +1,11 @@
+## Changes in version 2.1.3 (2025-10-27)
+* Changed the data loading function sumstats2qtle().
+    o Added a flag to skip checking for multiple association tests for combinations of state, feature and variant. 
+    o Replaced a left_join with a match which should be faster. 
+
 ## Changes in version 2.1.2 (2025-09-30)
 * Added support for QTLExperiment objects with only one state, i.e. one column. 
-    o sumstats2qtle() can read in data when input has only one path
+    o sumstats2qtle() can read in data when input has only one path.
     o mockQTLE() allows nStates = 1. 
 
 ## Changes in version 2.1.1 (2025-07-14)
