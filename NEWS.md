@@ -1,12 +1,12 @@
 ## Changes in version 2.1.3 (2025-10-27)
 * Changed the data loading function sumstats2qtle().
-    o Added a flag to skip checking for multiple association tests for combinations of state, feature and variant. 
-    o Replaced a left_join with a match which should be faster. 
+    - Added a flag to skip checking for multiple association tests for combinations of state, feature and variant. 
+    - Replaced a left_join with a match which should be faster. 
 
 ## Changes in version 2.1.2 (2025-09-30)
 * Added support for QTLExperiment objects with only one state, i.e. one column. 
-    o sumstats2qtle() can read in data when input has only one path.
-    o mockQTLE() allows nStates = 1. 
+    - sumstats2qtle() can read in data when input has only one path.
+    - mockQTLE() allows nStates = 1. 
 
 ## Changes in version 2.1.1 (2025-07-14)
 * subset function is now a generic.
@@ -19,10 +19,10 @@
 
 ## Changes in version 1.99.1 (2025-03-05)
 *  Major update to the underlying representation of the slots. 
-    o  Slots now use elementMetadata and colData. 
-    o  No longer use internal col and row Data. 
-    o  Almost all functions have been updated and testing is working but there may still be some edge cases that I have missed. 
-    o  Better consistency with other child classes of SingleCellExperiment.
+    -  Slots now use elementMetadata and colData. 
+    -  No longer use internal col and row Data. 
+    -  Almost all functions have been updated and testing is working but there may still be some edge cases that I have missed. 
+    -  Better consistency with other child classes of SingleCellExperiment.
 
 ## Changes in version 1.5.0 (2024-10-30)
 *  Added a test for object validity error messages
