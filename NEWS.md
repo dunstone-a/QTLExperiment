@@ -1,3 +1,6 @@
+## Changes in version 2.3.1 (2026-01-06)
+* Updated documentation for sumstats2qtle() to remove warning. 
+
 ## Changes in version 2.1.3 (2025-10-27)
 * Changed the data loading function sumstats2qtle().
     - Added a flag to skip checking for multiple association tests for combinations of state, feature and variant. 

@@ -54,4 +54,22 @@ test_that("Test that sumstats works with one state in a list", {
     expect_equivalent(class(data), "QTLExperiment")
 })
 
+test_that("Test that sumstats works with a gene filter", {
+    data <- sumstats2qtle(input_list, feature_id="molecular_trait_id",
+        variant_id="variant", betas = "beta",
+        errors="se", pvalues="pvalue", n_max=100, 
+        gene_filter = c("ENST00000483767"))
+    
+    expect_equivalent(class(data), "QTLExperiment")
+})
+
+test_that("Test that additional row data can be included", {
+    data <- sumstats2qtle(input_list, feature_id="molecular_trait_id",
+                          variant_id="variant", betas = "beta",
+                          errors="se", pvalues="pvalue", n_max=100, 
+                          otherFields=c("position", "ref"))
+    
+    expect_equal(ncol(rowData(data)), 4)
+    expect_equivalent(class(data), "QTLExperiment")
+})
 

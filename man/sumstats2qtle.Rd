@@ -11,8 +11,13 @@ sumstats2qtle(
   betas = "slope",
   errors = "slope_se",
   pvalues = NULL,
+  check_dupes = FALSE,
+  gene_filter = NULL,
+  col_types = NULL,
+  delayed = FALSE,
   n_max = Inf,
-  verbose = TRUE
+  verbose = TRUE,
+  otherFields = NULL
 )
 }
 \arguments{
@@ -32,10 +37,31 @@ error value.}
 
 \item{pvalues}{The name/index of the column with the significance score.}
 
+\item{check_dupes}{logical. Whether to check for duplicate tests for some 
+combinations of state, feature ID and variant ID. This is necessary for 
+some data (e.g., xQTLatlas) where multiple genetic variants were tested 
+for each feature and state. To avoid col_lists in the output object, 
+this argument subsets to the first test for each combination. Note that 
+checking that tests are unique can slow down run-times so should be avoided
+if not necessary.}
+
+\item{gene_filter}{A subset of the feature IDs to be retained in the object. 
+Useful if you would like to load all variant ID tests for a particular feature, e.g., 
+all tests in a particular region of a genome (e.g., for locus plots).}
+
+\item{col_types}{Column types e.g., a compact string "ccddd". For more information see \code{\link[vroom]{vroom}}.}
+
+\item{delayed}{Logical scalar indicating whether matrices should be wrapped in \linkS4class{DelayedArray}.}
+
 \item{n_max}{Max number of rows to read per file. This is primarily used
 for testing purposes.}
 
 \item{verbose}{logical. Whether to print progress messages.}
+
+\item{otherFields}{The names of additional columns from the data that are to
+be passed into the QTLExperiment rowData. For example, this could include the 
+positions of the variant IDs in terms of base pairs, or the name of the alternative
+allele.}
 }
 \value{
 A \linkS4class{QTLExperiment} object.

@@ -14,10 +14,6 @@
 #' @param errors The name/index of the column with the effect size/beta standard
 #'               error value.
 #' @param pvalues The name/index of the column with the significance score.
-#' @param delayed Logical scalar indicating whether matrices should be wrapped in \linkS4class{DelayedArray}.
-#' @param n_max Max number of rows to read per file. This is primarily used
-#'              for testing purposes.
-#' @param verbose logical. Whether to print progress messages.
 #' @param check_dupes logical. Whether to check for duplicate tests for some 
 #'        combinations of state, feature ID and variant ID. This is necessary for 
 #'        some data (e.g., xQTLatlas) where multiple genetic variants were tested 
@@ -25,6 +21,18 @@
 #'        this argument subsets to the first test for each combination. Note that 
 #'        checking that tests are unique can slow down run-times so should be avoided
 #'        if not necessary. 
+#' @param gene_filter A subset of the feature IDs to be retained in the object. 
+#'        Useful if you would like to load all variant ID tests for a particular feature, e.g., 
+#'        all tests in a particular region of a genome (e.g., for locus plots). 
+#' @param delayed Logical scalar indicating whether matrices should be wrapped in \linkS4class{DelayedArray}.
+#' @param col_types Column types e.g., a compact string "ccddd". For more information see \code{\link[vroom]{vroom}}. 
+#' @param n_max Max number of rows to read per file. This is primarily used
+#'              for testing purposes.
+#' @param verbose logical. Whether to print progress messages.
+#' @param otherFields The names of additional columns from the data that are to
+#'      be passed into the QTLExperiment rowData. For example, this could include the 
+#'      positions of the variant IDs in terms of base pairs, or the name of the alternative
+#'      allele. 
 #'
 #' @example man/examples/qtle_load_example.R
 #'
@@ -44,8 +52,9 @@
 #'
 sumstats2qtle <- function(
         input, feature_id="gene_id", variant_id="variant_pos", betas="slope",
-        errors="slope_se", pvalues=NULL, delayed = FALSE, n_max=Inf, verbose=TRUE,
-        check_dupes=FALSE){
+        errors="slope_se", pvalues=NULL, check_dupes=FALSE, gene_filter=NULL,
+        col_types=NULL, delayed=FALSE, 
+        n_max=Inf, verbose=TRUE, otherFields=NULL){
 
     path <- state <- id <- NULL
 
@@ -64,21 +73,31 @@ sumstats2qtle <- function(
     if(is.null(pvalues)){
         data <- vroom(input$path, id="path", show_col_types=FALSE,
             n_max=n_max,
-            col_select=list(feature_id=all_of(feature_id),
+            col_select=list(path, feature_id=all_of(feature_id),
                 variant_id=all_of(variant_id),
                 betas=all_of(betas),
-                errors=all_of(pvalues)),
+                errors=all_of(errors),
+                all_of(otherFields)),
             progress=verbose)
     } else{
         data <- vroom(input$path, id="path", show_col_types=FALSE,
             n_max=n_max,
-            col_select=list(feature_id=all_of(feature_id),
+            col_select=list(all_of(path), feature_id=all_of(feature_id),
                 variant_id=all_of(variant_id),
                 betas=all_of(betas),
                 errors=all_of(errors),
-                pvalues=all_of(pvalues)),
+                pvalues=all_of(pvalues),
+                all_of(otherFields)),
             progress=verbose)
     }
+    
+    # Filter to a subset of the genes if required.
+    if (!is.null(gene_filter)) {
+        data <- data[data$feature_id %in% gene_filter, ]
+    }
+    
+    # Convert path to a factor to save memory
+    data$path <- factor(data$path)
     
     data$state <- input$state[match(data$path, input$path)]
     data$path <- NULL
@@ -107,7 +126,16 @@ sumstats2qtle <- function(
 
     colData(object) <- cbind(
         colData(object),
-        dplyr::select(input, -dplyr::all_of(c("state", "path"))))
+        input[input$state %in% object$state_id, ] %>%
+            dplyr::select(-dplyr::all_of(c("state", "path"))))
+    
+    if(!is.null(otherFields)){
+        index <- match(row.names(betas), paste0(data$feature_id, "|", data$variant_id))
+        rowData(object) <- cbind(
+            rowData(object),
+            data[index, make.names(otherFields)]
+        )
+    }
 
     if(!is.null(pvalues)){
         pvalues <- data %>% 
