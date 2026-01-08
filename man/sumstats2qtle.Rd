@@ -51,7 +51,7 @@ all tests in a particular region of a genome (e.g., for locus plots).}
 
 \item{col_types}{Column types e.g., a compact string "ccddd". For more information see \code{\link[vroom]{vroom}}.}
 
-\item{delayed}{Logical scalar indicating whether matrices should be wrapped in \linkS4class{DelayedArray}.}
+\item{delayed}{Logical scalar indicating whether matrices should be wrapped in \code{\link[DelayedArray]{DelayedArray}}. Not yet implemented.}
 
 \item{n_max}{Max number of rows to read per file. This is primarily used
 for testing purposes.}

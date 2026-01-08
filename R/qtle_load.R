@@ -24,7 +24,7 @@
 #' @param gene_filter A subset of the feature IDs to be retained in the object. 
 #'        Useful if you would like to load all variant ID tests for a particular feature, e.g., 
 #'        all tests in a particular region of a genome (e.g., for locus plots). 
-#' @param delayed Logical scalar indicating whether matrices should be wrapped in \linkS4class{DelayedArray}.
+#' @param delayed Logical scalar indicating whether matrices should be wrapped in \code{\link[DelayedArray]{DelayedArray}}. Not yet implemented. 
 #' @param col_types Column types e.g., a compact string "ccddd". For more information see \code{\link[vroom]{vroom}}. 
 #' @param n_max Max number of rows to read per file. This is primarily used
 #'              for testing purposes.

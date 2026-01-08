@@ -22,7 +22,7 @@ A QTLExperiment object.
 }
 \description{
 The QTLExperiment class is designed to represent multi-state QTL
-data. It inherits from the \linkS4class{RangedSummarizedExperiment} class.
+data. It inherits from the \code{\link[SummarizedExperiment]{RangedSummarizedExperiment}} class.
 In addition, the class supports storage of multi-state adjusted
 beta and betaSE results (e.g., mash) and
 storage of summary results (e.g., pairwise sharing).
@@ -31,7 +31,7 @@ storage of summary results (e.g., pairwise sharing).
 In this class, rows should represent associations (feature_id:variant_id
 pairs) while columns represent states (e.g. tissues). Assays include betas
 and error associated with the betas (e.g. standard errors).
-As with any \linkS4class{SummarizedExperiment} derivative,
+As with any \code{\link[SummarizedExperiment]{SummarizedExperiment}} derivative,
 different information (e.g., test-statistics, significance calls) can be
 stored in user defined \code{\link[SummarizedExperiment]{assay}} slots, and additional row and
 column metadata can be attached using \code{\link{rowData}} and
@@ -44,8 +44,8 @@ class. This enables a consistent, formalized representation of key aspects
 of multi-state QTL data that are universal to the data structure.
 Readers are referred to the specific documentation pages for more details.
 
-A QTLe can also be coerced from a \linkS4class{SummarizedExperiment} or
-\linkS4class{RangedSummarizedExperiment} instance.
+A QTLe can also be coerced from a \code{\link[SummarizedExperiment]{SummarizedExperiment}} or
+\code{\link[SummarizedExperiment]{RangedSummarizedExperiment}} instance.
 }
 \section{Slots}{
 
