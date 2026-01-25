@@ -67,7 +67,7 @@ character vector of subscripts, indicating the rows and columns,
 respectively, to retain. If either \code{i} or \code{j} is missing, than
 subsetting is only performed in the specified dimension. If both are missing,
 \code{x} is replaced entirely with \code{value}. Arguments in \code{...} are
-passed to the corresponding \linkS4class{SummarizedExperiment} method.}
+passed to the corresponding \code{\link[SummarizedExperiment]{SummarizedExperiment}} method.}
 }
 }
 
