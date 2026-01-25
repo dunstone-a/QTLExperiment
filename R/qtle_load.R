@@ -14,7 +14,6 @@
 #' @param errors The name/index of the column with the effect size/beta standard
 #'               error value.
 #' @param pvalues The name/index of the column with the significance score.
-#' @param delayed Logical scalar indicating whether matrices should be wrapped in \linkS4class{DelayedArray}.
 #' @param n_max Max number of rows to read per file. This is primarily used
 #'              for testing purposes.
 #' @param verbose logical. Whether to print progress messages.
@@ -44,7 +43,7 @@
 #'
 sumstats2qtle <- function(
         input, feature_id="gene_id", variant_id="variant_pos", betas="slope",
-        errors="slope_se", pvalues=NULL, delayed = FALSE, n_max=Inf, verbose=TRUE,
+        errors="slope_se", pvalues=NULL, n_max=Inf, verbose=TRUE,
         check_dupes=FALSE){
 
     path <- state <- id <- NULL

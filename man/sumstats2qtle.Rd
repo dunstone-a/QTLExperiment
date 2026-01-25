@@ -12,7 +12,8 @@ sumstats2qtle(
   errors = "slope_se",
   pvalues = NULL,
   n_max = Inf,
-  verbose = TRUE
+  verbose = TRUE,
+  check_dupes = FALSE
 )
 }
 \arguments{
@@ -36,6 +37,14 @@ error value.}
 for testing purposes.}
 
 \item{verbose}{logical. Whether to print progress messages.}
+
+\item{check_dupes}{logical. Whether to check for duplicate tests for some 
+combinations of state, feature ID and variant ID. This is necessary for 
+some data (e.g., xQTLatlas) where multiple genetic variants were tested 
+for each feature and state. To avoid col_lists in the output object, 
+this argument subsets to the first test for each combination. Note that 
+checking that tests are unique can slow down run-times so should be avoided
+if not necessary.}
 }
 \value{
 A \linkS4class{QTLExperiment} object.
