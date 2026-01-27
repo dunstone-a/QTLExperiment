@@ -66,7 +66,7 @@ sumstats2qtle <- function(
             col_select=list(feature_id=all_of(feature_id),
                 variant_id=all_of(variant_id),
                 betas=all_of(betas),
-                errors=all_of(pvalues)),
+                errors=all_of(errors)),
             progress=verbose)
     } else{
         data <- vroom(input$path, id="path", show_col_types=FALSE,
