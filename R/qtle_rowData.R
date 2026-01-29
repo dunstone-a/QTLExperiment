@@ -85,11 +85,14 @@ setReplaceMethod(
             } 
             if (field == .feat_field) {
                 # Make sure new feature names map uniquely to the old ones
-                tab <- table(old[[.feat_field]], new[[.feat_field]])
-                if (sum(tab != 0) != n_old) {
-                    stop(sprintf(
-                        "New %s's must map uniquely", .feat_field))
+                if (!identical(old[[.feat_field]], new[[.feat_field]])) {
+                    tab <- table(old[[.feat_field]], new[[.feat_field]])
+                    if (sum(tab != 0) != n_old) {
+                        stop(sprintf(
+                            "New %s's must map uniquely", .feat_field))
+                    }
                 }
+
             }
         } else {
             # if none provided, retain original field
